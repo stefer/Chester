@@ -21,27 +21,25 @@ namespace Chess
         private const SquareState b = SquareState.Bishop;
         private const SquareState n = SquareState.Knight;
         private const SquareState p = SquareState.Pawn;
-        private const int Ranks = 10;
-        private const int Files = 12;
+        private const int Ranks = 8;
+        private const int Files = 8;
 
         private SquareState[] _squares = new SquareState[Ranks * Files]
         {
-            X, X, X, X, X, X, X, X, X, X, X, X,
-            X, X, T, B, N, Q, K, N, B, T, X, X,
-            X, X, P, P, P, P, P, P, P, P, X, X,
-            X, X, 0, 0, 0, 0, 0, 0, 0, 0, X, X,
-            X, X, 0, 0, 0, 0, 0, 0, 0, 0, X, X,
-            X, X, 0, 0, 0, 0, 0, 0, 0, 0, X, X,
-            X, X, 0, 0, 0, 0, 0, 0, 0, 0, X, X,
-            X, X, p, p, p, p, p, p, p, p, X, X,
-            X, X, t, b, n, q, k, n, b, t, X, X,
-            X, X, X, X, X, X, X, X, X, X, X, X,
+            T, B, N, Q, K, N, B, T,
+            P, P, P, P, P, P, P, P,
+            0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0,
+            p, p, p, p, p, p, p, p,
+            t, b, n, q, k, n, b, t,
         };
 
         private int Index(Position p)
         {
             if (!p.Valid) throw new InvalidOperationException("Cannot index invalid position");
-            return (p.Rank + 1) * Files + p.File + 2;
+            return p.Rank * Files + p.File;
         }
 
         public SquareState At(Position p)
@@ -68,7 +66,7 @@ namespace Chess
 
         private static Position Position(int idx)
         {
-            return new Position((idx / Files) - 1, (idx % Files) - 2);
+            return new Position(idx / Files, idx % Files);
         }
 
         private IEnumerable<Move> ValidMoves(Position from, SquareState square)
@@ -131,14 +129,14 @@ namespace Chess
             var sb = new StringBuilder();
 
             sb.AppendLine("  abcdefgh");
-            for (int r = 8; r > 0; r--)
+            for (int r = 7; r >= 0; r--)
             {
-                sb.Append($"{r}|");
-                for (int f = 2; f < 10; f++)
+                sb.Append($"{r+1}|");
+                for (int f = 0; f < 8; f++)
                 {
                     sb.Append(_squares[r * Files + f].AsString());
                 }
-                sb.AppendLine($"|{r}");
+                sb.AppendLine($"|{r+1}");
             }
             sb.AppendLine("  abcdefgh");
             return sb.ToString();
