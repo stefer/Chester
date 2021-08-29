@@ -16,5 +16,7 @@ namespace Chess
         Bishop = 0b00000100,
         Knight = 0b00000010,
         Pawn   = 0b00000001,
+
+        Pieces = 0b00111111,
     }
 }

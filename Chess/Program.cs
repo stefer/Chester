@@ -8,7 +8,8 @@ namespace Chess
         static void Main(string[] args)
         {
 
-            Board b = new Board();
+            Game game= new Game();
+            var b = game.Board;
             var rand = new Random();
 
             Console.WriteLine(b);
@@ -21,14 +22,17 @@ namespace Chess
 
                 if (moves.Count == 0) break;
 
-                var move = moves[rand.Next(0, moves.Count)];
-                Console.WriteLine($"Making move {move}");
+                var evaluations = moves.Select(x => game.Evaluate(x));
+
+                var eval = evaluations.Aggregate(evaluations.First(), (acc, x) => (int)color * x.Value > (int)color * acc.Value ? x : acc);
+                Console.WriteLine($"Making move {eval.Move} with value {eval.Value}");
+
+                b.MakeMove(eval.Move);
 
                 Console.ReadKey();
 
-                b.MakeMove(move);
-
                 Console.WriteLine(b);
+                Console.WriteLine();
                 color = color == Color.White ? Color.Black : Color.White;
             }
 

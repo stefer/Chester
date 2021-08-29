@@ -36,6 +36,13 @@ namespace Chess
             t, b, n, q, k, n, b, t,
         };
 
+        public Board() { }
+
+        public Board(Board board)
+        {
+            _squares = (SquareState[])board._squares.Clone();
+        }
+
         private int Index(Position p)
         {
             if (!p.Valid) throw new InvalidOperationException("Cannot index invalid position");
@@ -122,6 +129,18 @@ namespace Chess
 
             _squares[Index(m.To)] = fromSquare | SquareState.Moved;
             _squares[Index(m.From)] = SquareState.Free;
+        }
+
+        public IEnumerable<Piece> Search(Func<SquareState, bool> predicate)
+        {
+            return _squares
+                .Select((square, from) => new Piece(Position(from), square))
+                .Where(p => predicate(p.SquareState));
+        }
+
+        public Board Clone()
+        {
+            return new Board(this);
         }
 
         public override string ToString()

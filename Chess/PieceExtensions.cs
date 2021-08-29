@@ -37,6 +37,8 @@ namespace Chess
         public static bool IsKnight(this SquareState p) => p.HasFlag(SquareState.Knight);
         public static bool IsPawn(this SquareState p) => p.HasFlag(SquareState.Pawn);
 
+        public static SquareState Piece(this SquareState p) => p & SquareState.Pieces;
+
         public static bool SameColor(this SquareState self, SquareState other) => (self & SquareState.White) == (other & SquareState.White);
         public static bool IsAttack(this SquareState self, SquareState other) => other.IsOccupied() && !self.SameColor(other);
 
