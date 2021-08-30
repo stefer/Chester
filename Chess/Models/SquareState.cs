@@ -12,7 +12,7 @@ namespace Chess
 
         King   = 0b00100000,
         Queen  = 0b00010000,
-        Tower  = 0b00001000,
+        Rook  = 0b00001000,
         Bishop = 0b00000100,
         Knight = 0b00000010,
         Pawn   = 0b00000001,

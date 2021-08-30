@@ -11,13 +11,13 @@ namespace Chess
         private const SquareState X = SquareState.Invalid;
         private const SquareState K = SquareState.White | SquareState.King;
         private const SquareState Q = SquareState.White | SquareState.Queen;
-        private const SquareState T = SquareState.White | SquareState.Tower;
+        private const SquareState T = SquareState.White | SquareState.Rook;
         private const SquareState B = SquareState.White | SquareState.Bishop;
         private const SquareState N = SquareState.White | SquareState.Knight;
         private const SquareState P = SquareState.White | SquareState.Pawn;
         private const SquareState k = SquareState.King;
         private const SquareState q = SquareState.Queen;
-        private const SquareState t = SquareState.Tower;
+        private const SquareState t = SquareState.Rook;
         private const SquareState b = SquareState.Bishop;
         private const SquareState n = SquareState.Knight;
         private const SquareState p = SquareState.Pawn;
@@ -120,7 +120,7 @@ namespace Chess
                     }
                 }
             }
-            else if (square.IsTower())
+            else if (square.IsRook())
             {
                 var dirs = new (int r, int f)[] { (0, 1), (0, -1), (1, 0), (-1, 0) };
                 foreach (var (r, f) in dirs)
@@ -181,6 +181,8 @@ namespace Chess
             _squares[Index(m.To)] = fromSquare | SquareState.Moved;
             _squares[Index(m.From)] = SquareState.Free;
         }
+
+        public IEnumerable<Piece> Pieces => Search(s => s.IsOccupied());
 
         public IEnumerable<Piece> Search(Func<SquareState, bool> predicate)
         {

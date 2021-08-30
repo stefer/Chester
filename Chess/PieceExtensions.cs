@@ -9,13 +9,13 @@ namespace Chess
         {
             [SquareState.King] = 'k',
             [SquareState.Queen] = 'q',
-            [SquareState.Tower] = 't',
+            [SquareState.Rook] = 't',
             [SquareState.Bishop] = 'b',
             [SquareState.Knight] = 'n',
             [SquareState.Pawn] = 'p',
             [SquareState.White | SquareState.King] = 'K',
             [SquareState.White | SquareState.Queen] = 'Q',
-            [SquareState.White | SquareState.Tower] = 'T',
+            [SquareState.White | SquareState.Rook] = 'T',
             [SquareState.White | SquareState.Bishop] = 'B',
             [SquareState.White | SquareState.Knight] = 'N',
             [SquareState.White | SquareState.Pawn] = 'P',
@@ -32,7 +32,7 @@ namespace Chess
 
         public static bool IsKing(this SquareState p) => p.HasFlag(SquareState.King);
         public static bool IsQueen(this SquareState p) => p.HasFlag(SquareState.Queen);
-        public static bool IsTower(this SquareState p) => p.HasFlag(SquareState.Tower);
+        public static bool IsRook(this SquareState p) => p.HasFlag(SquareState.Rook);
         public static bool IsBishop(this SquareState p) => p.HasFlag(SquareState.Bishop);
         public static bool IsKnight(this SquareState p) => p.HasFlag(SquareState.Knight);
         public static bool IsPawn(this SquareState p) => p.HasFlag(SquareState.Pawn);
