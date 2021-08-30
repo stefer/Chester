@@ -120,6 +120,57 @@ namespace Chess
                     }
                 }
             }
+            else if (square.IsTower())
+            {
+                var dirs = new (int r, int f)[] { (0, 1), (0, -1), (1, 0), (-1, 0) };
+                foreach (var (r, f) in dirs)
+                {
+                    var p = from.Move(r, f);
+                    while (p.Valid)
+                    {
+                        var to = At(p);
+                        var isAttack = square.IsAttack(to);
+                        if (to.IsFree() || square.IsAttack(to)) yield return new Move(square, from, p, isAttack);
+                        if (isAttack || square.SameColor(to)) break;
+                        p = p.Move(r, f);
+                    }
+                }
+
+                // TODO: Castle
+            }
+            else if (square.IsQueen())
+            {
+                var dirs = new (int r, int f)[] { (-1, 1), (1, 1), (1, -1), (-1, -1), (0, 1), (0, -1), (1, 0), (-1, 0) };
+                foreach (var (r, f) in dirs)
+                {
+                    var p = from.Move(r, f);
+                    while (p.Valid)
+                    {
+                        var to = At(p);
+                        var isAttack = square.IsAttack(to);
+                        if (to.IsFree() || square.IsAttack(to)) yield return new Move(square, from, p, isAttack);
+                        if (isAttack || square.SameColor(to)) break;
+                        p = p.Move(r, f);
+                    }
+                }
+            }
+            else if (square.IsKing())
+            {
+                var dirs = new (int r, int f)[] { (-1, 1), (1, 1), (1, -1), (-1, -1), (0, 1), (0, -1), (1, 0), (-1, 0) };
+                foreach (var (r, f) in dirs)
+                {
+                    var p = from.Move(r, f);
+                    var to = At(p);
+                    var isAttack = square.IsAttack(to);
+                    if (to.IsFree() || square.IsAttack(to)) yield return new Move(square, from, p, isAttack);
+                }
+
+                // TODO: Castle
+            }
+            else
+            {
+                throw new InvalidOperationException($"Cannot generate moves for {square.AsString()}");
+            }
         }
 
         public void MakeMove(Move m)
