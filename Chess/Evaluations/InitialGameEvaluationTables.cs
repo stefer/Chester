@@ -1,11 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Chess.Models;
+using System.Collections.Generic;
 
-namespace Chess
+namespace Chess.Evaluations
 {
-    public class Evaluator
+    public class InitialGameEvaluationTables: EvaluationTables
     {
-        private static readonly Dictionary<SquareState, int> PieceValues = new Dictionary<SquareState, int>()
+        public static readonly EvaluationTables Instance = new InitialGameEvaluationTables();
+
+        public override int Positional(Piece s)
+        {
+            var rank = s.SquareState.IsWhite() ? s.Position.Rank : 7 - s.Position.Rank;
+            return s.SquareState.Direction() * PositionalValues[s.SquareState.Piece()][rank][s.Position.File];
+        }
+
+        public override int PieceValue(Piece s) => s.SquareState.Direction() * PieceValues[s.SquareState.Piece()];
+
+        private readonly Dictionary<SquareState, int> PieceValues = new()
         {
             [SquareState.King] = Evaluation.CheckMate,
             [SquareState.Queen] = 900,
@@ -18,7 +28,7 @@ namespace Chess
         /// <summary>
         /// https://www.chessprogramming.org/Simplified_Evaluation_Function
         /// </summary>
-        private static readonly Dictionary<SquareState, int[][]> PositionalValues = new Dictionary<SquareState, int[][]>()
+        private readonly Dictionary<SquareState, int[][]> PositionalValues = new()
         {
             [SquareState.Pawn] = new int[][]
             {
@@ -55,14 +65,14 @@ namespace Chess
             },
             [SquareState.Rook] = new int[][]
             {
-                new int[] {-50,-40,-30,-30,-30,-30,-40,-50 },
-                new int[] {-40,-20,  0,  0,  0,  0,-20,-40 },
-                new int[] {-30,  0, 10, 15, 15, 10,  0,-30 },
-                new int[] {-30,  5, 15, 20, 20, 15,  5,-30 },
-                new int[] {-30,  0, 15, 20, 20, 15,  0,-30 },
-                new int[] {-30,  5, 10, 15, 15, 10,  5,-30 },
-                new int[] {-40,-20,  0,  5,  5,  0,-20,-40 },
-                new int[] {-50,-40,-30,-30,-30,-30,-40,-50 }
+                new int[] {  0,  0,  0,  0,  0,  0,  0,  0 },
+                new int[] {  5, 10, 10, 10, 10, 10, 10,  5 },
+                new int[] { -5,  0,  0,  0,  0,  0,  0, -5 },
+                new int[] { -5,  0,  0,  0,  0,  0,  0, -5 },
+                new int[] { -5,  0,  0,  0,  0,  0,  0, -5 },
+                new int[] { -5,  0,  0,  0,  0,  0,  0, -5 },
+                new int[] { -5,  0,  0,  0,  0,  0,  0, -5 },
+                new int[] {  0,  0,  0,  5,  5,  0,  0,  0 }
             },
             [SquareState.Queen] = new int[][]
             {
@@ -83,25 +93,9 @@ namespace Chess
                 new int[] {-30,-40,-40,-50,-50,-40,-40,-30 },
                 new int[] {-20,-30,-30,-40,-40,-30,-30,-20 },
                 new int[] {-10,-20,-20,-20,-20,-20,-20,-10 },
-                new int[] { 20, 20,  0,  0,  0,  0, 20, 20 },
-                new int[] { 20, 30, 10,  0,  0, 10, 30, 20 }
+                new int[] {-10,-20,-20,-20,-20,-20,-20,-10 },
+                new int[] {-10, 30, 20,-20, 20,-20, 30,-10 },
             }
         };
-
-        public Evaluation Evaluate(Board b, Move m, Color color)
-        {
-            var byValue = b.Pieces.Select(PieceValue).Sum();
-            var byPosition = b.Pieces.Select(Positional).Sum();
-            return new Evaluation(byValue + byPosition, m);
-        }
-
-        private static int Positional(Piece s)
-        {
-            var rank = s.SquareState.IsWhite() ? s.Position.Rank : 7 - s.Position.Rank;
-            return s.SquareState.Direction() * PositionalValues[s.SquareState.Piece()][rank][s.Position.File];
-        }
-
-        private static int PieceValue(Piece s) => s.SquareState.Direction() * PieceValues[s.SquareState.Piece()];
-
     }
 }

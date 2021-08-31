@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Chess
+namespace Chess.Models
 {
     [Flags]
     public enum SquareState : byte

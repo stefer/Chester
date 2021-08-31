@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chess.Models;
+using System;
 using System.Linq;
 
 namespace Chess

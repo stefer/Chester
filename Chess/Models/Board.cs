@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace Chess
+namespace Chess.Models
 {
     public class Board
     {

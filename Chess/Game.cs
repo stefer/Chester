@@ -1,4 +1,7 @@
-﻿namespace Chess
+﻿using Chess.Evaluations;
+using Chess.Models;
+
+namespace Chess
 {
     public class Game
     {
@@ -7,9 +10,9 @@
 
         public Evaluation Evaluate(Move m)
         {
-            var evalBoard = Board.Clone();
-            evalBoard.MakeMove(m);
-            return _evaluator.Evaluate(evalBoard, m, m.FromSquare.IsWhite() ? Color.White : Color.Black);
+            var position = Board.Clone();
+            position.MakeMove(m);
+            return _evaluator.Evaluate(position, m);
         }
     }
 }
