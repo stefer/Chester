@@ -22,17 +22,17 @@ namespace Chess
 
                 if (moves.Count == 0) break;
 
-                var evaluations = moves.Select(x => game.Evaluate(x));
+                var evaluations = moves.Select(x => game.Evaluate(x)).ToList();
 
                 var eval = evaluations.Aggregate(evaluations.First(), (acc, x) => (int)color * x.Value > (int)color * acc.Value ? x : acc);
-                Console.WriteLine($"Making move {eval.Move} with value {eval.Value}");
+                Console.WriteLine($"{color} made move {eval.Move} with value {eval.Value}");
 
                 b.MakeMove(eval.Move);
 
-                Console.ReadKey();
-
                 Console.WriteLine(b);
                 Console.WriteLine();
+
+                Console.ReadKey();
                 color = color == Color.White ? Color.Black : Color.White;
             }
 

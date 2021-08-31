@@ -7,9 +7,9 @@
 
         public Evaluation Evaluate(Move m)
         {
-            var board = Board.Clone();
-            board.MakeMove(m);
-            return _evaluator.Evaluate(Board, m, m.FromSquare.IsWhite() ? Color.White : Color.Black);
+            var evalBoard = Board.Clone();
+            evalBoard.MakeMove(m);
+            return _evaluator.Evaluate(evalBoard, m, m.FromSquare.IsWhite() ? Color.White : Color.Black);
         }
     }
 }
