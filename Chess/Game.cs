@@ -12,13 +12,6 @@ namespace Chess
         private Evaluator _evaluator = new Evaluator();
         private int MaxDepth = 5;
 
-        public Evaluation Evaluate(Move m)
-        {
-            var position = Board.Clone();
-            position.MakeMove(m);
-            return _evaluator.Evaluate(position, m);
-        }
-
         public void MakeMove(Move move)
         {
             Board.MakeMove(move);
@@ -63,6 +56,13 @@ namespace Chess
             }
 
             return betaMove;
+        }
+
+        private Evaluation Evaluate(Move m)
+        {
+            var position = Board.Clone();
+            position.MakeMove(m);
+            return _evaluator.Evaluate(position, m);
         }
 
         public override string ToString()

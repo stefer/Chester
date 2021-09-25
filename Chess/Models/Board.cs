@@ -26,14 +26,14 @@ namespace Chess.Models
 
         private SquareState[] _squares = new SquareState[Ranks * Files]
         {
-            T, B, N, Q, K, N, B, T,
+            T, N, B, Q, K, B, N, T,
             P, P, P, P, P, P, P, P,
             0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0,
             p, p, p, p, p, p, p, p,
-            t, b, n, q, k, n, b, t,
+            t, n, b, q, k, b, n, t,
         };
 
         public Board() { }
