@@ -9,32 +9,24 @@ namespace Chess
         static void Main(string[] args)
         {
 
-            Game game= new Game();
-            var b = game.Board;
-            var rand = new Random();
+            var game= new Game();
 
-            Console.WriteLine(b);
+            Console.WriteLine(game);
 
-            var color = Color.White;
             while(true)
             {
-                var moves = b.MovesFor(color).ToList();
-                // Console.WriteLine(string.Join(",", moves));
+                var evaluation = game.Search();
 
-                if (moves.Count == 0) break;
+                if (Math.Abs(evaluation.Value) >= Evaluation.CheckMate) break;
 
-                var evaluations = moves.Select(x => game.Evaluate(x)).ToList();
+                Console.WriteLine($"{game.NextToMove} made move {evaluation.Move} with value {evaluation.Value}");
 
-                var eval = evaluations.Aggregate(evaluations.First(), (acc, x) => (int)color * x.Value > (int)color * acc.Value ? x : acc);
-                Console.WriteLine($"{color} made move {eval.Move} with value {eval.Value}");
+                game.MakeMove(evaluation.Move);
 
-                b.MakeMove(eval.Move);
-
-                Console.WriteLine(b);
+                Console.WriteLine(game);
                 Console.WriteLine();
 
                 Console.ReadKey();
-                color = color == Color.White ? Color.Black : Color.White;
             }
 
             Console.Beep();
