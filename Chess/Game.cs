@@ -1,6 +1,7 @@
 ﻿using Chess.Evaluations;
 using Chess.Models;
 using System;
+using System.Linq;
 
 namespace Chess
 {
@@ -31,21 +32,16 @@ namespace Chess
 
         Evaluation AlphaBetaMax(int alpha, int beta, int depthLeft, Color nextToMove, Move move)
         {
-            if (depthLeft == 0)
-            {
-                var position = Board.Clone();
-                position.MakeMove(move);
-                return _evaluator.Evaluate(position, move);
-            }
+            if (depthLeft == 0) return Evaluate(move);
+            
             var alphaMove = new Evaluation(alpha, move);
 
-            foreach (Move m in Board.MovesFor(nextToMove))
+            var sortedMoves = Board.MovesFor(nextToMove).Select(Evaluate).OrderBy(x => x.Value).Select(x => x.Move);
+            foreach (Move m in sortedMoves)
             {
                 var score = AlphaBetaMin(alphaMove.Value, beta, depthLeft - 1, nextToMove.Other(), m);
-                if (score.Value >= beta)
-                    return new Evaluation(beta, m);   // fail hard beta-cutoff
-                if (score.Value > alphaMove.Value)
-                    alphaMove = score; // alpha acts like max in MiniMax
+                if (score.Value >= beta) return new Evaluation(beta, m); // fail hard beta-cutoff
+                if (score.Value > alphaMove.Value) alphaMove = score;    // alpha acts like max in MiniMax
             }
 
             return alphaMove;
@@ -53,23 +49,19 @@ namespace Chess
 
         Evaluation AlphaBetaMin(int alpha, int beta, int depthLeft, Color nextToMove, Move move)
         {
-            if (depthLeft == 0)
-            {
-                var position = Board.Clone();
-                position.MakeMove(move);
-                return _evaluator.Evaluate(position, move);
-            }
+            if (depthLeft == 0) return Evaluate(move);
+
             var betaMove = new Evaluation(beta, move);
 
-            foreach (Move m in Board.MovesFor(nextToMove))
+            var sortedMoves = Board.MovesFor(nextToMove).Select(Evaluate).OrderByDescending(x => x.Value).Select(x => x.Move);
+            foreach (Move m in sortedMoves)
             {
                 var score = AlphaBetaMax(alpha, betaMove.Value, depthLeft - 1, nextToMove.Other(), m);
 
-                if (score.Value <= alpha)
-                    return new Evaluation(alpha, move); // fail hard alpha-cutoff
-                if (score.Value < betaMove.Value)
-                    betaMove = score; // beta acts like min in MiniMax
+                if (score.Value <= alpha)  return new Evaluation(alpha, m); // fail hard alpha-cutoff
+                if (score.Value < betaMove.Value)  betaMove = score;        // beta acts like min in MiniMax
             }
+
             return betaMove;
         }
 
