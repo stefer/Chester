@@ -43,7 +43,12 @@ namespace Chess.Models
             _squares = (SquareState[])board._squares.Clone();
         }
 
-        private int Index(Position p)
+        public static Position Position(int idx)
+        {
+            return new Position(idx % Files, idx / Files);
+        }
+
+        public static int Index(Position p)
         {
             if (!p.Valid) throw new InvalidOperationException("Cannot index invalid position");
             return p.Rank * Files + p.File;
@@ -71,23 +76,18 @@ namespace Chess.Models
             }
         }
 
-        private static Position Position(int idx)
-        {
-            return new Position(idx / Files, idx % Files);
-        }
-
         private IEnumerable<Move> ValidMoves(Position from, SquareState square)
         {
             var direction = square.Direction();
             if (square.IsPawn())
             {
-                var oneUp = from.Move(direction, 0);
-                var twoUp = from.Move(direction*2, 0);
+                var oneUp = from.Move(0, direction);
+                var twoUp = from.Move(0, direction * 2);
                 if (At(oneUp).IsFree()) yield return new Move(square, from, oneUp);
                 if (!square.HasMoved() && At(twoUp).IsFree()) yield return new Move(square, from, twoUp);
 
-                var leftUp = from.Move(direction, 1);
-                var rightUp = from.Move(direction, -1);
+                var leftUp = from.Move(1, direction);
+                var rightUp = from.Move(-1, direction);
                 if (square.IsAttack(At(leftUp))) yield return new Move(square, from, leftUp, true);
                 if (square.IsAttack(At(rightUp))) yield return new Move(square, from, rightUp, true);
 
@@ -98,7 +98,7 @@ namespace Chess.Models
                 var valids = new (int r, int f)[] { (1, 2), (2, 1), (-1, 2), (-2, 1), (1, -2), (2, -1) };
                 foreach(var (r, f) in valids)
                 {
-                    var p = from.Move(r, f);
+                    var p = from.Move(f, r);
                     var to = At(p);
                     var isAttack = square.IsAttack(to);
                     if (to.IsFree() || isAttack) yield return new Move(square, from, p, isAttack);
@@ -109,14 +109,14 @@ namespace Chess.Models
                 var dirs = new (int r, int f)[] { (-1, 1), (1, 1), (1, -1), (-1, -1) };
                 foreach(var(r, f) in dirs)
                 {
-                    var p = from.Move(r, f);
+                    var p = from.Move(f, r);
                     while(p.Valid)
                     {
                         var to = At(p);
                         var isAttack = square.IsAttack(to);
                         if (to.IsFree() || square.IsAttack(to)) yield return new Move(square, from, p, isAttack);
                         if (isAttack || square.SameColor(to)) break;
-                        p = p.Move(r, f);
+                        p = p.Move(f, r);
                     }
                 }
             }
@@ -125,14 +125,14 @@ namespace Chess.Models
                 var dirs = new (int r, int f)[] { (0, 1), (0, -1), (1, 0), (-1, 0) };
                 foreach (var (r, f) in dirs)
                 {
-                    var p = from.Move(r, f);
+                    var p = from.Move(f, r);
                     while (p.Valid)
                     {
                         var to = At(p);
                         var isAttack = square.IsAttack(to);
                         if (to.IsFree() || square.IsAttack(to)) yield return new Move(square, from, p, isAttack);
                         if (isAttack || square.SameColor(to)) break;
-                        p = p.Move(r, f);
+                        p = p.Move(f, r);
                     }
                 }
 
@@ -143,14 +143,14 @@ namespace Chess.Models
                 var dirs = new (int r, int f)[] { (-1, 1), (1, 1), (1, -1), (-1, -1), (0, 1), (0, -1), (1, 0), (-1, 0) };
                 foreach (var (r, f) in dirs)
                 {
-                    var p = from.Move(r, f);
+                    var p = from.Move(f, r);
                     while (p.Valid)
                     {
                         var to = At(p);
                         var isAttack = square.IsAttack(to);
                         if (to.IsFree() || square.IsAttack(to)) yield return new Move(square, from, p, isAttack);
                         if (isAttack || square.SameColor(to)) break;
-                        p = p.Move(r, f);
+                        p = p.Move(f, r);
                     }
                 }
             }
@@ -159,7 +159,7 @@ namespace Chess.Models
                 var dirs = new (int r, int f)[] { (-1, 1), (1, 1), (1, -1), (-1, -1), (0, 1), (0, -1), (1, 0), (-1, 0) };
                 foreach (var (r, f) in dirs)
                 {
-                    var p = from.Move(r, f);
+                    var p = from.Move(f, r);
                     var to = At(p);
                     var isAttack = square.IsAttack(to);
                     if (to.IsFree() || square.IsAttack(to)) yield return new Move(square, from, p, isAttack);
