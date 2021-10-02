@@ -22,6 +22,18 @@ namespace Chess.Tests.Models.Pgn
         }
 
         [Test]
+        public void ShortWithResult()
+        {
+            var moveText = @"1.c4 g6 1-0";
+            var sut = new MoveTextReader(moveText);
+
+            var moves = sut.ReadAll();
+
+            Assert.That(moves.Count, Is.EqualTo(1));
+            Assert.That(moves.Result, Is.EqualTo("1-0"));
+        }
+
+        [Test]
         public void HalfMove_OnlyFile()
         {
             var sut = new MoveTextReader("dxc5");
@@ -40,8 +52,29 @@ namespace Chess.Tests.Models.Pgn
             Assert.That(move.White.To.ToString(), Is.EqualTo("c5"));
 
             Assert.That(move.ToString(), Is.EqualTo("1. dxc5"));
-
         }
+
+        [Test]
+        public void HalfMove_NoFrom()
+        {
+            var sut = new MoveTextReader("Bxc3+");
+
+            var result = sut.ReadAll();
+
+            Assert.That(result.Count, Is.EqualTo(1));
+            var move = result[0];
+
+            Assert.That(move.Seq, Is.EqualTo(1));
+            Assert.That(move.Black, Is.Null);
+            Assert.That(move.White.Color, Is.EqualTo(Color.White));
+            Assert.That(move.White.Piece, Is.EqualTo(PgnPiece.Bishop));
+            Assert.That(move.White.Type.HasFlag(PgnMoveType.Take));
+            Assert.That(move.White.From.InValid, Is.True);
+            Assert.That(move.White.To.ToString(), Is.EqualTo("c3"));
+
+            Assert.That(move.ToString(), Is.EqualTo("1. Bxc3+"));
+        }
+
 
         [Test]
         [TestCase("e4")]
@@ -63,11 +96,87 @@ namespace Chess.Tests.Models.Pgn
             Assert.That(move.Black, Is.Null);
             Assert.That(move.White.Color, Is.EqualTo(Color.White));
             Assert.That(move.White.Piece, Is.EqualTo(PgnPiece.Pawn));
-            Assert.That(move.White.From.Valid, Is.True);
+            Assert.That(move.White.From.InValid, Is.False);
             Assert.That(move.White.From.File, Is.EqualTo(4));
             Assert.That(move.White.From.Rank, Is.EqualTo(3));
             Assert.That(move.White.From.ToString(), Is.EqualTo("e4"));
             Assert.That(move.ToString(), Is.EqualTo("1. e4"));
+        }
+
+        [Test]
+        public void WhiteKingCastling()
+        {
+            var sut = new MoveTextReader("O-O");
+
+            var result = sut.ReadAll();
+
+            Assert.That(result.Count, Is.EqualTo(1));
+            var move = result[0];
+
+            Assert.That(move.White.Type.HasFlag(PgnMoveType.CastleKingSide));
+            Assert.That(move.White.Color, Is.EqualTo(Color.White));
+            Assert.That(move.White.Piece, Is.EqualTo(PgnPiece.King));
+            Assert.That(move.White.From.InValid, Is.False);
+            Assert.That(move.White.From.ToString(), Is.EqualTo("e1"));
+            Assert.That(move.White.To.ToString(), Is.EqualTo("g1"));
+            Assert.That(move.ToString(), Is.EqualTo("1. O-O"));
+        }
+
+        [Test]
+        public void BlackKingCastling()
+        {
+            var sut = new MoveTextReader("e4 O-O");
+
+            var result = sut.ReadAll();
+
+            Assert.That(result.Count, Is.EqualTo(1));
+            var move = result[0];
+
+            Assert.That(move.Black.Type.HasFlag(PgnMoveType.CastleKingSide));
+            Assert.That(move.Black.Color, Is.EqualTo(Color.Black));
+            Assert.That(move.Black.Piece, Is.EqualTo(PgnPiece.King));
+            Assert.That(move.Black.From.InValid, Is.False);
+            Assert.That(move.Black.From.ToString(), Is.EqualTo("e8"));
+            Assert.That(move.Black.To.ToString(), Is.EqualTo("g8"));
+            Assert.That(move.ToString(), Is.EqualTo("1. e4 O-O"));
+        }
+
+        [Test]
+        public void WhiteQueenCastling()
+        {
+            var sut = new MoveTextReader("O-O-O");
+
+            var result = sut.ReadAll();
+
+            Assert.That(result.Count, Is.EqualTo(1));
+            var move = result[0];
+
+            Assert.That(move.White.Type.HasFlag(PgnMoveType.CastleQueenSide));
+            Assert.That(move.White.Color, Is.EqualTo(Color.White));
+            Assert.That(move.White.Piece, Is.EqualTo(PgnPiece.King));
+            Assert.That(move.White.From.InValid, Is.False);
+            Assert.That(move.White.From.ToString(), Is.EqualTo("e1"));
+            Assert.That(move.White.To.ToString(), Is.EqualTo("c1"));
+            Assert.That(move.ToString(), Is.EqualTo("1. O-O-O"));
+        }
+
+        [Test]
+        public void BlackQueenCastling()
+        {
+            var sut = new MoveTextReader("e4 O-O-O");
+
+            var result = sut.ReadAll();
+
+            Assert.That(result.Count, Is.EqualTo(1));
+            var move = result[0];
+
+            Assert.That(move.Black.Type.HasFlag(PgnMoveType.CastleQueenSide));
+            Assert.That(move.Black.Color, Is.EqualTo(Color.Black));
+            Assert.That(move.Black.Piece, Is.EqualTo(PgnPiece.King));
+            Assert.That(move.Black.From.InValid, Is.False);
+            Assert.That(move.Black.From.ToString(), Is.EqualTo("e8"));
+            Assert.That(move.Black.To.ToString(), Is.EqualTo("c8"));
+            Assert.That(move.ToString(), Is.EqualTo("1. e4 O-O-O"));
         }
     }
 }

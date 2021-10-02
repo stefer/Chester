@@ -52,15 +52,27 @@ namespace Chess.Models.Pgn
 
         public override string ToString()
         {
-            // examples : d4, Qa6xb7#, fxg1=Q+
+            // examples : d4, Qa6xb7#, fxg1=Q+, O-O-O
 
             var sb = new StringBuilder();
-            sb.Append(PgnPieces[Piece]);
-            sb.Append(From);
-            if (Type.HasFlag(PgnMoveType.Take)) sb.Append('x');
-            if (To != null && To.Valid) sb.Append(To);
-            var promotion = Type & PgnMoveType.PromotionMask;
-            if (promotion != PgnMoveType.Normal) sb.Append('=').Append(Promotions[promotion]);
+            if (Type.HasFlag(PgnMoveType.CastleKingSide))
+            {
+                sb.Append("O-O");
+            }
+            else if (Type.HasFlag(PgnMoveType.CastleQueenSide))
+            {
+                sb.Append("O-O-O");
+            }
+            else
+            {
+                sb.Append(PgnPieces[Piece]);
+                sb.Append(From);
+                if (Type.HasFlag(PgnMoveType.Take)) sb.Append('x');
+                if (To != null && !To.InValid) sb.Append(To);
+                var promotion = Type & PgnMoveType.PromotionMask;
+                if (promotion != PgnMoveType.Normal) sb.Append('=').Append(Promotions[promotion]);
+            }
+
             if (Type.HasFlag(PgnMoveType.CheckMate)) sb.Append('#');
             if (Type.HasFlag(PgnMoveType.Check)) sb.Append('+');
 

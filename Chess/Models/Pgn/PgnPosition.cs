@@ -16,16 +16,16 @@
 
         public void Deconstruct(out int file, out int rank) => (rank, file) = (Rank, File);
 
-        public bool Valid => ValidRank && ValidFile;
+        public bool InValid => !ValidRank && !ValidFile;
         public bool ValidRank => Rank >= 0 && Rank < 8;
         public bool ValidFile => File >= 0 && File < 8;
 
         public override string ToString()
         {
-            if (!ValidFile) return $"{ranks[Rank]}";
-            if (!ValidRank) return $"{files[File]}";
-            return $"{files[File]}{ranks[Rank]}";
+            string file = ValidFile ? files[File].ToString() : string.Empty;
+            string rank = ValidRank ? ranks[Rank].ToString() : string.Empty;
+
+            return $"{file}{rank}";
         }
-        public string FileString => $"{files[File]}";
     }
 }

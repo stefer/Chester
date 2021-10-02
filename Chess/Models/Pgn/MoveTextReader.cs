@@ -6,7 +6,7 @@ namespace Chess.Models.Pgn
 {
     public class MoveTextReader
     {
-        private ReadOnlyMemory<char> _content;
+        private readonly ReadOnlyMemory<char> _content;
         private ReadOnlyMemory<char> _current;
 
         public MoveTextReader(string input): this(input.AsMemory()) { }
@@ -38,7 +38,7 @@ namespace Chess.Models.Pgn
         }
 
         /// <summary>
-        /// Parse a result, like "1/2-1/2", 1-0
+        /// Parse a result, like *, "1/2-1/2", 1-0, 0-1
         /// </summary>
         /// <param name="result"></param>
         private void Result(out string result)
@@ -52,6 +52,22 @@ namespace Chess.Models.Pgn
             while (move < span.Length && !char.IsWhiteSpace(span[move])) move++;
 
             result = span[0..move].ToString();
+            _current = _current[move..];
+        }
+
+        private static readonly string[] Results = new string[] { "*", "1/2-1/2", "1-0", "0-1" };
+
+        private bool IsResult()
+        {
+            var span = _current.Span;
+            while (char.IsWhiteSpace(span[0])) span = span[1..];
+
+            foreach (var result in Results)
+            {
+                if (span.StartsWith(result)) return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -64,6 +80,7 @@ namespace Chess.Models.Pgn
         {
             move = null;
             if (_current.Length < 2) return false;
+            if (IsResult()) return false;
 
             WhiteSpace();
             Sequence();
@@ -83,19 +100,54 @@ namespace Chess.Models.Pgn
         /// Read Half Move, like d4, Qa6xb7#, fxg1=Q+
         /// </summary>
         /// <param name="color"></param>
-        /// <param name="white"></param>
+        /// <param name="halfMove"></param>
         /// <returns></returns>
-        private bool HalfMove(Color color, out PgnHalfMove white)
+        private bool HalfMove(Color color, out PgnHalfMove halfMove)
         {
-            white = null;
+            halfMove = null;
+            if (Castling(color, out PgnHalfMove castling))
+            {
+                Check(out PgnMoveType check1);
+                halfMove = castling with { Type = castling.Type | check1 };
+                return true;
+            }
+
             Piece(out PgnPiece piece);
-            if (!Position(out PgnPosition from)) return false;
+            Position(out PgnPosition from);
             Take(out PgnMoveType take);
             Position(out PgnPosition to);
             Promotion(out PgnMoveType promotion);
             Check(out PgnMoveType check);
 
-            white = new PgnHalfMove(color, piece, from, to, take | promotion | check);
+            if (from.InValid && to.InValid) return false;
+
+            halfMove = new PgnHalfMove(color, piece, from, to, take | promotion | check);
+            return true;
+        }
+
+        private bool Castling(Color color, out PgnHalfMove castling)
+        {
+            castling = null;
+            var span = _current.Span;
+            var queenSide = span.StartsWith("O-O-O");
+            var kingSide = span.StartsWith("O-O");
+
+            if (!queenSide && !kingSide) return false;
+
+            var castlingType = queenSide ? PgnMoveType.CastleQueenSide : PgnMoveType.CastleKingSide;
+            var rank = color == Color.White ? 0 : 7;
+            var fromFile = 4;
+            var toFile = queenSide ? 2 : 6;
+
+            castling = new PgnHalfMove(
+                color,
+                PgnPiece.King,
+                new PgnPosition(fromFile, rank),
+                new PgnPosition(toFile, rank),
+                castlingType);
+
+            _current = _current[(queenSide ? 5 : 3)..];
+
             return true;
         }
 
