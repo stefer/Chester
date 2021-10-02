@@ -195,7 +195,7 @@ namespace Chess.Models.Pgn
 
             if (_current.IsEmpty) return;
 
-            if (PgnPieces.TryGetValue(char.ToUpper(_current.Span[0]), out PgnPiece piece2))
+            if (PgnPieces.TryGetValue(_current.Span[0], out PgnPiece piece2))
             {
                 piece = piece2;
                 _current = _current[1..];

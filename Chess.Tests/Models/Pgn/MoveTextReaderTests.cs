@@ -4,21 +4,48 @@ using NUnit.Framework;
 
 namespace Chess.Tests.Models.Pgn
 {
+    using Chess.Tests.Extensions;
+
     public class MoveTextReaderTests
     {
         [Test]
-        public void Kalle()
+        public void ReadAll_Complete_ToString()
         {
             var moveText = @"
 1.c4 g6 2.d4 Bg7 3.e4 d6 4.Nc3 c5 5.dxc5 Bxc3+ 6.bxc3 dxc5 7.Bd3 Nc6 8.f4 Qa5
 9.Ne2 Be6 10.f5 O-O-O 11.fxe6 Ne5 12.exf7 Nf6 13.O-O Nxd3 14.Bh6 Ne5 15.Qb3 Nxf7  1-0
 ";
+
+            var moveTextExpected = 
+@"1. c4 g6 2. d4 Bg7 3. e4 d6 4. Nc3 c5 5. dxc5 Bxc3+ 6. bxc3 dxc5 7. Bd3 Nc6 
+8. f4 Qa5 9. Ne2 Be6 10. f5 O-O-O 11. fxe6 Ne5 12. exf7 Nf6 13. O-O Nxd3 
+14. Bh6 Ne5 15. Qb3 Nxf7  1-0";
             var sut = new MoveTextReader(moveText);
 
             var moves = sut.ReadAll();
 
             Assert.That(moves.Count, Is.EqualTo(15));
             Assert.That(moves.Result, Is.EqualTo("1-0"));
+            Assert.That(moves.ToString(), Is.EqualTo(moveTextExpected));
+        }
+
+        [Test]
+        public void ReadAll_bxc3()
+        {
+            var moveText = @"6.bxc3 dxc5";
+            var sut = new MoveTextReader(moveText);
+
+            var move = sut.ReadAll()[0];
+
+            Assert.That(move.White.Piece, Is.EqualTo(PgnPiece.Pawn));
+            Assert.That(move.White.Type, Has.Flag(PgnMoveType.Take));
+            Assert.That(move.White.From.ToString(), Is.EqualTo("b"));
+            Assert.That(move.White.To.ToString(), Is.EqualTo("c3"));
+
+            Assert.That(move.Black.Piece, Is.EqualTo(PgnPiece.Pawn));
+            Assert.That(move.Black.Type, Has.Flag(PgnMoveType.Take));
+            Assert.That(move.Black.From.ToString(), Is.EqualTo("d"));
+            Assert.That(move.Black.To.ToString(), Is.EqualTo("c5"));
         }
 
         [Test]
