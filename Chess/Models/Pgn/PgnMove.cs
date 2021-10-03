@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Chess.Models.Pgn
@@ -30,7 +31,7 @@ namespace Chess.Models.Pgn
 
     }
 
-    public record PgnHalfMove(Color Color, PgnPiece Piece, PgnPosition From, PgnPosition To = null, PgnMoveType Type = PgnMoveType.Normal)
+    public record PgnHalfMove(Color Color, PgnPiece Piece, PgnPosition From, PgnPosition To = null, PgnMoveType Type = PgnMoveType.Normal, string Comment = null)
     {
         private static readonly Dictionary<PgnPiece, string> PgnPieces = new()
         {
@@ -56,13 +57,9 @@ namespace Chess.Models.Pgn
 
             var sb = new StringBuilder();
             if (Type.HasFlag(PgnMoveType.CastleKingSide))
-            {
                 sb.Append("O-O");
-            }
             else if (Type.HasFlag(PgnMoveType.CastleQueenSide))
-            {
                 sb.Append("O-O-O");
-            }
             else
             {
                 sb.Append(PgnPieces[Piece]);
@@ -75,12 +72,13 @@ namespace Chess.Models.Pgn
 
             if (Type.HasFlag(PgnMoveType.CheckMate)) sb.Append('#');
             if (Type.HasFlag(PgnMoveType.Check)) sb.Append('+');
+            if (Comment != null) sb.Append(" ").Append('{').Append(Comment).Append('}');
 
             return sb.ToString();
         }
     }
 
-    public record PgnMove(int Seq, PgnHalfMove White, PgnHalfMove Black)
+    public record PgnMove(int Seq, PgnHalfMove White, PgnHalfMove Black, string Comment = null)
     {
         public override string ToString()
         {

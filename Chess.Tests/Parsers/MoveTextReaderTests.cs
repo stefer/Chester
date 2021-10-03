@@ -206,5 +206,45 @@ namespace Chess.Tests.Parsers
             Assert.That(move.Black.To.ToString(), Is.EqualTo("c8"));
             Assert.That(move.ToString(), Is.EqualTo("1. e4 O-O-O"));
         }
+
+        [Test]
+        public void InlineBlackComment()
+        {
+            var sut = new MoveTextReader("1. e4 e5 { This opening is called the Ruy Lopez.} 4.Ba4 Nf6");
+
+            var result = sut.ReadAll();
+
+            Assert.That(result[0].Black.Comment, Is.EqualTo("This opening is called the Ruy Lopez."));
+        }
+
+        [Test]
+        public void InlineWhiteComment()
+        {
+            var sut = new MoveTextReader("1. e4 { This opening is called the Ruy Lopez.} e5  4.Ba4 Nf6");
+
+            var result = sut.ReadAll();
+
+            Assert.That(result[0].White.Comment, Is.EqualTo("This opening is called the Ruy Lopez."));
+        }
+
+        [Test]
+        public void InlineMoveComment()
+        {
+            var sut = new MoveTextReader("1. { This opening is called the Ruy Lopez.} e4 e5  4.Ba4 Nf6");
+
+            var result = sut.ReadAll();
+
+            Assert.That(result[0].Comment, Is.EqualTo("This opening is called the Ruy Lopez."));
+        }
+
+        [Test]
+        public void LineComment()
+        {
+            var sut = new MoveTextReader("1. e4 e5 ; This opening is called the Ruy Lopez. \r\n 4.Ba4 Nf6");
+
+            var result = sut.ReadAll();
+
+            Assert.That(result[0].Black.Comment, Is.EqualTo("This opening is called the Ruy Lopez."));
+        }
     }
 }

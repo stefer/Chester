@@ -1,4 +1,5 @@
 ﻿using Chess.Models.Pgn;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,9 +30,10 @@ namespace Chess.Parsers
 
         private static MoveText ParseMoves(string span, ref int position)
         {
-            // TODO: implement moves parsing
+            var savedPos = position;
             MoveToAttributes(span, ref position);
-            return new MoveText(Enumerable.Empty<PgnMove>(), "");
+            var reader = new MoveTextReader(span.AsMemory()[savedPos..position]);
+            return reader.ReadAll();
         }
 
         private static void SkipWhiteSpace(string span, ref int position)

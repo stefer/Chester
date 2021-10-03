@@ -74,6 +74,9 @@ namespace Chess.Parsers
 
         /// <summary>
         /// Read Move like 11.fxe6 Ne5
+        /// Sequence number can repeat, with three dots for black: 11.fxe6 11...Ne5
+        /// Comments may in different places
+        ///   11. {Comment Move} fxe6 { Comment White } Ne5 { Comment Black }
         /// </summary>
         /// <param name="sequence"></param>
         /// <param name="move"></param>
@@ -84,18 +87,40 @@ namespace Chess.Parsers
             if (_current.Length < 2) return false;
             if (IsResult()) return false;
 
-            WhiteSpace();
             Sequence();
-            WhiteSpace();
+            Comment(out string comment);
             if (!HalfMove(Color.White, out PgnHalfMove white)) return false;
-            WhiteSpace();
             Sequence();
-            WhiteSpace();
             HalfMove(Color.Black, out PgnHalfMove black);
 
-            move = new PgnMove(sequence, white, black);
+            move = new PgnMove(sequence, white, black, comment);
 
             return true;
+        }
+
+        private void Comment(out string comment)
+        {
+            comment = null;
+            WhiteSpace();
+            var span = _current.Span;
+            if (span.IsEmpty) return;
+
+            if (span[0] == '{')
+            {
+                var end = 0;
+                while (end < span.Length && span[end] != '}') end++;
+                comment = span[1..end].ToString().Trim();
+                end = Math.Min(span.Length, end + 1);
+                _current = _current[end..];
+            }
+            if (span[0] == ';')
+            {
+                var end = 0;
+                while (end < span.Length && span[end] != '\n') end++;
+                comment = span[1..end].ToString().Trim();
+                end = Math.Min(span.Length, end+1);
+                _current = _current[end..];
+            }
         }
 
         /// <summary>
@@ -107,10 +132,13 @@ namespace Chess.Parsers
         private bool HalfMove(Color color, out PgnHalfMove halfMove)
         {
             halfMove = null;
+            WhiteSpace();
+
             if (Castling(color, out PgnHalfMove castling))
             {
                 Check(out PgnMoveType check1);
-                halfMove = castling with { Type = castling.Type | check1 };
+                Comment(out var comment);
+                halfMove = castling with { Type = castling.Type | check1, Comment = comment };
                 return true;
             }
 
@@ -120,10 +148,11 @@ namespace Chess.Parsers
             Position(out PgnPosition to);
             Promotion(out PgnMoveType promotion);
             Check(out PgnMoveType check);
+            Comment(out var comment1);
 
             if (from.InValid && to.InValid) return false;
 
-            halfMove = new PgnHalfMove(color, piece, from, to, take | promotion | check);
+            halfMove = new PgnHalfMove(color, piece, from, to, take | promotion | check, comment1);
             return true;
         }
 
@@ -268,6 +297,7 @@ namespace Chess.Parsers
 
         private void Sequence()
         {
+            WhiteSpace();
             Number();
             WhiteSpace();
             var span = _current.Span;
