@@ -34,7 +34,6 @@ namespace Chess.Parsers
 
             WhiteSpace();
             Result(out string result);
-            WhiteSpace();
 
             return new MoveText(moves, result);
         }
@@ -45,10 +44,11 @@ namespace Chess.Parsers
         /// <param name="result"></param>
         private void Result(out string result)
         {
-            result = "*";
+            result = null;
             if (_current.IsEmpty) return;
+            if (!IsResult()) return;
+
             var span = _current.Span;
-            if (span[0] == '*') return;
 
             int move = 0;
             while (move < span.Length && !char.IsWhiteSpace(span[move])) move++;
