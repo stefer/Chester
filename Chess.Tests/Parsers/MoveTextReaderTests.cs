@@ -2,8 +2,9 @@
 using Chess.Models.Pgn;
 using NUnit.Framework;
 
-namespace Chess.Tests.Models.Pgn
+namespace Chess.Tests.Parsers
 {
+    using Chess.Parsers;
     using Chess.Tests.Extensions;
 
     public class MoveTextReaderTests

@@ -1,11 +1,12 @@
 using Chess.Models.Pgn;
+using Chess.Parsers;
 using NUnit.Framework;
 using System.Linq;
 
-namespace Chess.Tests.Models.Pgn
+namespace Chess.Tests.Parsers
 {
 
-    public class PgnTests
+    public class PgnParserTests
     {
 
         private static string example1 = @"

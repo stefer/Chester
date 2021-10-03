@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Chess.Models.Pgn;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace Chess.Models.Pgn
+namespace Chess.Parsers
 {
     /// <summary>
     /// https://www.thechessdrum.net/PGN_Reference.txt

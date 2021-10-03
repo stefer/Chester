@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Chess.Models;
+using Chess.Models.Pgn;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Chess.Models.Pgn
+namespace Chess.Parsers
 {
     public class MoveTextReader
     {
