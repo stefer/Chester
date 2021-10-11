@@ -2,8 +2,6 @@
 
 namespace Chess.Models.Pgn
 {
-
-
     public class Pgn
     {
         public Pgn(Dictionary<string, string> attributes, MoveText moves)

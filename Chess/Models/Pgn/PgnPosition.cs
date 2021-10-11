@@ -1,4 +1,7 @@
-﻿namespace Chess.Models
+﻿using System;
+using System.Linq;
+
+namespace Chess.Models.Pgn
 {
     public record PgnPosition
     {
@@ -14,6 +17,16 @@
             File = file;
         }
 
+        public PgnPosition(string position)
+        {
+            if (string.IsNullOrEmpty(position)) throw new ArgumentNullException(nameof(position));
+            if (position.Length != 2) throw new ArgumentException("Must have length 2", nameof(position));
+            if (!files.Contains(position[0])) throw new ArgumentException("File must be a-h", nameof(position));
+            if (!ranks.Contains(position[1]-'0')) throw new ArgumentException("Rank must be 1-8", nameof(position));
+            File = Array.IndexOf(files, position[0]);
+            Rank = Array.IndexOf(ranks, position[1] - '0');
+        }
+
         public void Deconstruct(out int file, out int rank) => (rank, file) = (Rank, File);
 
         public bool InValid => !ValidRank && !ValidFile;
@@ -27,5 +40,7 @@
 
             return $"{file}{rank}";
         }
+
+        public static implicit operator PgnPosition(string pos) => new PgnPosition(pos);
     }
 }

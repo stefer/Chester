@@ -25,6 +25,8 @@ namespace Chess.Models.Pgn
         
         IEnumerator IEnumerable.GetEnumerator() => _moves.GetEnumerator();
 
+        public IEnumerable<PgnHalfMove> AsHalfMoves() => _moves.SelectMany(x => x.HalfMoves());
+
         override public string ToString()
         {
             const int LineLength = 80;
