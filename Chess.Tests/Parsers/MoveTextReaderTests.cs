@@ -197,10 +197,11 @@ namespace Chess.Tests.Parsers
                 Assert.That(move.Black, Is.Null);
                 Assert.That(move.White.Color, Is.EqualTo(Color.White));
                 Assert.That(move.White.Piece, Is.EqualTo(PgnPiece.Pawn));
-                Assert.That(move.White.From.InValid, Is.False);
-                Assert.That(move.White.From.File, Is.EqualTo(4));
-                Assert.That(move.White.From.Rank, Is.EqualTo(3));
-                Assert.That(move.White.From.ToString(), Is.EqualTo("e4"));
+                Assert.That(move.White.From, Is.Null);
+                Assert.That(move.White.To.InValid, Is.False);
+                Assert.That(move.White.To.File, Is.EqualTo(4));
+                Assert.That(move.White.To.Rank, Is.EqualTo(3));
+                Assert.That(move.White.To.ToString(), Is.EqualTo("e4"));
                 Assert.That(move.ToString(), Is.EqualTo("1. e4"));
             }
         }

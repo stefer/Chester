@@ -143,14 +143,19 @@ namespace Chess.Parsers
             }
 
             Piece(out PgnPiece piece);
-            Position(out PgnPosition from);
+            Position(out PgnPosition first);
             Take(out PgnMoveType take);
-            Position(out PgnPosition to);
+            Position(out PgnPosition second);
             Promotion(out PgnMoveType promotion);
             Check(out PgnMoveType check);
             Comment(out var comment1);
 
-            if (from.InValid && to.InValid) return false;
+
+            if (first.InValid && second.InValid) return false;
+
+            // if only one position is found, it is the to position
+            var from = second.InValid ? null : first;
+            var to = second.InValid ? first : second;
 
             halfMove = new PgnHalfMove(color, piece, from, to, take | promotion | check, comment1);
             return true;

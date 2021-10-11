@@ -76,6 +76,19 @@ namespace Chess.Models.Pgn
 
             return sb.ToString();
         }
+
+        public virtual bool Equals(PgnHalfMove other)
+        {
+            if (other == null) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return (Color, Piece, From, To, To).Equals((other.Color, other.Piece, other.From, other.To, other.To));
+        }
+
+        public override int GetHashCode()
+        {
+            return (Color, Piece, From, To, To).GetHashCode();
+        }
     }
 
     public record PgnMove(int Seq, PgnHalfMove White, PgnHalfMove Black, string Comment = null)
@@ -86,6 +99,25 @@ namespace Chess.Models.Pgn
                 return $"{Seq}. {White} {Black}";
 
             return $"{Seq}. {White}";
+        }
+
+        public IEnumerable<PgnHalfMove> HalfMoves()
+        {
+            yield return White;
+            if (Black != null) yield return Black;
+        }
+
+        public virtual bool Equals(PgnMove other)
+        {
+            if (other == null) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return (Seq, White, Black).Equals((other.Seq, other.White, other.Black));
+        }
+
+        public override int GetHashCode()
+        {
+            return (Seq, White, Black).GetHashCode();
         }
     }
 }
