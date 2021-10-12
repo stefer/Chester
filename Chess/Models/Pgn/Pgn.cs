@@ -16,7 +16,7 @@ namespace Chess.Models.Pgn
         public int Round => int.TryParse(Attributes.GetValueOrDefault(nameof(Round)), out int value) ? value : 0;
         public string White => Attributes.GetValueOrDefault(nameof(White));
         public string Black => Attributes.GetValueOrDefault(nameof(Black));
-        public string Result => Attributes.GetValueOrDefault(nameof(Result));
+        public PgnResult Result => PgnResult.FromString(Attributes.GetValueOrDefault(nameof(Result)));
 
         public IReadOnlyDictionary<string,string> Attributes { get; private set; }
 

@@ -58,7 +58,7 @@ Nf2 42. g4 Bd3 43. Re6 1/2-1/2
                 Assert.That(sut.Round, Is.EqualTo(29));
                 Assert.That(sut.White, Is.EqualTo("Fischer, Robert J."));
                 Assert.That(sut.Black, Is.EqualTo("Spassky, Boris V."));
-                Assert.That(sut.Result, Is.EqualTo("1/2-1/2"));
+                Assert.That(sut.Result, Is.EqualTo(PgnResult.Draw));
             }
 
             [Test]
@@ -69,7 +69,7 @@ Nf2 42. g4 Bd3 43. Re6 1/2-1/2
                 Assert.That(sut.Moves, Is.Not.Empty);
                 Assert.That(sut.Moves[0].ToString(), Is.EqualTo("1. e4 e5"));
                 Assert.That(sut.Moves[42].ToString(), Is.EqualTo("43. Re6"));
-                Assert.That(sut.Result, Is.EqualTo("1/2-1/2"));
+                Assert.That(sut.Result, Is.EqualTo(PgnResult.Draw));
             }
         }
 
