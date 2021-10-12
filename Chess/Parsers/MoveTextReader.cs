@@ -215,7 +215,7 @@ namespace Chess.Parsers
             return moved > 0;
         }
 
-        private readonly Dictionary<char, PgnPiece> PgnPieces = new()
+        private static readonly Dictionary<char, PgnPiece> PgnPieces = new()
         {
             ['K'] = PgnPiece.King,
             ['Q'] = PgnPiece.Queen,

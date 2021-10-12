@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Chess.Models.Pgn
 {
-    public class MoveText: IEnumerable<PgnMove>, IReadOnlyList<PgnMove>
+    public class MoveText : IEnumerable<PgnMove>, IReadOnlyList<PgnMove>
     {
         private List<PgnMove> _moves;
 
@@ -22,10 +23,19 @@ namespace Chess.Models.Pgn
         public int Count => _moves.Count;
 
         public IEnumerator<PgnMove> GetEnumerator() => _moves.GetEnumerator();
-        
+
         IEnumerator IEnumerable.GetEnumerator() => _moves.GetEnumerator();
 
-        public IEnumerable<PgnHalfMove> AsHalfMoves() => _moves.SelectMany(x => x.HalfMoves());
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IEnumerable<PgnHalfMove> AsHalfMoves() {
+            List<PgnHalfMove> result = new(_moves.Count * 2);
+            foreach(var move in _moves)
+            {
+                result.Add(move.White);
+                if (move.Black is not null) result.Add(move.Black);
+            }
+            return result;
+        }
 
         override public string ToString()
         {

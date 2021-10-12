@@ -1,4 +1,5 @@
 ﻿using Chess.Models.Pgn;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -7,6 +8,12 @@ using System.Runtime.CompilerServices;
 
 namespace Chess.Openings
 {
+    public record OpeningResults(int WinsWhite, int WinsBlack, int Draws)
+    {
+        public static OpeningResults operator +(OpeningResults left, OpeningResults right) => 
+            new(left.WinsWhite + right.WinsWhite, right.WinsBlack + left.WinsBlack, right.Draws + left.Draws);
+    }
+
     [DebuggerDisplay("Alt {Move}")]
     public class OpeningAlternative
     {
@@ -15,13 +22,18 @@ namespace Chess.Openings
             Move = move;
         }
 
-        public PgnHalfMove Move {  get; init; }
-        public PgnGame Pgn {  get; private set; }
-        // Wins for black / white, draws?
+        public PgnHalfMove Move { get; init; }
+        public PgnGame Pgn { get; private set; }
+        public OpeningResults Results { get; private set; }
 
         internal void SetPgn(PgnGame pgn)
         {
             Pgn = pgn;
+        }
+
+        internal void SetResult(OpeningResults result)
+        {
+            Results = result;
         }
     }
 
@@ -34,16 +46,13 @@ namespace Chess.Openings
                 if (x is null && y is null) return true;
                 if (x is null || y is null) return false;
 
-                return Get(x).Equals(Get(y));
+                return (x.From, x.To, x.Piece).Equals((y.From, y.To, y.Piece));
             }
 
             public int GetHashCode([DisallowNull] PgnHalfMove obj)
             {
-                return Get(obj).GetHashCode();
+                return (obj.From, obj.To, obj.Piece).GetHashCode();
             }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private static (PgnPosition, PgnPosition, PgnPiece, PgnMoveType) Get(PgnHalfMove move) => (move.From, move.To, move.Piece, move.Type);
         }
 
         [DebuggerDisplay("Node {Value} ({_alternatives.Count})")]
@@ -53,6 +62,7 @@ namespace Chess.Openings
 
             public Node()
             {
+                Value = new OpeningAlternative(PgnHalfMove.None);
             }
 
             public Node(PgnHalfMove move)
@@ -91,6 +101,30 @@ namespace Chess.Openings
         public OpeningSearch(IEnumerable<PgnGame> pgns)
         {
             Build(pgns);
+            Calculate(_root);
+        }
+
+        private void Calculate(Node node)
+        {
+            OpeningResults result = new(0, 0, 0);
+            if (node?.Value.Pgn != null)
+            {
+                result += GetResult(node.Value.Pgn.Result);
+            }
+            foreach(var subnode in node.Alternatives)
+            {
+                Calculate(subnode);
+                result += subnode.Value.Results;
+            }
+            node?.Value.SetResult(result);
+        }
+
+        private OpeningResults GetResult(PgnResult result)
+        {
+            if (result == PgnResult.WhiteWin) return new OpeningResults(1, 0, 0);
+            if (result == PgnResult.BlackWin) return new OpeningResults(0, 1, 0);
+            if (result == PgnResult.Draw) return new OpeningResults(0, 0, 1);
+            return new OpeningResults(0, 0, 0);
         }
 
         public IEnumerable<OpeningAlternative> GetAlternatives(IEnumerable<PgnHalfMove> moves)
@@ -126,14 +160,8 @@ namespace Chess.Openings
 
         private void BuildNode(PgnGame pgn)
         {
-            var edge = BuildTree(_root, pgn.Moves.SelectMany(GetHalfMoves));
+            var edge = BuildTree(_root, pgn.Moves.AsHalfMoves());
             edge.SetPgn(pgn);
-        }
-
-        private IEnumerable<PgnHalfMove> GetHalfMoves(PgnMove m)
-        {
-            yield return m.White;
-            if (m.Black != null) yield return m.Black;
         }
 
         private Node BuildTree(Node current, IEnumerable<PgnHalfMove> moves)

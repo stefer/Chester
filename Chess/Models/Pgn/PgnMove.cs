@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Chess.Models.Pgn
@@ -33,6 +34,8 @@ namespace Chess.Models.Pgn
 
     public record PgnHalfMove(Color Color, PgnPiece Piece, PgnPosition From, PgnPosition To = null, PgnMoveType Type = PgnMoveType.Normal, string Comment = null)
     {
+        public static PgnHalfMove None = new((Color) (-1), (PgnPiece) (-1), null);
+
         private static readonly Dictionary<PgnPiece, string> PgnPieces = new()
         {
             [PgnPiece.King] = "K",
@@ -101,6 +104,7 @@ namespace Chess.Models.Pgn
             return $"{Seq}. {White}";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<PgnHalfMove> HalfMoves()
         {
             yield return White;
