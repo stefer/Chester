@@ -2,9 +2,9 @@
 
 namespace Chess.Models.Pgn
 {
-    public class Pgn
+    public class PgnGame
     {
-        public Pgn(Dictionary<string, string> attributes, MoveText moves)
+        public PgnGame(Dictionary<string, string> attributes, MoveText moves)
         {
             Attributes = attributes;
             Moves = moves;

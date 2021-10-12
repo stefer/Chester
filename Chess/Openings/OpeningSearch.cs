@@ -16,10 +16,10 @@ namespace Chess.Openings
         }
 
         public PgnHalfMove Move {  get; init; }
-        public Pgn Pgn {  get; private set; }
+        public PgnGame Pgn {  get; private set; }
         // Wins for black / white, draws?
 
-        internal void SetPgn(Pgn pgn)
+        internal void SetPgn(PgnGame pgn)
         {
             Pgn = pgn;
         }
@@ -80,7 +80,7 @@ namespace Chess.Openings
 
             public bool TryGet(PgnHalfMove halfMove, out Node node) => _alternatives.TryGetValue(halfMove, out node);
 
-            public void SetPgn(Pgn pgn)
+            public void SetPgn(PgnGame pgn)
             {
                 Value.SetPgn(pgn);
             }
@@ -88,7 +88,7 @@ namespace Chess.Openings
 
         private Node _root;
 
-        public OpeningSearch(IEnumerable<Pgn> pgns)
+        public OpeningSearch(IEnumerable<PgnGame> pgns)
         {
             Build(pgns);
         }
@@ -114,17 +114,17 @@ namespace Chess.Openings
             return Find(subtree, moves.Skip(1));
         }
 
-        private void Build(IEnumerable<Pgn> pgns)
+        private void Build(IEnumerable<PgnGame> pgns)
         {
             _root = new Node();
 
-            foreach(Pgn pgn in pgns)
+            foreach(PgnGame pgn in pgns)
             {
                 BuildNode(pgn);
             }
         }
 
-        private void BuildNode(Pgn pgn)
+        private void BuildNode(PgnGame pgn)
         {
             var edge = BuildTree(_root, pgn.Moves.SelectMany(GetHalfMoves));
             edge.SetPgn(pgn);

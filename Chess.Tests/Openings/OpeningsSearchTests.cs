@@ -17,7 +17,7 @@ namespace Chess.Tests.Openings
         {
             var pgns = new[]
             {
-                new Pgn(new Dictionary<string, string> { { "Result", "1-0"} }, Moves("1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 { This opening is called the Ruy Lopez.}"))
+                new PgnGame(new Dictionary<string, string> { { "Result", "1-0"} }, Moves("1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 { This opening is called the Ruy Lopez.}"))
             };
 
             var sut = new OpeningSearch(pgns);
@@ -33,7 +33,7 @@ namespace Chess.Tests.Openings
         {
             var pgns = new[]
             {
-                new Pgn(new Dictionary<string, string> { { "Result", "1-0"} }, Moves("1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 { This opening is called the Ruy Lopez.}"))
+                new PgnGame(new Dictionary<string, string> { { "Result", "1-0"} }, Moves("1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 { This opening is called the Ruy Lopez.}"))
             };
 
             var sut = new OpeningSearch(pgns);
@@ -52,8 +52,8 @@ namespace Chess.Tests.Openings
         {
             var pgns = new[]
             {
-                new Pgn(new Dictionary<string, string> { { "Result", "1-0"} }, Moves("1.d4 g6 2.e4 Bg7 3.c4 d6 4.Nc3 e5 5.d5 f5 6.exf5 gxf5 7.Qh5+ Kf8 8.Nf3 Nf6")),
-                new Pgn(new Dictionary<string, string> { { "Result", "0-1"} }, Moves("1.e4 g6 2.d4 Bg7 3.c4 d6 4.Nc3 Nf6 5.Bg5 O-O 6.Qd2 c5 7.d5 Ne8 8.Bd3 Nd7"))
+                new PgnGame(new Dictionary<string, string> { { "Result", "1-0"} }, Moves("1.d4 g6 2.e4 Bg7 3.c4 d6 4.Nc3 e5 5.d5 f5 6.exf5 gxf5 7.Qh5+ Kf8 8.Nf3 Nf6")),
+                new PgnGame(new Dictionary<string, string> { { "Result", "0-1"} }, Moves("1.e4 g6 2.d4 Bg7 3.c4 d6 4.Nc3 Nf6 5.Bg5 O-O 6.Qd2 c5 7.d5 Ne8 8.Bd3 Nd7"))
             };
 
             var sut = new OpeningSearch(pgns);
@@ -69,8 +69,8 @@ namespace Chess.Tests.Openings
         {
             var pgns = new[]
             {
-                new Pgn(new Dictionary<string, string> { { "Result", "1-0"} }, Moves("1.d4 g6 2.e4 Bg7 3.c4 d6 4.Nc3 e5 5.d5 f5 6.exf5 gxf5 7.Qh5+ Kf8 8.Nf3 Nf6")),
-                new Pgn(new Dictionary<string, string> { { "Result", "0-1"} }, Moves("1.d4 g6 2.e4 Bg7 3.c4 d6 4.Nc3 Nf6 5.Bg5 O-O 6.Qd2 c5 7.d5 Ne8 8.Bd3 Nd7"))
+                new PgnGame(new Dictionary<string, string> { { "Result", "1-0"} }, Moves("1.d4 g6 2.e4 Bg7 3.c4 d6 4.Nc3 e5 5.d5 f5 6.exf5 gxf5 7.Qh5+ Kf8 8.Nf3 Nf6")),
+                new PgnGame(new Dictionary<string, string> { { "Result", "0-1"} }, Moves("1.d4 g6 2.e4 Bg7 3.c4 d6 4.Nc3 Nf6 5.Bg5 O-O 6.Qd2 c5 7.d5 Ne8 8.Bd3 Nd7"))
             };
 
             var sut = new OpeningSearch(pgns);

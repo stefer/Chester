@@ -9,7 +9,7 @@ namespace Chess.Parsers
     /// https://www.thechessdrum.net/PGN_Reference.txt
     /// </summary>
     public class PgnParser { 
-        public static IEnumerable<Pgn> Parse(string input)
+        public static IEnumerable<PgnGame> Parse(string input)
         {
             int position = 0;
             do
@@ -18,7 +18,7 @@ namespace Chess.Parsers
                 var attributes = ParseAttributes(input, ref position);
                 SkipWhiteSpace(input, ref position);
                 var moves = ParseMoves(input, ref position);
-                yield return new Pgn(attributes, moves);
+                yield return new PgnGame(attributes, moves);
                 SkipWhiteSpace(input, ref position);
             } while (position < input.Length);
         }

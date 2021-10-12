@@ -2,7 +2,7 @@
 
 namespace Chess.Models.Pgn
 {
-    public record PgnResult(string value)
+    public record PgnResult(string Value)
     {
         public static PgnResult WhiteWin = new("1-0");
         public static PgnResult BlackWin = new("0-1");
