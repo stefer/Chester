@@ -24,6 +24,20 @@ namespace Chess.Models
         private const int Ranks = 8;
         private const int Files = 8;
 
+        private static SquareState[] Emptysquares = new SquareState[Ranks * Files]
+        {
+            0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0,
+        };
+
+        public static Board Empty() => new Board(Emptysquares);
+
         private SquareState[] _squares = new SquareState[Ranks * Files]
         {
             T, N, B, Q, K, B, N, T,
@@ -38,10 +52,12 @@ namespace Chess.Models
 
         public Board() { }
 
-        public Board(Board board)
+        public Board(SquareState[] squares)
         {
-            _squares = (SquareState[])board._squares.Clone();
+            _squares = (SquareState[])squares.Clone();
         }
+
+        public Board(Board board): this(board._squares) {}
 
         public static Position Position(int idx)
         {
@@ -57,6 +73,11 @@ namespace Chess.Models
         public SquareState At(Position p)
         {
             return p.Valid ? _squares[Index(p)] : SquareState.Invalid;
+        }
+
+        public void Set(Position p, SquareState state)
+        {
+            _squares[Index(p)] = state;
         }
 
         public IEnumerable<Move> MovesFor(Color c)

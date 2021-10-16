@@ -1,9 +1,14 @@
-﻿namespace Chess.Models
+﻿using System;
+using System.Linq;
+
+namespace Chess.Models
 {
     public record Position
     {
         static readonly int[] ranks = { 1, 2, 3, 4, 5, 6, 7, 8 };
         static readonly char[] files = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
+
+        public static readonly Position Invalid = new(-1, -1);
 
         public int Rank { get; init; }
         public int File { get; init; }
@@ -12,6 +17,16 @@
         {
             Rank = rank;
             File = file;
+        }
+
+        public Position(string position)
+        {
+            if (string.IsNullOrEmpty(position)) throw new ArgumentNullException(nameof(position));
+            if (position.Length != 2) throw new ArgumentException("Must have length 2", nameof(position));
+            if (!files.Contains(position[0])) throw new ArgumentException("File must be a-h", nameof(position));
+            if (!ranks.Contains(position[1] - '0')) throw new ArgumentException("Rank must be 1-8", nameof(position));
+            File = Array.IndexOf(files, position[0]);
+            Rank = Array.IndexOf(ranks, position[1] - '0');
         }
 
         public void Deconstruct(out int file, out int rank) => (rank, file) = (Rank, File);
@@ -94,6 +109,5 @@
         public static readonly Position h6 = new(7, 5);
         public static readonly Position h7 = new(7, 6);
         public static readonly Position h8 = new(7, 7);
-
     }
 }

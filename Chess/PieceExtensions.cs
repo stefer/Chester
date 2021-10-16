@@ -1,6 +1,7 @@
 ﻿using Chess.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Chess
 {
@@ -10,13 +11,13 @@ namespace Chess
         {
             [SquareState.King] = 'k',
             [SquareState.Queen] = 'q',
-            [SquareState.Rook] = 't',
+            [SquareState.Rook] = 'r',
             [SquareState.Bishop] = 'b',
             [SquareState.Knight] = 'n',
             [SquareState.Pawn] = 'p',
             [SquareState.White | SquareState.King] = 'K',
             [SquareState.White | SquareState.Queen] = 'Q',
-            [SquareState.White | SquareState.Rook] = 'T',
+            [SquareState.White | SquareState.Rook] = 'R',
             [SquareState.White | SquareState.Bishop] = 'B',
             [SquareState.White | SquareState.Knight] = 'N',
             [SquareState.White | SquareState.Pawn] = 'P',
@@ -46,5 +47,10 @@ namespace Chess
         public static int Direction(this SquareState self) => self.IsWhite() ? 1 : self.IsBlack() ? -1 : throw new InvalidOperationException("Square is neither black nor White");
 
         public static string AsString(this SquareState self) => pcs.TryGetValue(self & ~SquareState.Moved, out char rep) ? rep.ToString() : "-";
+        public static SquareState AsPiece(this char self)
+        {
+            var tuple = pcs.SingleOrDefault(t => t.Value == self, new KeyValuePair<SquareState, char>(SquareState.Invalid, char.MinValue));
+            return tuple.Key;
+        }
     }
 }
