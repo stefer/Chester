@@ -27,7 +27,7 @@ namespace Chess.Models.Pgn
             Rank = Array.IndexOf(ranks, position[1] - '0');
         }
 
-        public void Deconstruct(out int file, out int rank) => (rank, file) = (Rank, File);
+        public void Deconstruct(out int file, out int rank) => (file, rank) = (File, Rank);
 
         public bool InValid => !ValidRank && !ValidFile;
         public bool ValidRank => Rank >= 0 && Rank < 8;
@@ -41,6 +41,6 @@ namespace Chess.Models.Pgn
             return $"{file}{rank}";
         }
 
-        public static implicit operator PgnPosition(string pos) => new PgnPosition(pos);
+        public static implicit operator PgnPosition(string pos) => new(pos);
     }
 }

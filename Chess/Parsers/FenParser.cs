@@ -30,7 +30,7 @@ namespace Chess.Parsers
 
         private Board ParseBoard(string v)
         {
-            Board board = new Board();
+            Board board = Board.Empty();
             string[] rankStrings = v.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
             if (rankStrings.Length != 8) throw new FenParseError($"Expected 8 ranks, but was {rankStrings.Length} in {v}");
@@ -86,7 +86,7 @@ namespace Chess.Parsers
                     'Q' => Castling.WhiteQueen,
                     'k' => Castling.BlackKing,
                     'q' => Castling.BlackQueen,
-                    '_' => Castling.None,
+                    '-' => Castling.None,
                     _ => throw new FenParseError($"Unknown castling character {c} in {value}")
                 };
             return castling;

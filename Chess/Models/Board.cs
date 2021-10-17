@@ -36,7 +36,7 @@ namespace Chess.Models
             0, 0, 0, 0, 0, 0, 0, 0,
         };
 
-        public static Board Empty() => new Board(Emptysquares);
+        public static Board Empty() => new(Emptysquares);
 
         private SquareState[] _squares = new SquareState[Ranks * Files]
         {

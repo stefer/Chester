@@ -7,7 +7,7 @@ namespace Chess
 {
     public static class PieceExtensions
     {
-        static Dictionary<SquareState, char> pcs = new Dictionary<SquareState, char>()
+        static Dictionary<SquareState, char> pcs = new()
         {
             [SquareState.King] = 'k',
             [SquareState.Queen] = 'q',

@@ -2,12 +2,12 @@
 {
     public record PgnPart(int? Value)
     {
-        public static readonly PgnPart Unknown = new((int?)null);
+        public static readonly PgnPart Unknown = new(null);
 
         public override string ToString() => Value == Unknown.Value ? "??" : Value.ToString();
 
         public static implicit operator PgnPart(string value) => FromString(value);
-        public static implicit operator PgnPart(int value) => new PgnPart(value);
+        public static implicit operator PgnPart(int value) => new(value);
 
         public static PgnPart FromString(string part)
         {

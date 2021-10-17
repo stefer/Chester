@@ -29,11 +29,13 @@ namespace Chess.Models
             Rank = Array.IndexOf(ranks, position[1] - '0');
         }
 
-        public void Deconstruct(out int file, out int rank) => (rank, file) = (Rank, File);
+        public void Deconstruct(out int file, out int rank) => (file, rank) = (File, Rank);
 
         public bool Valid => Rank >= 0 && Rank < 8 && File >= 0 && File < 8;
 
         public Position Move(int df = 0, int dr = 0) => this with { Rank = Rank + dr, File = File + df };
+
+        public static implicit operator Position(string pos) => new(pos);
 
         public override string ToString() => Valid ? $"{files[File]}{ranks[Rank]}" : "--";
         public string FileString => $"{files[File]}";

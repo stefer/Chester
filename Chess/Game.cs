@@ -9,7 +9,7 @@ namespace Chess
     {
         private Board Board { get; init; } = new Board();
         public Color NextToMove { get; private set; } = Color.White;
-        private Evaluator _evaluator = new Evaluator();
+        private Evaluator _evaluator = new();
         private int MaxDepth = 5;
 
         public void MakeMove(Move move)
