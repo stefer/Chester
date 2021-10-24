@@ -1,6 +1,5 @@
 ﻿using Chess.Evaluations;
 using Chess.Models;
-using System;
 using System.Linq;
 
 namespace Chess
@@ -11,6 +10,16 @@ namespace Chess
         public Color NextToMove { get; private set; } = Color.White;
         private Evaluator _evaluator = new();
         private int MaxDepth = 5;
+
+        public Game() { }
+
+        public Game(Board board, Color nextToMove)
+        {
+            Board = board;
+            NextToMove = nextToMove;
+        }
+
+        public SquareState At(Position p) => Board.At(p);
 
         public void MakeMove(Move move)
         {

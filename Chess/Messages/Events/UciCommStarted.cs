@@ -1,6 +1,4 @@
 ﻿namespace Chess.Messages.Events
 {
-    internal class UciCommStarted : Event
-    {
-    }
+    internal class UciCommStarted : Event { }
 }

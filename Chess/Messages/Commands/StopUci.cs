@@ -1,6 +1,4 @@
 ﻿namespace Chess.Messages.Commands
 {
-    internal class StopUci: Command
-    {
-    }
+    internal class StopUci: Command { }
 }

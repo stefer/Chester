@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Chess.Messages;
 using Chess.Messages.Events;
 
@@ -68,45 +67,28 @@ namespace Chess
                         .AddSingleton<IUciInterpretator, UciInterpreter>()
                         .AddSingleton<IMessageBus, MessageBus>();
 
-                    services.AddSingleton<ICommandHandler<SendUciMessage>>(services => services.GetService<UciStdInOut>());
-                    services.AddSingleton<ICommandHandler<StartUci>>(services => services.GetService<UciStdInOut>());
-                    services.AddSingleton<ICommandHandler<StopUci>>(services => services.GetService<UciStdInOut>());
-                    services.AddSingleton<ICommandHandler<UciCommStarted>>(services => services.GetService<GameChanger>());
+                    services
+                        .AddMessageHandler<SendUciMessage, UciStdInOut>()
+                        .AddMessageHandler<StartUci, UciStdInOut>()
+                        .AddMessageHandler<StopUci, UciStdInOut>()
+                        .AddMessageHandler<BestMoveEvaluated, UciStdInOut>()
+
+                        .AddMessageHandler<UciCommStarted, GameChanger>()
+                        .AddMessageHandler<UciReadyRequested, GameChanger>()
+                        .AddMessageHandler<StartNewGame, GameChanger>()
+                        .AddMessageHandler<SetPosition, GameChanger>()
+                        .AddMessageHandler<Go, GameChanger>();
                 });
         }
     }
 
-    public class StdErrConsoleLogger : ILogger
+    internal static class ServiceCollectionExtensions
     {
-        public IDisposable BeginScope<TState>(TState state) => default;
-
-        public bool IsEnabled(LogLevel logLevel) => true;
-
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        public static IServiceCollection AddMessageHandler<TMessage, THandler>(this IServiceCollection services) 
+            where TMessage: Message 
+            where THandler: ICommandHandler<TMessage>
         {
-            Console.Error.WriteLine($"[{eventId.Id,2}: {logLevel,-12}] {formatter(state, exception)}");
-        }
-    }
-
-    public sealed class StdErrConsoleLoggerProvider : ILoggerProvider
-    {
-        public ILogger CreateLogger(string categoryName)
-        {
-            return new StdErrConsoleLogger();
-        }
-
-        public void Dispose()
-        {
-        }
-    }
-
-    public static class StdErrConsoleLoggerExtensions
-    {
-        public static ILoggingBuilder AddStdErrConsoleLogger(this ILoggingBuilder builder)
-        {
-            builder.Services.TryAddEnumerable(
-                ServiceDescriptor.Singleton<ILoggerProvider, StdErrConsoleLoggerProvider>());
-            return builder;
-        }
+            return services.AddSingleton<ICommandHandler<TMessage>>(s => s.GetService<THandler>());
+        } 
     }
 }

@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace Chess.Parsers
 {
+    /// <summary>
+    /// Parse a movetext where moves are represented using SAN (Standard Algebraic Notation)
+    /// </summary>
     public class MoveTextReader
     {
         private readonly ReadOnlyMemory<char> _content;

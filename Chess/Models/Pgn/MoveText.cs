@@ -10,6 +10,8 @@ namespace Chess.Models.Pgn
     {
         private List<PgnMove> _moves;
 
+        public static readonly MoveText Empty = new MoveText(Enumerable.Empty<PgnMove>(), "*");
+
         public MoveText(IEnumerable<PgnMove> moves, string result)
         {
             _moves = moves.ToList();

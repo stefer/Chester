@@ -30,5 +30,10 @@ namespace Chess.Models
 
             return $"{FromSquare.AsString()}{From}{(Capture ? 'x' : string.Empty)}{To}";
         }
+
+        public string ToStringLong()
+        {
+            return $"{From}{To}";
+        }
     }
 }

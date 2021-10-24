@@ -1,5 +1,6 @@
 ﻿using Chess.Messages;
 using Chess.Messages.Commands;
+using Chess.Messages.Events;
 using System;
 using System.IO;
 using System.Threading;
@@ -13,16 +14,11 @@ namespace Chess.Services
         public Task ExecuteAsync(string commandLine);
     }
 
-    internal interface IUciChannel : 
+    internal class UciStdInOut : 
         ICommandHandler<SendUciMessage>,
         ICommandHandler<StartUci>,
-        ICommandHandler<StopUci>
-    { }
-
-    internal class UciStdInOut : IUciChannel,
-        ICommandHandler<SendUciMessage>,
-        ICommandHandler<StartUci>,
-        ICommandHandler<StopUci>
+        ICommandHandler<StopUci>,
+        ICommandHandler<BestMoveEvaluated>
     {
         private readonly IUciInterpretator interpretator;
         readonly Channel<string> channel;
@@ -48,6 +44,11 @@ namespace Chess.Services
         {
             Stop();
             return Task.CompletedTask;
+        }
+
+        public async Task HandleAsync(BestMoveEvaluated message)
+        {
+            await channel.Writer.WriteAsync($"bestmove {message.Move.ToStringLong()}");
         }
 
         public async Task Start()
