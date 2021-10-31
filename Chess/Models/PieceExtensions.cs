@@ -1,9 +1,8 @@
-﻿using Chess.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Chess
+namespace Chess.Models
 {
     public static class PieceExtensions
     {
