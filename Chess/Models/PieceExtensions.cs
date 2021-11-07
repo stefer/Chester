@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Chess.Models
 {
@@ -24,25 +25,41 @@ namespace Chess.Models
             [SquareState.Invalid] = 'X',
         };
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsFree(this SquareState p) => p == SquareState.Free;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsInvalid(this SquareState p) => p == SquareState.Invalid;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsOccupied(this SquareState p) => !(p.IsFree() || p.IsInvalid());
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsWhite(this SquareState p) => p.HasFlag(SquareState.White) && p.IsOccupied();
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBlack(this SquareState p) => !p.HasFlag(SquareState.White) && p.IsOccupied();
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool HasMoved(this SquareState p) => p.HasFlag(SquareState.Moved);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsKing(this SquareState p) => p.HasFlag(SquareState.King);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsQueen(this SquareState p) => p.HasFlag(SquareState.Queen);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsRook(this SquareState p) => p.HasFlag(SquareState.Rook);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBishop(this SquareState p) => p.HasFlag(SquareState.Bishop);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsKnight(this SquareState p) => p.HasFlag(SquareState.Knight);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsPawn(this SquareState p) => p.HasFlag(SquareState.Pawn);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SquareState Piece(this SquareState p) => p & SquareState.Pieces;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool SameColor(this SquareState self, SquareState other) => (self & SquareState.White) == (other & SquareState.White);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsAttack(this SquareState self, SquareState other) => other.IsOccupied() && !self.SameColor(other);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Direction(this SquareState self) => self.IsWhite() ? 1 : self.IsBlack() ? -1 : throw new InvalidOperationException("Square is neither black nor White");
 
         public static string AsString(this SquareState self) => pcs.TryGetValue(self & ~SquareState.Moved, out char rep) ? rep.ToString() : "-";

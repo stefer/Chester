@@ -54,7 +54,7 @@ namespace Chess.Search
         {
             if (depthLeft == 0) return Evaluate(board, nextToMove);
 
-            var moves = board.MovesFor(nextToMove).ToList();
+            var moves = board.MovesFor(nextToMove);
             var sortedMoves = moves.Select(m => Evaluate(board, m)).OrderByDescending(x => x.score);
 
             foreach (var (_, move) in sortedMoves)
