@@ -4,7 +4,7 @@ namespace Chess.Models
 {
     internal static class PgnConvert
     {
-        public static Position ToModel(this PgnPosition pos) => new Position(pos.File, pos.Rank);
+        public static Position ToModel(this PgnPosition pos) => Position.Create(pos.File, pos.Rank);
         public static SquareState ToModel(this PgnPiece piece) => piece switch
         {
             PgnPiece.Pawn => SquareState.Pawn,

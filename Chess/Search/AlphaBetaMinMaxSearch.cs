@@ -31,7 +31,8 @@ namespace Chess.Search
                 return new Evaluation(move.score, move.move);
             }
 
-            Parallel.ForEach(sortedMoves, x => {
+            Parallel.ForEach(sortedMoves, x =>
+            {
                 var score = AlphaBetaMin(x.position, -Evaluation.CheckMate, Evaluation.CheckMate, _options.MaxDepth, nextToMove.Other());
                 if (score > bestScore)
                     lock (l)
@@ -51,7 +52,8 @@ namespace Chess.Search
         {
             if (depthLeft == 0) return Evaluate(board, nextToMove);
 
-            var sortedMoves = board.MovesFor(nextToMove).Select(m => Evaluate(board, m)).OrderByDescending(x => x.score);
+            var moves = board.MovesFor(nextToMove).ToList();
+            var sortedMoves = moves.Select(m => Evaluate(board, m)).OrderByDescending(x => x.score);
 
             foreach (var (_, position, _) in sortedMoves)
             {
@@ -67,7 +69,8 @@ namespace Chess.Search
         {
             if (depthLeft == 0) return Evaluate(board, nextToMove);
 
-            var sortedMoves = board.MovesFor(nextToMove).Select(m => Evaluate(board, m)).OrderBy(x => x.score);
+            var moves = board.MovesFor(nextToMove).ToList();
+            var sortedMoves = moves.Select(m => Evaluate(board, m)).OrderBy(x => x.score);
 
             foreach (var (_, position, _) in sortedMoves)
             {

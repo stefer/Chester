@@ -59,9 +59,9 @@ namespace Chess.Models
 
         public Board(Board board): this(board._squares) {}
 
-        public static Position Position(int idx)
+        public static Position Pos(int idx)
         {
-            return new Position(idx % Files, idx / Files);
+            return Position.Create(idx % Files, idx / Files);
         }
 
         public static int Index(Position p)
@@ -84,12 +84,12 @@ namespace Chess.Models
         {
             Func<SquareState, bool> byColor = c == Color.White ? PieceExtensions.IsWhite : PieceExtensions.IsBlack;
             var pieces = _squares
-                .Select((square, from) => (Position(from), square))
+                .Select((square, from) => (from, square))
                 .Where(x => byColor(x.square));
 
             foreach(var (from, square) in pieces)
             {
-                var moves = ValidMoves(from, square);
+                var moves = ValidMoves(Pos(from), square);
                 foreach(var move in moves)
                 {
                     yield return move;
@@ -208,7 +208,7 @@ namespace Chess.Models
         public IEnumerable<Piece> Search(Func<SquareState, bool> predicate)
         {
             return _squares
-                .Select((square, from) => new Piece(Position(from), square))
+                .Select((square, from) => new Piece(Pos(from), square))
                 .Where(p => predicate(p.SquareState));
         }
 

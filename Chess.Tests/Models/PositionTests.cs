@@ -14,15 +14,15 @@ namespace Chess.Tests.Models
         [TestCase(5, 5, ExpectedResult = "f6")]
         [TestCase(6, 6, ExpectedResult = "g7")]
         [TestCase(7, 7, ExpectedResult = "h8")]
-        public string ToString(int file, int rank) => new Position(file, rank).ToString();
+        public string ToString(int file, int rank) => Position.Create(file, rank).ToString();
 
         [Test]
         public void Equals()
         {
-            Assert.That(new Position(0, 0), Is.EqualTo(Position.a1));
-            Assert.That(new Position(0, 1), Is.EqualTo(Position.a2));
-            Assert.That(new Position(1, 2), Is.EqualTo(Position.b3));
-            Assert.That(new Position(7, 7), Is.EqualTo(Position.h8));
+            Assert.That(Position.Create(0, 0), Is.EqualTo(Position.FromString("a1")));
+            Assert.That(Position.Create(0, 1), Is.EqualTo(Position.FromString("a2")));
+            Assert.That(Position.Create(1, 2), Is.EqualTo(Position.FromString("b3")));
+            Assert.That(Position.Create(7, 7), Is.EqualTo(Position.FromString("h8")));
         }
     }
 }

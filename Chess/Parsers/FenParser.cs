@@ -49,7 +49,7 @@ namespace Chess.Parsers
                         var piece = c.AsPiece();
                         if (piece.IsInvalid()) throw new FenParseError($"Unknown piece character {c} in {rankString}");
 
-                        board.Set(new Position(f, r), piece);
+                        board.Set(Position.Create(f, r), piece);
                         f++;
                     }
                 }
@@ -71,7 +71,7 @@ namespace Chess.Parsers
         {
             if (pos == "-") return Position.Invalid;
 
-            var position = new Position(pos);
+            var position = Position.FromString(pos);
             if (!position.Valid) throw new FenParseError($"Unknown position format {pos}");
             return position;
         }
