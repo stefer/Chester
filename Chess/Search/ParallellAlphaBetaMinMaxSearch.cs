@@ -14,25 +14,32 @@ namespace Chess.Search
 
         public override Evaluation Search(Board board, Color nextToMove)
         {
-            var bestScore = -Evaluation.CheckMate;
+            var isMaximizing = nextToMove == Color.White;
+            var bestScore = isMaximizing ? -Evaluation.CheckMate : Evaluation.CheckMate;
             Move bestMove = null;
             var l = new object();
 
-            var sortedMoves = board.MovesFor(nextToMove).Select(m => EvaluateCopy(board, m)).OrderByDescending(x => x.score).ToList();
-
-            if (Options.MaxDepth == 0)
-            {
-                var move = sortedMoves.FirstOrDefault();
-                return new Evaluation(move.score, move.move);
-            }
+            var moves = board.MovesFor(nextToMove).Select(m => EvaluateCopy(board, m));
+            var sortedMoves = isMaximizing ? moves.OrderByDescending(x => x.score).ToList() : moves.OrderBy(x => x.score).ToList();
 
             Parallel.ForEach(sortedMoves, x =>
             {
-                var score = AlphaBetaMin(x.position, -Evaluation.CheckMate, Evaluation.CheckMate, Options.MaxDepth, nextToMove.Other());
-                if (score > bestScore)
+                var score = isMaximizing
+                    ? AlphaBetaMin(x.position, -Evaluation.CheckMate, Evaluation.CheckMate, Options.MaxDepth, nextToMove.Other())
+                    : AlphaBetaMax(x.position, -Evaluation.CheckMate, Evaluation.CheckMate, Options.MaxDepth, nextToMove.Other());
+                if (isMaximizing && score > bestScore)
                     lock (l)
                     {
-                        if (score > bestScore)
+                        if (isMaximizing && score > bestScore)
+                        {
+                            bestScore = score;
+                            bestMove = x.move;
+                        }
+                    }
+                else if (!isMaximizing && score < bestScore)
+                    lock (l)
+                    {
+                        if (!isMaximizing && score < bestScore)
                         {
                             bestScore = score;
                             bestMove = x.move;

@@ -18,33 +18,33 @@ namespace Chess.Search
 
         public virtual Evaluation Search(Board board, Color nextToMove)
         {
-            var bestScore = -Evaluation.CheckMate;
+            var isMaximizing = nextToMove == Color.White;
+            var bestScore = isMaximizing ? -Evaluation.CheckMate : Evaluation.CheckMate;
             Move bestMove = null;
-            var l = new object();
 
-            var sortedMoves = board.MovesFor(nextToMove).Select(m => Evaluate(board, m)).OrderByDescending(x => x.score).ToList();
-
-            if (Options.MaxDepth == 0)
-            {
-                var move = sortedMoves.FirstOrDefault();
-                return new Evaluation(move.score, move.move);
-            }
+            var moves = board.MovesFor(nextToMove).Select(m => Evaluate(board, m));
+            var sortedMoves =  isMaximizing ? moves.OrderByDescending(x => x.score).ToList() : moves.OrderBy(x => x.score).ToList();
 
             foreach(var x in sortedMoves)
             {
                 var save = board.MakeMove(x.move);
-                var score = AlphaBetaMin(board, -Evaluation.CheckMate, Evaluation.CheckMate, Options.MaxDepth, nextToMove.Other());
+
+                var score = isMaximizing
+                    ? AlphaBetaMin(board, -Evaluation.CheckMate, Evaluation.CheckMate, Options.MaxDepth, nextToMove.Other())
+                    : AlphaBetaMax(board, -Evaluation.CheckMate, Evaluation.CheckMate, Options.MaxDepth, nextToMove.Other());
+
                 board.TakeBack(save);
 
-                if (score > bestScore)
-                    lock (l)
-                    {
-                        if (score > bestScore)
-                        {
-                            bestScore = score;
-                            bestMove = x.move;
-                        }
-                    }
+                if (isMaximizing && score > bestScore)
+                {
+                    bestScore = score;
+                    bestMove = x.move;
+                }
+                else if (!isMaximizing && score < bestScore)
+                {
+                    bestScore = score;
+                    bestMove = x.move;
+                }
             };
 
             return new Evaluation(bestScore, bestMove);
@@ -91,23 +91,20 @@ namespace Chess.Search
 
         protected int Evaluate(Board position, Color turnToMove)
         {
-            var dir = turnToMove == Color.White ? 1 : -1;
-            return dir * Evaluator.Evaluate(position);
+            return Evaluator.Evaluate(position);
         }
 
         protected (int score, Board position, Move move) EvaluateCopy(Board board, Move m)
         {
-            var dir = m.FromSquare.Direction();
             var position = board.Clone();
             position.MakeMove(m);
-            return (dir * Evaluator.Evaluate(position), position, m);
+            return (Evaluator.Evaluate(position), position, m);
         }
 
         protected (int score, Move move) Evaluate(Board board, Move m)
         {
-            var dir = m.FromSquare.Direction();
             var saved = board.MakeMove(m);
-            var eval = dir * Evaluator.Evaluate(board);
+            var eval = Evaluator.Evaluate(board);
             board.TakeBack(saved);
             return (eval, m);
         }

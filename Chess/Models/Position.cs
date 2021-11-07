@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Chess.Models
 {
@@ -20,13 +21,14 @@ namespace Chess.Models
         {
             for (int f = 0; f < 8; f++)
                 for (int r = 0; r < 8; r++)
-                    Positions[f * 8 + r] = new Position(f, r);
+                    Positions[f * 64 + r] = new Position(f, r);
 
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Position Create(int file, int rank)
         {
-            if (Positions.TryGetValue(file * 8 + rank, out Position value)) return value;
+            if (Positions.TryGetValue(file * 64 + rank, out Position value)) return value;
             return Invalid;
         }
 
