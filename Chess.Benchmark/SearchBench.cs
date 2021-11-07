@@ -16,9 +16,9 @@ namespace Chess.Benchmark
     [ThreadingDiagnoser]
     public class SearchBench
     {
-        private Evaluator evaluator;
-        private Board board;
-        private ISearch search;
+        private Evaluator? evaluator;
+        private Board? board;
+        private ISearch? search;
 
         [Params(1, 2, 3, 4)]
         public int N;
@@ -32,6 +32,6 @@ namespace Chess.Benchmark
         }
 
         [Benchmark]
-        public Evaluation Search() => search.Search(board, Color.White);
+        public Evaluation? Search() => search?.Search(board, Color.White);
     }
 }

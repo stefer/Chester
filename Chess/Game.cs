@@ -1,7 +1,6 @@
 ﻿using Chess.Evaluations;
 using Chess.Models;
 using Chess.Search;
-using System.Linq;
 
 namespace Chess
 {
@@ -9,7 +8,7 @@ namespace Chess
     {
         private Board Board { get; init; } = new Board();
         public Color NextToMove { get; private set; } = Color.White;
-        private readonly ISearch _search = new AlphaBetaMinMaxSearch(new SearchOptions(5), new Evaluator());
+        private readonly ISearch _search = new ParallellAlphaBetaMinMaxSearch(new SearchOptions(5), new Evaluator());
 
         public Game() { }
 

@@ -8,16 +8,16 @@ namespace Chess.Search
 
     public class AlphaBetaMinMaxSearch: ISearch
     {
-        private readonly SearchOptions _options;
-        private readonly IEvaluator _evaluator;
+        protected SearchOptions Options { get; }
+        private IEvaluator Evaluator { get; }
 
         public AlphaBetaMinMaxSearch(SearchOptions options, IEvaluator evaluator)
         {
-            _options = options;
-            _evaluator = evaluator;
+            Options = options;
+            Evaluator = evaluator;
         }
 
-        public Evaluation Search(Board board, Color nextToMove)
+        public virtual Evaluation Search(Board board, Color nextToMove)
         {
             var bestScore = -Evaluation.CheckMate;
             Move bestMove = null;
@@ -25,15 +25,15 @@ namespace Chess.Search
 
             var sortedMoves = board.MovesFor(nextToMove).Select(m => Evaluate(board, m)).OrderByDescending(x => x.score).ToList();
 
-            if (_options.MaxDepth == 0)
+            if (Options.MaxDepth == 0)
             {
                 var move = sortedMoves.FirstOrDefault();
                 return new Evaluation(move.score, move.move);
             }
 
-            Parallel.ForEach(sortedMoves, x =>
+            foreach(var x in sortedMoves)
             {
-                var score = AlphaBetaMin(x.position, -Evaluation.CheckMate, Evaluation.CheckMate, _options.MaxDepth, nextToMove.Other());
+                var score = AlphaBetaMin(x.position, -Evaluation.CheckMate, Evaluation.CheckMate, Options.MaxDepth, nextToMove.Other());
                 if (score > bestScore)
                     lock (l)
                     {
@@ -43,12 +43,12 @@ namespace Chess.Search
                             bestMove = x.move;
                         }
                     }
-            });
+            };
 
             return new Evaluation(bestScore, bestMove);
         }
 
-        int AlphaBetaMax(Board board, int alpha, int beta, int depthLeft, Color nextToMove)
+        protected int AlphaBetaMax(Board board, int alpha, int beta, int depthLeft, Color nextToMove)
         {
             if (depthLeft == 0) return Evaluate(board, nextToMove);
 
@@ -65,7 +65,7 @@ namespace Chess.Search
             return alpha;
         }
 
-        int AlphaBetaMin(Board board, int alpha, int beta, int depthLeft, Color nextToMove)
+        protected int AlphaBetaMin(Board board, int alpha, int beta, int depthLeft, Color nextToMove)
         {
             if (depthLeft == 0) return Evaluate(board, nextToMove);
 
@@ -83,18 +83,18 @@ namespace Chess.Search
             return beta;
         }
 
-        private int Evaluate(Board position, Color turnToMove)
+        protected int Evaluate(Board position, Color turnToMove)
         {
             var dir = turnToMove == Color.White ? 1 : -1;
-            return dir * _evaluator.Evaluate(position);
+            return dir * Evaluator.Evaluate(position);
         }
 
-        private (int score, Board position, Move move) Evaluate(Board board, Move m)
+        protected (int score, Board position, Move move) Evaluate(Board board, Move m)
         {
             var dir = m.FromSquare.Direction();
             var position = board.Clone();
             position.MakeMove(m);
-            return (dir * _evaluator.Evaluate(position), position, m);
+            return (dir * Evaluator.Evaluate(position), position, m);
         }
     }
 }
