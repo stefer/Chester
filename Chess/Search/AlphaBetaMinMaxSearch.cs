@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace Chess.Search
 {
-
     public class AlphaBetaMinMaxSearch: ISearch
     {
         protected SearchOptions Options { get; }
@@ -33,7 +32,10 @@ namespace Chess.Search
 
             foreach(var x in sortedMoves)
             {
-                var score = AlphaBetaMin(x.position, -Evaluation.CheckMate, Evaluation.CheckMate, Options.MaxDepth, nextToMove.Other());
+                var save = board.MakeMove(x.move);
+                var score = AlphaBetaMin(board, -Evaluation.CheckMate, Evaluation.CheckMate, Options.MaxDepth, nextToMove.Other());
+                board.TakeBack(save);
+
                 if (score > bestScore)
                     lock (l)
                     {
@@ -55,9 +57,11 @@ namespace Chess.Search
             var moves = board.MovesFor(nextToMove).ToList();
             var sortedMoves = moves.Select(m => Evaluate(board, m)).OrderByDescending(x => x.score);
 
-            foreach (var (_, position, _) in sortedMoves)
+            foreach (var (_, move) in sortedMoves)
             {
-                var score = AlphaBetaMin(position, alpha, beta, depthLeft - 1, nextToMove.Other());
+                var save = board.MakeMove(move);
+                var score = AlphaBetaMin(board, alpha, beta, depthLeft - 1, nextToMove.Other());
+                board.TakeBack(save);
                 if (score >= beta) return beta; // fail hard beta-cutoff
                 if (score > alpha) alpha = score;    // alpha acts like max in MiniMax
             }
@@ -72,9 +76,11 @@ namespace Chess.Search
             var moves = board.MovesFor(nextToMove).ToList();
             var sortedMoves = moves.Select(m => Evaluate(board, m)).OrderBy(x => x.score);
 
-            foreach (var (_, position, _) in sortedMoves)
+            foreach (var (_, move) in sortedMoves)
             {
-                var score = AlphaBetaMax(position, alpha, beta, depthLeft - 1, nextToMove.Other());
+                var save = board.MakeMove(move);
+                var score = AlphaBetaMax(board, alpha, beta, depthLeft - 1, nextToMove.Other());
+                board.TakeBack(save);
 
                 if (score <= alpha) return alpha; // fail hard alpha-cutoff
                 if (score < beta) beta = score;        // beta acts like min in MiniMax
@@ -89,12 +95,22 @@ namespace Chess.Search
             return dir * Evaluator.Evaluate(position);
         }
 
-        protected (int score, Board position, Move move) Evaluate(Board board, Move m)
+        protected (int score, Board position, Move move) EvaluateCopy(Board board, Move m)
         {
             var dir = m.FromSquare.Direction();
             var position = board.Clone();
             position.MakeMove(m);
             return (dir * Evaluator.Evaluate(position), position, m);
         }
+
+        protected (int score, Move move) Evaluate(Board board, Move m)
+        {
+            var dir = m.FromSquare.Direction();
+            var saved = board.MakeMove(m);
+            var eval = dir * Evaluator.Evaluate(board);
+            board.TakeBack(saved);
+            return (eval, m);
+        }
+
     }
 }

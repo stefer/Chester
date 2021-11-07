@@ -135,7 +135,7 @@ namespace Chess.Models
                     {
                         var to = At(p);
                         var isAttack = square.IsAttack(to);
-                        if (to.IsFree() || square.IsAttack(to)) yield return new Move(square, from, p, isAttack);
+                        if (to.IsFree() || isAttack) yield return new Move(square, from, p, isAttack);
                         if (isAttack || square.SameColor(to)) break;
                         p = p.Move(f, r);
                     }
@@ -151,7 +151,7 @@ namespace Chess.Models
                     {
                         var to = At(p);
                         var isAttack = square.IsAttack(to);
-                        if (to.IsFree() || square.IsAttack(to)) yield return new Move(square, from, p, isAttack);
+                        if (to.IsFree() || isAttack) yield return new Move(square, from, p, isAttack);
                         if (isAttack || square.SameColor(to)) break;
                         p = p.Move(f, r);
                     }
@@ -169,7 +169,7 @@ namespace Chess.Models
                     {
                         var to = At(p);
                         var isAttack = square.IsAttack(to);
-                        if (to.IsFree() || square.IsAttack(to)) yield return new Move(square, from, p, isAttack);
+                        if (to.IsFree() || isAttack) yield return new Move(square, from, p, isAttack);
                         if (isAttack || square.SameColor(to)) break;
                         p = p.Move(f, r);
                     }
@@ -183,7 +183,7 @@ namespace Chess.Models
                     var p = from.Move(f, r);
                     var to = At(p);
                     var isAttack = square.IsAttack(to);
-                    if (to.IsFree() || square.IsAttack(to)) yield return new Move(square, from, p, isAttack);
+                    if (to.IsFree() || isAttack) yield return new Move(square, from, p, isAttack);
                 }
 
                 // TODO: Castle
@@ -194,13 +194,23 @@ namespace Chess.Models
             }
         }
 
-        public void MakeMove(Move m)
+        public SavedMove MakeMove(Move m)
         {
             var fromSquare = At(m.From);
             Debug.Assert(fromSquare == m.FromSquare);
 
+            SavedMove sm = new(m, _squares[Index(m.To)]);
+
             _squares[Index(m.To)] = fromSquare | SquareState.Moved;
             _squares[Index(m.From)] = SquareState.Free;
+
+            return sm;
+        }
+
+        public void TakeBack(SavedMove sm)
+        {
+            _squares[Index(sm.Move.To)] = sm.ToSquare;
+            _squares[Index(sm.Move.From)] = sm.Move.FromSquare;
         }
 
         public IEnumerable<Piece> Pieces => Search(s => s.IsOccupied());

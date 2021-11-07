@@ -18,7 +18,7 @@ namespace Chess.Search
             Move bestMove = null;
             var l = new object();
 
-            var sortedMoves = board.MovesFor(nextToMove).Select(m => Evaluate(board, m)).OrderByDescending(x => x.score).ToList();
+            var sortedMoves = board.MovesFor(nextToMove).Select(m => EvaluateCopy(board, m)).OrderByDescending(x => x.score).ToList();
 
             if (Options.MaxDepth == 0)
             {

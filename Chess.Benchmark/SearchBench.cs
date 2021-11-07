@@ -28,7 +28,7 @@ namespace Chess.Benchmark
         {
             evaluator = new Evaluator();
             board = new Board();
-            search = new AlphaBetaMinMaxSearch(new SearchOptions(N), evaluator);
+            search = new ParallellAlphaBetaMinMaxSearch(new SearchOptions(N), evaluator);
         }
 
         [Benchmark]

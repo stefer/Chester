@@ -64,17 +64,13 @@ namespace Chess.Tests.Search
         [Test, Explicit]
         public void DepthThree_ReturnsHighestScore()
         {
-            var evaluator = A.Fake<IEvaluator>();
-            A.CallTo(() => evaluator.Evaluate(A<Board>._)).Returns(0);
-            A.CallTo(() => evaluator.Evaluate(A<Board>.That.Matches(b => b.At("e4").IsWhite()))).Returns(10);
-            A.CallTo(() => evaluator.Evaluate(A<Board>.That.Matches(b => b.At("e4").IsWhite() && b.At("d5").IsBlack()))).Returns(-10);
-            A.CallTo(() => evaluator.Evaluate(A<Board>.That.Matches(b => b.At("d4").IsWhite()))).Returns(8);
+            var evaluator = new Evaluator();
             var sut = new AlphaBetaMinMaxSearch(new SearchOptions(3), evaluator);
 
             var board = new Board();
             var eval = sut.Search(board, Color.White);
 
-            Assert.That(eval.Value, Is.EqualTo(8));
+            Assert.That(eval.Value, Is.EqualTo(455));
             Assert.That(eval.Move.ToStringLong(), Is.EqualTo("d2d4"));
         }
     }

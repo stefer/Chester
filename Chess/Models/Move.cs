@@ -2,6 +2,8 @@
 
 namespace Chess.Models
 {
+    public record SavedMove(Move Move, SquareState ToSquare) { };
+
     public record Move
     {
         public SquareState FromSquare { get; init; } 

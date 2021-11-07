@@ -14,19 +14,19 @@ namespace Chess.Models
         public int Rank { get; init; }
         public int File { get; init; }
 
-        public static Dictionary<(int file, int rank), Position> Positions = new Dictionary<(int file, int rank), Position>(64);
+        public static Dictionary<int, Position> Positions = new Dictionary<int, Position>(64);
 
         static Position()
         {
-            for (int f = 0; f < files.Length; f++)
-                for (int r = 0; r < ranks.Length; r++)
-                    Positions[(f, r)] = new Position(f, r);
+            for (int f = 0; f < 8; f++)
+                for (int r = 0; r < 8; r++)
+                    Positions[f * 8 + r] = new Position(f, r);
 
         }
 
         public static Position Create(int file, int rank)
         {
-            if (Positions.TryGetValue((file, rank), out Position value)) return value;
+            if (Positions.TryGetValue(file * 8 + rank, out Position value)) return value;
             return Invalid;
         }
 
