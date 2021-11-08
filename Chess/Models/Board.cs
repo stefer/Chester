@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chess.Models.Pgn;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -116,7 +117,7 @@ namespace Chess.Models
             }
             else if (square.IsKnight())
             {
-                var valids = new (int r, int f)[] { (1, 2), (2, 1), (-1, 2), (-2, 1), (1, -2), (2, -1) };
+                var valids = new (int r, int f)[] { (1, 2), (2, 1), (-1, 2), (-2, 1), (1, -2), (2, -1), (-1, -2), (-2, -1) };
                 foreach(var (r, f) in valids)
                 {
                     var p = from.Move(f, r);
@@ -191,6 +192,20 @@ namespace Chess.Models
             else
             {
                 throw new InvalidOperationException($"Cannot generate moves for {square.AsString()}");
+            }
+        }
+
+        public void MakeMoves(MoveText moveText)
+        {
+            foreach (var move in moveText.AsHalfMoves())
+            {
+                var from = move.From.ToModel();
+                var to = move.To.ToModel();
+                var fromState = At(from);
+                var toState = At(to);
+
+                var gameMove = new Move(fromState, from, to, fromState.IsAttack(toState));
+                MakeMove(gameMove);
             }
         }
 

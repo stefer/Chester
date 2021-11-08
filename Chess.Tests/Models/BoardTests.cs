@@ -47,29 +47,11 @@ namespace Chess.Tests.Models
             Assert.That(moves.Select(x => x.ToStringLong()), Does.Not.Contain("b8b2"));
         }
 
-        private static Chess.Models.Pgn.MoveText Play(Board board, string moveText)
+        private static void Play(Board board, string moveText)
         {
             var reader = new MoveTextReader(moveText);
             var moves = reader.ReadAll();
-
-            foreach (var move in moves.AsHalfMoves())
-            {
-                var from = move.From.ToModel();
-                var to = move.To.ToModel();
-                var fromState = board.At(from);
-                var toState = board.At(to);
-
-                //if (fromState.Piece() != move.Piece.ToModel())
-                //    throw new GameError($"SetPosition: move {move} piece does not match actual board piece {fromState}");
-
-                //if (toState.SameColor(fromState))
-                //    throw new GameError($"SetPosition: move {move} tries to move piece onto same color {fromState} -> {toState}");
-
-                var gameMove = new Move(fromState, from, to, fromState.IsAttack(toState));
-                board.MakeMove(gameMove);
-            }
-
-            return moves;
+            board.MakeMoves(moves);
         }
     }
 }

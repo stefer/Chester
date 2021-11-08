@@ -1,5 +1,6 @@
 ﻿using Chess.Evaluations;
 using Chess.Models;
+using Chess.Parsers;
 using Chess.Search;
 using FakeItEasy;
 using NUnit.Framework;
@@ -92,6 +93,27 @@ namespace Chess.Tests.Search
 
             Assert.That(eval.Value, Is.EqualTo(40));
             Assert.That(eval.Move.ToStringLong(), Is.EqualTo("d2d4"));
+        }
+
+        [Test]
+        public void DepthOne_ReturnsHighestScore_ForBlackQueenTake()
+        {
+            var evaluator = new Evaluator();
+            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(1), evaluator);
+
+            var board = new Board();
+            Play(board, "e2e4 g8h6 d1g4");
+            var eval = sut.Search(board, Color.Black);
+
+            Assert.That(eval.Value, Is.EqualTo(-910));
+            Assert.That(eval.Move.ToStringLong(), Is.EqualTo("h6g4"));
+        }
+
+        private static void Play(Board board, string moveText)
+        {
+            var reader = new MoveTextReader(moveText);
+            var moves = reader.ReadAll();
+            board.MakeMoves(moves);
         }
     }
 }

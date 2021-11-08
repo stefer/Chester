@@ -22,7 +22,7 @@ namespace Chess.Search
             var bestScore = isMaximizing ? -Evaluation.CheckMate : Evaluation.CheckMate;
             Move bestMove = null;
 
-            var moves = board.MovesFor(nextToMove).Select(m => Evaluate(board, m));
+            var moves = board.MovesFor(nextToMove).Select(m => Evaluate(board, m)).ToList();
             var sortedMoves =  isMaximizing ? moves.OrderByDescending(x => x.score).ToList() : moves.OrderBy(x => x.score).ToList();
 
             foreach(var x in sortedMoves)
