@@ -1,14 +1,14 @@
-﻿using Chess.Evaluations;
-using Chess.Models;
+﻿using Chester.Evaluations;
+using Chester.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Chess.Search
+namespace Chester.Search
 {
 
-    public class ParallellAlphaBetaMinMaxSearch: AlphaBetaMinMaxSearch
+    public class ParallellAlphaBetaMinMaxSearch : AlphaBetaMinMaxSearch
     {
-        public ParallellAlphaBetaMinMaxSearch(SearchOptions options, IEvaluator evaluator): base(options, evaluator)
+        public ParallellAlphaBetaMinMaxSearch(SearchOptions options, IEvaluator evaluator) : base(options, evaluator)
         {
         }
 

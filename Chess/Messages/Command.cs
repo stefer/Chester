@@ -1,4 +1,4 @@
-﻿namespace Chess.Messages
+﻿namespace Chester.Messages
 {
     public class Command : Message { }
 }

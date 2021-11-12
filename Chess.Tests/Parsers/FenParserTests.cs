@@ -1,14 +1,14 @@
-﻿using Chess.Models;
-using Chess.Parsers;
+﻿using Chester.Parsers;
 using NUnit.Framework;
 
-namespace Chess.Tests.Parsers
+namespace Chester.Tests.Parsers
 {
-    using Chess.Tests.Extensions;
+    using Chester.Models;
+    using Chester.Tests.Extensions;
 
     public class FenParserTests
     {
-        public class ParseStandard 
+        public class ParseStandard
         {
             private Fen fen;
 
@@ -60,7 +60,7 @@ namespace Chess.Tests.Parsers
             return fen.NextToMove;
         }
 
-        [TestCase("KQkq", ExpectedResult =  Castling.WhiteKing | Castling.WhiteQueen | Castling.BlackKing | Castling.BlackQueen)]
+        [TestCase("KQkq", ExpectedResult = Castling.WhiteKing | Castling.WhiteQueen | Castling.BlackKing | Castling.BlackQueen)]
         [TestCase("K", ExpectedResult = Castling.WhiteKing)]
         [TestCase("Q", ExpectedResult = Castling.WhiteQueen)]
         [TestCase("kq", ExpectedResult = Castling.BlackKing | Castling.BlackQueen)]

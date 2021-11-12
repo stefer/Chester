@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace Chess.Models.Pgn
+namespace Chester.Models.Pgn
 {
     public class MoveText : IEnumerable<PgnMove>, IReadOnlyList<PgnMove>
     {
@@ -29,9 +29,10 @@ namespace Chess.Models.Pgn
         IEnumerator IEnumerable.GetEnumerator() => _moves.GetEnumerator();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerable<PgnHalfMove> AsHalfMoves() {
+        public IEnumerable<PgnHalfMove> AsHalfMoves()
+        {
             List<PgnHalfMove> result = new(_moves.Count * 2);
-            foreach(var move in _moves)
+            foreach (var move in _moves)
             {
                 result.Add(move.White);
                 if (move.Black is not null) result.Add(move.Black);
@@ -42,7 +43,7 @@ namespace Chess.Models.Pgn
         override public string ToString()
         {
             const int LineLength = 80;
-            
+
             var sb = new StringBuilder();
             var lineLength = 0;
 
@@ -50,7 +51,7 @@ namespace Chess.Models.Pgn
             {
                 var moveStr = move.ToString();
 
-                if ((lineLength + moveStr.Length + 1) > LineLength)
+                if (lineLength + moveStr.Length + 1 > LineLength)
                 {
                     sb.AppendLine();
                     lineLength = 0;

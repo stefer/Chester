@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Running;
 
-namespace Chess.Benchmark
+namespace Chester.Benchmark
 {
     public class Program
     {

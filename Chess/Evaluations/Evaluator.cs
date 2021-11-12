@@ -1,14 +1,14 @@
-﻿using Chess.Models;
+﻿using Chester.Models;
 using System.Linq;
 
-namespace Chess.Evaluations
+namespace Chester.Evaluations
 {
     public interface IEvaluator
     {
         public int Evaluate(Board b);
     }
 
-    public class Evaluator: IEvaluator
+    public class Evaluator : IEvaluator
     {
         public int Evaluate(Board b)
         {

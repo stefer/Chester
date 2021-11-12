@@ -1,11 +1,11 @@
-﻿using Chess.Models.Pgn;
+﻿using Chester.Models.Pgn;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace Chess.Models
+namespace Chester.Models
 {
     public class Board
     {
@@ -58,7 +58,7 @@ namespace Chess.Models
             _squares = (SquareState[])squares.Clone();
         }
 
-        public Board(Board board): this(board._squares) {}
+        public Board(Board board) : this(board._squares) { }
 
         public static Position Pos(int idx)
         {
@@ -88,10 +88,10 @@ namespace Chess.Models
                 .Select((square, from) => (from, square))
                 .Where(x => byColor(x.square));
 
-            foreach(var (from, square) in pieces)
+            foreach (var (from, square) in pieces)
             {
                 var moves = ValidMoves(Pos(from), square);
-                foreach(var move in moves)
+                foreach (var move in moves)
                 {
                     yield return move;
                 }
@@ -118,7 +118,7 @@ namespace Chess.Models
             else if (square.IsKnight())
             {
                 var valids = new (int r, int f)[] { (1, 2), (2, 1), (-1, 2), (-2, 1), (1, -2), (2, -1), (-1, -2), (-2, -1) };
-                foreach(var (r, f) in valids)
+                foreach (var (r, f) in valids)
                 {
                     var p = from.Move(f, r);
                     var to = At(p);
@@ -129,10 +129,10 @@ namespace Chess.Models
             else if (square.IsBishop())
             {
                 var dirs = new (int r, int f)[] { (-1, 1), (1, 1), (1, -1), (-1, -1) };
-                foreach(var(r, f) in dirs)
+                foreach (var (r, f) in dirs)
                 {
                     var p = from.Move(f, r);
-                    while(p.Valid)
+                    while (p.Valid)
                     {
                         var to = At(p);
                         var isAttack = square.IsAttack(to);
@@ -249,12 +249,12 @@ namespace Chess.Models
             sb.AppendLine("  abcdefgh");
             for (int r = 7; r >= 0; r--)
             {
-                sb.Append($"{r+1}|");
+                sb.Append($"{r + 1}|");
                 for (int f = 0; f < 8; f++)
                 {
                     sb.Append(_squares[r * Files + f].AsString());
                 }
-                sb.AppendLine($"|{r+1}");
+                sb.AppendLine($"|{r + 1}");
             }
             sb.AppendLine("  abcdefgh");
             return sb.ToString();

@@ -1,5 +1,7 @@
-﻿namespace Chess.Messages.Commands
+﻿using Chester.Messages;
+
+namespace Chester.Messages.Commands
 {
 
-    internal class Go: Command { }
+    internal class Go : Command { }
 }

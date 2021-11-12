@@ -1,4 +1,6 @@
-﻿namespace Chess.Messages.Events
+﻿using Chester.Messages;
+
+namespace Chester.Messages.Events
 {
     internal class UciReadyRequested : Event { }
 }

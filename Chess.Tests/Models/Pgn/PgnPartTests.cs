@@ -1,7 +1,7 @@
-﻿using Chess.Models.Pgn;
+﻿using Chester.Models.Pgn;
 using NUnit.Framework;
 
-namespace Chess.Tests.Models.Pgn
+namespace Chester.Tests.Models.Pgn
 {
     public class PgnPartTests
     {

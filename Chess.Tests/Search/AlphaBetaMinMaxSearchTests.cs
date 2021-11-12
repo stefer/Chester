@@ -1,22 +1,22 @@
-﻿using Chess.Evaluations;
-using Chess.Models;
-using Chess.Parsers;
-using Chess.Search;
+﻿using Chester.Models;
+using Chester.Parsers;
+using Chester.Search;
+using Chester.Evaluations;
 using FakeItEasy;
 using NUnit.Framework;
 
-namespace Chess.Tests.Search
+namespace Chester.Tests.Search
 {
     internal class AlphaBetaMinMaxSearchTests
     {
-        [TestCase(Color.White, 0,  1, ExpectedResult =  1)]
+        [TestCase(Color.White, 0, 1, ExpectedResult = 1)]
         [TestCase(Color.White, 0, -1, ExpectedResult = -1)]
-        [TestCase(Color.White, 1,  1, ExpectedResult =  1)]
+        [TestCase(Color.White, 1, 1, ExpectedResult = 1)]
         [TestCase(Color.White, 1, -1, ExpectedResult = -1)]
         [TestCase(Color.Black, 0, -1, ExpectedResult = -1)]
-        [TestCase(Color.Black, 0,  1, ExpectedResult =  1)]
+        [TestCase(Color.Black, 0, 1, ExpectedResult = 1)]
         [TestCase(Color.Black, 1, -1, ExpectedResult = -1)]
-        [TestCase(Color.Black, 1,  1, ExpectedResult =  1)]
+        [TestCase(Color.Black, 1, 1, ExpectedResult = 1)]
         public int Search_ReturnsScore(Color toMove, int depth, int score)
         {
             var evaluator = A.Fake<IEvaluator>();
@@ -57,7 +57,7 @@ namespace Chess.Tests.Search
             var sut = new AlphaBetaMinMaxSearch(new SearchOptions(0), evaluator);
 
             var board = new Board();
-            board.MakeMove(new Move(board.At("e2"), "e2", "e4"));;
+            board.MakeMove(new Move(board.At("e2"), "e2", "e4")); ;
             var eval = sut.Search(board, Color.Black);
 
             Assert.That(eval.Value, Is.EqualTo(-11));

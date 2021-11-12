@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Chess.Models
+namespace Chester.Models
 {
     public class FenParseError : Exception
     {

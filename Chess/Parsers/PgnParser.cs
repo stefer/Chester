@@ -1,14 +1,14 @@
-﻿using Chess.Models.Pgn;
+﻿using Chester.Models.Pgn;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace Chess.Parsers
+namespace Chester.Parsers
 {
     /// <summary>
     /// https://www.thechessdrum.net/PGN_Reference.txt
     /// </summary>
-    public class PgnParser { 
+    public class PgnParser
+    {
         public static IEnumerable<PgnGame> Parse(string input)
         {
             int position = 0;
@@ -41,7 +41,7 @@ namespace Chess.Parsers
             while (position < span.Length && char.IsWhiteSpace(span[position])) position++;
         }
 
-        private static Dictionary<string ,string> ParseAttributes(string span, ref int position)
+        private static Dictionary<string, string> ParseAttributes(string span, ref int position)
         {
             Expect('[', span, ref position, false);
             Dictionary<string, string> attributes = new();
@@ -54,7 +54,7 @@ namespace Chess.Parsers
             return attributes;
         }
 
-        private static (string span,string) ParseAttribute(string span, ref int position)
+        private static (string span, string) ParseAttribute(string span, ref int position)
         {
             Expect('[', span, ref position);
             var key = ParseKey(span, ref position);

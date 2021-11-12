@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Chess.Models;
-using Chess.Models.Pgn;
-using Chess.Openings;
-using Chess.Parsers;
+using Chester.Models.Pgn;
+using Chester.Openings;
+using Chester.Parsers;
+using Chester.Models;
 using NUnit.Framework;
 
-namespace Chess.Tests.Openings
+namespace Chester.Tests.Openings
 {
     internal class OpeningsSearchTests
     {

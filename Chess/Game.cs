@@ -1,8 +1,8 @@
-﻿using Chess.Evaluations;
-using Chess.Models;
-using Chess.Search;
+﻿using Chester.Evaluations;
+using Chester.Models;
+using Chester.Search;
 
-namespace Chess
+namespace Chester
 {
     public class Game
     {

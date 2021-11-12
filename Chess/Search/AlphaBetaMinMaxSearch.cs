@@ -1,11 +1,11 @@
-﻿using Chess.Evaluations;
-using Chess.Models;
+﻿using Chester.Evaluations;
+using Chester.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Chess.Search
+namespace Chester.Search
 {
-    public class AlphaBetaMinMaxSearch: ISearch
+    public class AlphaBetaMinMaxSearch : ISearch
     {
         protected SearchOptions Options { get; }
         private IEvaluator Evaluator { get; }
@@ -23,9 +23,9 @@ namespace Chess.Search
             Move bestMove = null;
 
             var moves = board.MovesFor(nextToMove).Select(m => Evaluate(board, m)).ToList();
-            var sortedMoves =  isMaximizing ? moves.OrderByDescending(x => x.score).ToList() : moves.OrderBy(x => x.score).ToList();
+            var sortedMoves = isMaximizing ? moves.OrderByDescending(x => x.score).ToList() : moves.OrderBy(x => x.score).ToList();
 
-            foreach(var x in sortedMoves)
+            foreach (var x in sortedMoves)
             {
                 var save = board.MakeMove(x.move);
 

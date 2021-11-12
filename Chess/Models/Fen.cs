@@ -1,4 +1,4 @@
-﻿namespace Chess.Models
+﻿namespace Chester.Models
 {
 
     /// <summary>

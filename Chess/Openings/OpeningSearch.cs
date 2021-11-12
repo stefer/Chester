@@ -1,4 +1,4 @@
-﻿using Chess.Models.Pgn;
+﻿using Chester.Models.Pgn;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,11 +6,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace Chess.Openings
+namespace Chester.Openings
 {
     public record OpeningResults(int WinsWhite, int WinsBlack, int Draws)
     {
-        public static OpeningResults operator +(OpeningResults left, OpeningResults right) => 
+        public static OpeningResults operator +(OpeningResults left, OpeningResults right) =>
             new(left.WinsWhite + right.WinsWhite, right.WinsBlack + left.WinsBlack, right.Draws + left.Draws);
     }
 
@@ -70,7 +70,7 @@ namespace Chess.Openings
                 Value = new OpeningAlternative(move);
             }
 
-            public Node(PgnHalfMove move, Node subtree): this(move)
+            public Node(PgnHalfMove move, Node subtree) : this(move)
             {
                 Add(subtree);
             }
@@ -111,7 +111,7 @@ namespace Chess.Openings
             {
                 result += GetResult(node.Value.Pgn.Result);
             }
-            foreach(var subnode in node.Alternatives)
+            foreach (var subnode in node.Alternatives)
             {
                 Calculate(subnode);
                 result += subnode.Value.Results;
@@ -152,7 +152,7 @@ namespace Chess.Openings
         {
             _root = new Node();
 
-            foreach(PgnGame pgn in pgns)
+            foreach (PgnGame pgn in pgns)
             {
                 BuildNode(pgn);
             }

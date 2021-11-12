@@ -1,9 +1,9 @@
-﻿using Chess.Models;
+﻿using Chester.Models;
 
-namespace Chess.Messages.Events
+namespace Chester.Messages.Events
 {
-    internal class BestMoveEvaluated : Event 
-    { 
+    internal class BestMoveEvaluated : Event
+    {
         public Move Move { get; set; }
 
         public BestMoveEvaluated(Move move)

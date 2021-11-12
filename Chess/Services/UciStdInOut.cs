@@ -1,20 +1,20 @@
-﻿using Chess.Messages;
-using Chess.Messages.Commands;
-using Chess.Messages.Events;
+﻿using Chester.Messages;
+using Chester.Messages.Commands;
+using Chester.Messages.Events;
 using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace Chess.Services
+namespace Chester.Services
 {
     public interface IUciInterpretator
     {
         public Task ExecuteAsync(string commandLine);
     }
 
-    internal class UciStdInOut : 
+    internal class UciStdInOut :
         ICommandHandler<SendUciMessage>,
         ICommandHandler<StartUci>,
         ICommandHandler<StopUci>,

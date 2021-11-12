@@ -1,6 +1,6 @@
-﻿using Chess.Models;
+﻿using Chester.Models;
 
-namespace Chess.Search
+namespace Chester.Search
 {
     public interface ISearch
     {

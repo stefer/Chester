@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Chess.Models.Pgn
+namespace Chester.Models.Pgn
 {
     public class PgnGame
     {
@@ -18,7 +18,7 @@ namespace Chess.Models.Pgn
         public string Black => Attributes.GetValueOrDefault(nameof(Black));
         public PgnResult Result => PgnResult.FromString(Attributes.GetValueOrDefault(nameof(Result)));
 
-        public IReadOnlyDictionary<string,string> Attributes { get; private set; }
+        public IReadOnlyDictionary<string, string> Attributes { get; private set; }
 
         public MoveText Moves { get; private set; }
     }

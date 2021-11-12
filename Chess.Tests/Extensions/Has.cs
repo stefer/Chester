@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Chess.Tests.Extensions
+namespace Chester.Tests.Extensions
 {
     public class Has : NUnit.Framework.Has
     {

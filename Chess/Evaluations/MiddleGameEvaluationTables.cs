@@ -1,9 +1,9 @@
-﻿using Chess.Models;
+﻿using Chester.Models;
 using System.Collections.Generic;
 
-namespace Chess.Evaluations
+namespace Chester.Evaluations
 {
-    public class MiddleGameEvaluationTables: EvaluationTables
+    public class MiddleGameEvaluationTables : EvaluationTables
     {
         public static readonly EvaluationTables Instance = new MiddleGameEvaluationTables();
 

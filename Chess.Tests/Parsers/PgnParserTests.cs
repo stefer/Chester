@@ -1,9 +1,9 @@
-using Chess.Models.Pgn;
-using Chess.Parsers;
+using Chester.Models.Pgn;
+using Chester.Parsers;
 using NUnit.Framework;
 using System.Linq;
 
-namespace Chess.Tests.Parsers
+namespace Chester.Tests.Parsers
 {
 
     public class PgnParserTests

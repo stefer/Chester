@@ -1,4 +1,4 @@
-﻿namespace Chess.Models.Pgn
+﻿namespace Chester.Models.Pgn
 {
     public record PgnPart(int? Value)
     {

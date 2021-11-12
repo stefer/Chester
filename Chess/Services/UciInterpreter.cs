@@ -1,13 +1,13 @@
-﻿using Chess.Messages;
-using Chess.Messages.Commands;
-using Chess.Messages.Events;
-using Chess.Parsers;
+﻿using Chester.Messages.Commands;
+using Chester.Messages.Events;
+using Chester.Parsers;
+using Chester.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Chess.Services
+namespace Chester.Services
 {
     internal class UciInterpreter : IUciInterpretator
     {

@@ -1,4 +1,4 @@
-﻿using Chess.Messages;
+﻿using Chester.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Chess.Services
+namespace Chester.Services
 {
     internal class MessageBus : IMessageBus
     {

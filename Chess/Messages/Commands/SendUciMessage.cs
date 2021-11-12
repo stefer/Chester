@@ -1,4 +1,4 @@
-﻿namespace Chess.Messages.Commands
+﻿namespace Chester.Messages.Commands
 {
     internal class SendUciMessage : Event
     {

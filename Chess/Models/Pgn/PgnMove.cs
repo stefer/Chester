@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Chester.Models;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace Chess.Models.Pgn
+namespace Chester.Models.Pgn
 {
     public enum PgnPiece
     {
@@ -15,26 +16,26 @@ namespace Chess.Models.Pgn
         Pawn
     }
 
-    public enum PgnMoveType: ushort
+    public enum PgnMoveType : ushort
     {
-        Normal          = 0b0000000000,
-        Take            = 0b0000000001,
-        EnPassant       = 0b0000000010,
-        PromotionQueen  = 0b0000000100, 
-        PromotionRook   = 0b0000001000,
+        Normal = 0b0000000000,
+        Take = 0b0000000001,
+        EnPassant = 0b0000000010,
+        PromotionQueen = 0b0000000100,
+        PromotionRook = 0b0000001000,
         PromotionBishop = 0b0000010000,
         PromotionKnight = 0b0000100000,
-        PromotionMask   = 0b0000111100,
+        PromotionMask = 0b0000111100,
         CastleQueenSide = 0b0001000000,
-        CastleKingSide  = 0b0010000000,
-        Check           = 0b0100000000,
-        CheckMate       = 0b1000000000,
+        CastleKingSide = 0b0010000000,
+        Check = 0b0100000000,
+        CheckMate = 0b1000000000,
 
     }
 
     public record PgnHalfMove(Color Color, PgnPiece Piece, PgnPosition From, PgnPosition To = null, PgnMoveType Type = PgnMoveType.Normal, string Comment = null)
     {
-        public static PgnHalfMove None = new((Color) (-1), (PgnPiece) (-1), null);
+        public static PgnHalfMove None = new((Color)(-1), (PgnPiece)(-1), null);
 
         private static readonly Dictionary<PgnPiece, string> PgnPieces = new()
         {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace Chess.Models
+namespace Chester.Models
 {
     public static class PieceExtensions
     {

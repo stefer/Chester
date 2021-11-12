@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Chess.Models.Pgn
+namespace Chester.Models.Pgn
 {
     public record PgnPosition
     {
@@ -22,7 +22,7 @@ namespace Chess.Models.Pgn
             if (string.IsNullOrEmpty(position)) throw new ArgumentNullException(nameof(position));
             if (position.Length != 2) throw new ArgumentException("Must have length 2", nameof(position));
             if (!files.Contains(position[0])) throw new ArgumentException("File must be a-h", nameof(position));
-            if (!ranks.Contains(position[1]-'0')) throw new ArgumentException("Rank must be 1-8", nameof(position));
+            if (!ranks.Contains(position[1] - '0')) throw new ArgumentException("Rank must be 1-8", nameof(position));
             File = Array.IndexOf(files, position[0]);
             Rank = Array.IndexOf(ranks, position[1] - '0');
         }

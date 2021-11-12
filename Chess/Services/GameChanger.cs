@@ -1,12 +1,12 @@
-﻿using Chess.Messages;
-using Chess.Messages.Commands;
-using Chess.Messages.Events;
-using Chess.Models;
+﻿using Chester.Models;
+using Chester.Messages;
+using Chester.Messages.Commands;
+using Chester.Messages.Events;
 using System.Threading.Tasks;
 
-namespace Chess.Services
+namespace Chester.Services
 {
-    internal class GameChanger: 
+    internal class GameChanger :
         ICommandHandler<UciCommStarted>,
         ICommandHandler<UciReadyRequested>,
         ICommandHandler<StartNewGame>,
@@ -51,7 +51,7 @@ namespace Chess.Services
                 _game = new Game();
             }
 
-            foreach(var move in message.Moves.AsHalfMoves())
+            foreach (var move in message.Moves.AsHalfMoves())
             {
                 var from = move.From.ToModel();
                 var to = move.To.ToModel();

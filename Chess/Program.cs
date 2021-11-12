@@ -1,14 +1,14 @@
-﻿using Chess.Messages.Commands;
-using Chess.Services;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
-using Chess.Messages;
-using Chess.Messages.Events;
+using Chester.Services;
+using Chester.Messages.Events;
+using Chester.Messages.Commands;
+using Chester.Messages;
 
-namespace Chess
+namespace Chester
 {
     class Program
     {
@@ -60,7 +60,8 @@ namespace Chess
                     logging.ClearProviders();
                     logging.AddStdErrConsoleLogger();
                 })
-                .ConfigureServices((_, services) => {
+                .ConfigureServices((_, services) =>
+                {
                     services
                         .AddSingleton<GameChanger>()
                         .AddSingleton<UciStdInOut>()
@@ -84,11 +85,11 @@ namespace Chess
 
     internal static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddMessageHandler<TMessage, THandler>(this IServiceCollection services) 
-            where TMessage: Message 
-            where THandler: ICommandHandler<TMessage>
+        public static IServiceCollection AddMessageHandler<TMessage, THandler>(this IServiceCollection services)
+            where TMessage : Message
+            where THandler : ICommandHandler<TMessage>
         {
             return services.AddSingleton<ICommandHandler<TMessage>>(s => s.GetService<THandler>());
-        } 
+        }
     }
 }

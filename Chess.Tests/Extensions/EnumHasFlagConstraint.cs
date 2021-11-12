@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework.Constraints;
 using System;
 
-namespace Chess.Tests.Extensions
+namespace Chester.Tests.Extensions
 {
     public class EnumHasFlagConstraint<T> : Constraint where T : Enum
     {

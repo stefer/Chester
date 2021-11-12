@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Chess.Models.Pgn
+namespace Chester.Models.Pgn
 {
     public record PgnDate(PgnPart Year, PgnPart Month, PgnPart Day)
     {

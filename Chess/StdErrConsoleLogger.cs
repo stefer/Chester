@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace Chess
+namespace Chester
 {
     public class StdErrConsoleLogger : ILogger
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Chess.Services
+namespace Chester.Services
 {
     public class GameError : Exception
     {

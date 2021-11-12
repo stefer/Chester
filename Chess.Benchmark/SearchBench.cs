@@ -1,10 +1,10 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
-using Chess.Evaluations;
-using Chess.Models;
-using Chess.Search;
+using Chester.Evaluations;
+using Chester.Models;
+using Chester.Search;
 
-namespace Chess.Benchmark
+namespace Chester.Benchmark
 {
     [SimpleJob(RuntimeMoniker.Net60)]
     [MemoryDiagnoser]

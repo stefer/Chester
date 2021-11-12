@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Chess.Models.Pgn
+namespace Chester.Models.Pgn
 {
     public record PgnResult(string Value)
     {
@@ -14,7 +14,7 @@ namespace Chess.Models.Pgn
         public static PgnResult FromString(string value)
         {
             if (pgnResults.TryGetValue(new PgnResult(value), out PgnResult result)) return result;
-            return PgnResult.Unknown;
+            return Unknown;
         }
     }
 }

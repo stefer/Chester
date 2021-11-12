@@ -1,7 +1,7 @@
-﻿using Chess.Models;
+﻿using Chester.Models;
 using System;
 
-namespace Chess.Parsers
+namespace Chester.Parsers
 {
     public class FenParser
     {
@@ -35,14 +35,15 @@ namespace Chess.Parsers
 
             if (rankStrings.Length != 8) throw new FenParseError($"Expected 8 ranks, but was {rankStrings.Length} in {v}");
 
-            for (int r = 7; r >= 0; r--) { 
-                var rankString = rankStrings[7-r];
+            for (int r = 7; r >= 0; r--)
+            {
+                var rankString = rankStrings[7 - r];
                 var f = 0;
                 foreach (char c in rankString)
                 {
                     if (char.IsDigit(c))
                     {
-                        f += (c - '0');
+                        f += c - '0';
                     }
                     else
                     {

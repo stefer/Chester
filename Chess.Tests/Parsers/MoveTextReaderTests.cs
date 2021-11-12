@@ -1,11 +1,11 @@
-﻿using Chess.Models;
-using Chess.Models.Pgn;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
-namespace Chess.Tests.Parsers
+namespace Chester.Tests.Parsers
 {
-    using Chess.Parsers;
-    using Chess.Tests.Extensions;
+    using Chester.Parsers;
+    using Chester.Models;
+    using Chester.Models.Pgn;
+    using Chester.Tests.Extensions;
 
     public class MoveTextReaderTests
     {

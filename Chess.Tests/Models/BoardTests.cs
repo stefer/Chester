@@ -1,17 +1,17 @@
-﻿
-using Chess.Models;
-using Chess.Parsers;
+﻿using Chester.Parsers;
+using Chester.Models;
 using NUnit.Framework;
 using System.Linq;
 
-namespace Chess.Tests.Models
+namespace Chester.Tests.Models
 {
     public class BoardTests
     {
         [Test]
         public void Position_Converts()
         {
-            Assert.Multiple( () => {
+            Assert.Multiple(() =>
+            {
                 Assert.That(Board.Pos(0), Is.EqualTo(Position.FromString("a1")));
                 Assert.That(Board.Pos(1), Is.EqualTo(Position.FromString("b1")));
                 Assert.That(Board.Pos(7), Is.EqualTo(Position.FromString("h1")));
@@ -25,7 +25,8 @@ namespace Chess.Tests.Models
         [Test]
         public void Index_Converts()
         {
-            Assert.Multiple(() => {
+            Assert.Multiple(() =>
+            {
                 Assert.That(Board.Index(Position.FromString("a1")), Is.EqualTo(0));
                 Assert.That(Board.Index(Position.FromString("b1")), Is.EqualTo(1));
                 Assert.That(Board.Index(Position.FromString("h1")), Is.EqualTo(7));

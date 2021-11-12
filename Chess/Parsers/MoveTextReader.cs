@@ -1,10 +1,10 @@
-﻿using Chess.Models;
-using Chess.Models.Pgn;
+﻿using Chester.Models;
+using Chester.Models.Pgn;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Chess.Parsers
+namespace Chester.Parsers
 {
     /// <summary>
     /// Parse a movetext where moves are represented using SAN (Standard Algebraic Notation)
@@ -14,7 +14,7 @@ namespace Chess.Parsers
         private readonly ReadOnlyMemory<char> _content;
         private ReadOnlyMemory<char> _current;
 
-        public MoveTextReader(string input): this(input.AsMemory()) { }
+        public MoveTextReader(string input) : this(input.AsMemory()) { }
 
         public MoveTextReader(ReadOnlyMemory<char> input)
         {
@@ -121,7 +121,7 @@ namespace Chess.Parsers
                 var end = 0;
                 while (end < span.Length && span[end] != '\n') end++;
                 comment = span[1..end].ToString().Trim();
-                end = Math.Min(span.Length, end+1);
+                end = Math.Min(span.Length, end + 1);
                 _current = _current[end..];
             }
         }
@@ -199,7 +199,7 @@ namespace Chess.Parsers
             var file = -1;
             var rank = -1;
             var moved = 0;
-            
+
             if (!span.IsEmpty && files.Contains(span[moved]))
             {
                 file = _current.Span[moved] - 'a';
@@ -286,7 +286,7 @@ namespace Chess.Parsers
             {
                 _current = _current[1..];
                 check = PgnMoveType.CheckMate;
-            } 
+            }
             else if (_current.Span[0] == '+')
             {
                 _current = _current[1..];
@@ -298,7 +298,7 @@ namespace Chess.Parsers
         {
             var span = _current.Span;
             int i = 0;
-            while (i < span.Length && Char.IsWhiteSpace(span[i])) i++;
+            while (i < span.Length && char.IsWhiteSpace(span[i])) i++;
 
             _current = _current[i..];
         }
@@ -319,7 +319,7 @@ namespace Chess.Parsers
         {
             var span = _current.Span;
             int i = 0;
-            while (i < span.Length && Char.IsNumber(span[i])) i++;
+            while (i < span.Length && char.IsNumber(span[i])) i++;
 
             _current = _current[i..];
         }

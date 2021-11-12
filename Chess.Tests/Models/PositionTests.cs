@@ -1,7 +1,7 @@
-﻿using Chess.Models;
+﻿using Chester.Models;
 using NUnit.Framework;
 
-namespace Chess.Tests.Models
+namespace Chester.Tests.Models
 {
     public class PositionTests
     {

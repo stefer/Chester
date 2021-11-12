@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Chess.Models
+namespace Chester.Models
 {
     [Flags]
     public enum SquareState : byte
@@ -10,12 +10,12 @@ namespace Chess.Models
         White = 0b10000000,
         Moved = 0b01000000,
 
-        King   = 0b00100000,
-        Queen  = 0b00010000,
-        Rook   = 0b00001000,
+        King = 0b00100000,
+        Queen = 0b00010000,
+        Rook = 0b00001000,
         Bishop = 0b00000100,
         Knight = 0b00000010,
-        Pawn   = 0b00000001,
+        Pawn = 0b00000001,
 
         Pieces = 0b00111111,
     }

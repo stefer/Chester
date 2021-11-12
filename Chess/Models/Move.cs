@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace Chess.Models
+namespace Chester.Models
 {
     public record SavedMove(Move Move, SquareState ToSquare) { };
 
     public record Move
     {
-        public SquareState FromSquare { get; init; } 
-        public Position From { get; init; } 
+        public SquareState FromSquare { get; init; }
+        public Position From { get; init; }
         public Position To { get; init; }
         public bool Capture { get; init; }
 

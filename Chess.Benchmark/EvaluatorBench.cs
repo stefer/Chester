@@ -1,9 +1,9 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
-using Chess.Evaluations;
-using Chess.Models;
+using Chester.Evaluations;
+using Chester.Models;
 
-namespace Chess.Benchmark
+namespace Chester.Benchmark
 {
     [SimpleJob(RuntimeMoniker.Net60)]
     [MemoryDiagnoser]
@@ -15,8 +15,8 @@ namespace Chess.Benchmark
     [ThreadingDiagnoser]
     public class EvaluatorBench
     {
-        private Evaluator evaluator;
-        private Board board;
+        private Evaluator? evaluator;
+        private Board? board;
 
         [Params(1000)]
         public int N;
@@ -29,6 +29,6 @@ namespace Chess.Benchmark
         }
 
         [Benchmark]
-        public int Evaluate() => evaluator.Evaluate(board);
+        public int? Evaluate() => evaluator?.Evaluate(board);
     }
 }

@@ -1,6 +1,6 @@
-﻿using Chess.Models.Pgn;
+﻿using Chester.Models.Pgn;
 
-namespace Chess.Models
+namespace Chester.Models
 {
     public static class PgnConvert
     {
