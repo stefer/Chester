@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31423.177
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chester", "Chess\Chester.csproj", "{60683AAB-D73E-4D50-A3F0-6EED60FDE210}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chester", "Chester\Chester.csproj", "{60683AAB-D73E-4D50-A3F0-6EED60FDE210}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chester.Tests", "Chess.Tests\Chester.Tests.csproj", "{1CA44994-EB2A-4671-A064-670F3796FF41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chester.Tests", "Chester.Tests\Chester.Tests.csproj", "{1CA44994-EB2A-4671-A064-670F3796FF41}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chester.Benchmark", "Chess.Benchmark\Chester.Benchmark.csproj", "{086FA9D0-E295-4BF6-9978-1901DF26C253}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chester.Benchmark", "Chester.Benchmark\Chester.Benchmark.csproj", "{086FA9D0-E295-4BF6-9978-1901DF26C253}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
