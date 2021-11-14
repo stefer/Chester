@@ -28,10 +28,17 @@ namespace Chester.Benchmark
         {
             evaluator = new Evaluator();
             board = new Board();
-            search = new ParallellAlphaBetaMinMaxSearch(new SearchOptions(N), evaluator);
+            search = new ParallellAlphaBetaMinMaxSearch(new SearchOptions(N), evaluator, new NullReporter());
         }
 
         [Benchmark]
         public Evaluation? Search() => search?.Search(board, Color.White);
+    }
+
+    public class NullReporter : ISearchReporter
+    {
+        public void CurrentMove(Move move, long moveNumber, int score)
+        {
+        }
     }
 }

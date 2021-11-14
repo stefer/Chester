@@ -32,7 +32,7 @@ namespace Chester.Services
 
         public async Task CmdUci(IEnumerable<string> args) => await messageBus.SendAsync(new UciCommStarted());
         public async Task CmdIsReady(IEnumerable<string> args) => await messageBus.SendAsync(new UciReadyRequested());
-        public async Task CmdNewGame(IEnumerable<string> args) => await messageBus.SendAsync(new UciReadyRequested());
+        public async Task CmdNewGame(IEnumerable<string> args) => await messageBus.SendAsync(new StartNewGame());
 
         private async Task CmdPosition(IEnumerable<string> args)
         {

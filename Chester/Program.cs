@@ -7,37 +7,12 @@ using Chester.Services;
 using Chester.Messages.Events;
 using Chester.Messages.Commands;
 using Chester.Messages;
+using Chester.Search;
 
 namespace Chester
 {
     class Program
     {
-        //static void Main(string[] args)
-        //{
-
-        //    var game= new Game();
-
-        //    Console.WriteLine(game);
-
-        //    while(true)
-        //    {
-        //        var evaluation = game.Search();
-
-        //        if (Math.Abs(evaluation.Value) >= Evaluation.CheckMate) break;
-
-        //        Console.WriteLine($"{game.NextToMove} made move {evaluation.Move} with value {evaluation.Value}");
-
-        //        game.MakeMove(evaluation.Move);
-
-        //        Console.WriteLine(game);
-        //        Console.WriteLine();
-
-        //        Console.ReadKey();
-        //    }
-
-        //    Console.Beep();
-        //}
-
         static async Task Main(string[] args)
         {
             using IHost host = CreateHostBuilder(args).Build();
@@ -66,13 +41,15 @@ namespace Chester
                         .AddSingleton<GameChanger>()
                         .AddSingleton<UciStdInOut>()
                         .AddSingleton<IUciInterpretator, UciInterpreter>()
-                        .AddSingleton<IMessageBus, MessageBus>();
+                        .AddSingleton<IMessageBus, MessageBus>()
+                        .AddSingleton<ISearchReporter, SearchReporter>();
 
                     services
                         .AddMessageHandler<SendUciMessage, UciStdInOut>()
                         .AddMessageHandler<StartUci, UciStdInOut>()
                         .AddMessageHandler<StopUci, UciStdInOut>()
                         .AddMessageHandler<BestMoveEvaluated, UciStdInOut>()
+                        .AddMessageHandler<Info, UciStdInOut>()
 
                         .AddMessageHandler<UciCommStarted, GameChanger>()
                         .AddMessageHandler<UciReadyRequested, GameChanger>()

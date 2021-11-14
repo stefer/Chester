@@ -3,6 +3,7 @@ using Chester.Messages;
 using Chester.Messages.Commands;
 using Chester.Messages.Events;
 using System.Threading.Tasks;
+using Chester.Search;
 
 namespace Chester.Services
 {
@@ -15,10 +16,13 @@ namespace Chester.Services
     {
         private readonly IMessageBus _messageBus;
         private Game _game;
+        ISearchReporter _reporter;
 
-        public GameChanger(IMessageBus messageBus)
+        public GameChanger(IMessageBus messageBus, ISearchReporter reporter)
         {
             _messageBus = messageBus;
+            _reporter = reporter;
+            _game = new Game(_reporter);
         }
 
         public async Task HandleAsync(UciCommStarted _)
@@ -35,7 +39,7 @@ namespace Chester.Services
 
         public Task HandleAsync(StartNewGame _)
         {
-            _game = new Game();
+            _game = new Game(_reporter);
             return Task.CompletedTask;
         }
 
@@ -43,12 +47,12 @@ namespace Chester.Services
         {
             if (message.Fen != null)
             {
-                _game = new Game(message.Fen.Board, message.Fen.NextToMove);
+                _game = new Game(message.Fen.Board, message.Fen.NextToMove, _reporter);
             }
 
             if (message.StartPosition)
             {
-                _game = new Game();
+                _game = new Game(_reporter);
             }
 
             foreach (var move in message.Moves.AsHalfMoves())

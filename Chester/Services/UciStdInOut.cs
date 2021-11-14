@@ -3,6 +3,7 @@ using Chester.Messages.Commands;
 using Chester.Messages.Events;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -18,7 +19,8 @@ namespace Chester.Services
         ICommandHandler<SendUciMessage>,
         ICommandHandler<StartUci>,
         ICommandHandler<StopUci>,
-        ICommandHandler<BestMoveEvaluated>
+        ICommandHandler<BestMoveEvaluated>,
+        ICommandHandler<Info>
     {
         private readonly IUciInterpretator interpretator;
         readonly Channel<string> channel;
@@ -49,6 +51,17 @@ namespace Chester.Services
         public async Task HandleAsync(BestMoveEvaluated message)
         {
             await channel.Writer.WriteAsync($"bestmove {message.Move.ToStringLong()}");
+        }
+
+        public async Task HandleAsync(Info message)
+        {
+            StringBuilder sb = new();
+
+            if (message.CurrentMove != null) sb.Append("currentmove ").Append(message.CurrentMove.ToStringLong());
+            if (message.CurrentMoveNumber.HasValue) sb.Append(" currentmovenumber ").Append(message.CurrentMoveNumber.Value);
+            if (message.Score.HasValue) sb.Append(" score cp ").Append(message.Score.Value);
+
+            await channel.Writer.WriteAsync(sb.ToString());
         }
 
         public async Task Start()
