@@ -30,7 +30,7 @@ namespace Chester.Models
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsInvalid(this SquareState p) => p == SquareState.Invalid;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsOccupied(this SquareState p) => !(p.IsFree() || p.IsInvalid());
+        public static bool IsOccupied(this SquareState p) => !p.IsFree() && !p.IsInvalid() && p.Piece() != SquareState.Free;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsWhite(this SquareState p) => p.HasFlag(SquareState.White) && p.IsOccupied();
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -109,6 +109,17 @@ namespace Chester.Tests.Search
             Assert.That(eval.Move.ToStringLong(), Is.EqualTo("h6g4"));
         }
 
+        [Test]
+        public void InvalidOperation_MovedBlack()
+        {
+            var evaluator = new Evaluator();
+            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(1), evaluator);
+
+            var board = new Board();
+            Play(board, "e2e4 b8c6 g1f3 g8f6 b1c3 a8b8 f1b5 f6g4 e1g1 a7a6 b5a4 b7b5 a4b3 c6a5 b3d5 b5b4 c3e2 c7c6 d5b3 a5b3 a2b3 c8b7 h2h3 g4f6 d2d4 f6e4 d1d3 e4d6 c2c3 b4c3 b2c3 b8c8 f3e5 c8c7 c3c4 f7f6 e5g4 f6f5 g4e5 c6c5 d4d5 d6e4 c1b2 h8g8 b2a3 d7d6 e5f3 g7g6 b3b4 c5b4 a3b4 c7d7 b4a5 d8c8 f1b1");
+            Assert.That(() => sut.Search(board, Color.Black), Throws.Nothing);
+        }
+
         private static void Play(Board board, string moveText)
         {
             var reader = new MoveTextReader(moveText);
