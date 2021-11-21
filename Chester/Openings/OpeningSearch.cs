@@ -17,12 +17,12 @@ namespace Chester.Openings
     [DebuggerDisplay("Alt {Move}")]
     public class OpeningAlternative
     {
-        public OpeningAlternative(PgnHalfMove move)
+        public OpeningAlternative(PgnPly move)
         {
             Move = move;
         }
 
-        public PgnHalfMove Move { get; init; }
+        public PgnPly Move { get; init; }
         public PgnGame Pgn { get; private set; }
         public OpeningResults Results { get; private set; }
 
@@ -39,9 +39,9 @@ namespace Chester.Openings
 
     public class OpeningSearch
     {
-        private class HalfMoveComparer : IEqualityComparer<PgnHalfMove>
+        private class HalfMoveComparer : IEqualityComparer<PgnPly>
         {
-            public bool Equals(PgnHalfMove x, PgnHalfMove y)
+            public bool Equals(PgnPly x, PgnPly y)
             {
                 if (x is null && y is null) return true;
                 if (x is null || y is null) return false;
@@ -49,7 +49,7 @@ namespace Chester.Openings
                 return (x.From, x.To, x.Piece).Equals((y.From, y.To, y.Piece));
             }
 
-            public int GetHashCode([DisallowNull] PgnHalfMove obj)
+            public int GetHashCode([DisallowNull] PgnPly obj)
             {
                 return (obj.From, obj.To, obj.Piece).GetHashCode();
             }
@@ -58,19 +58,19 @@ namespace Chester.Openings
         [DebuggerDisplay("Node {Value} ({_alternatives.Count})")]
         private class Node
         {
-            private Dictionary<PgnHalfMove, Node> _alternatives = new(new HalfMoveComparer());
+            private Dictionary<PgnPly, Node> _alternatives = new(new HalfMoveComparer());
 
             public Node()
             {
-                Value = new OpeningAlternative(PgnHalfMove.None);
+                Value = new OpeningAlternative(PgnPly.None);
             }
 
-            public Node(PgnHalfMove move)
+            public Node(PgnPly move)
             {
                 Value = new OpeningAlternative(move);
             }
 
-            public Node(PgnHalfMove move, Node subtree) : this(move)
+            public Node(PgnPly move, Node subtree) : this(move)
             {
                 Add(subtree);
             }
@@ -88,7 +88,7 @@ namespace Chester.Openings
 
             }
 
-            public bool TryGet(PgnHalfMove halfMove, out Node node) => _alternatives.TryGetValue(halfMove, out node);
+            public bool TryGet(PgnPly halfMove, out Node node) => _alternatives.TryGetValue(halfMove, out node);
 
             public void SetPgn(PgnGame pgn)
             {
@@ -127,7 +127,7 @@ namespace Chester.Openings
             return new OpeningResults(0, 0, 0);
         }
 
-        public IEnumerable<OpeningAlternative> GetAlternatives(IEnumerable<PgnHalfMove> moves)
+        public IEnumerable<OpeningAlternative> GetAlternatives(IEnumerable<PgnPly> moves)
         {
             var edge = Find(_root, moves);
 
@@ -136,7 +136,7 @@ namespace Chester.Openings
             return edge.Alternatives.Select(n => n.Value);
         }
 
-        private Node Find(Node current, IEnumerable<PgnHalfMove> moves)
+        private Node Find(Node current, IEnumerable<PgnPly> moves)
         {
             if (!moves.Any()) return current;
 
@@ -160,11 +160,11 @@ namespace Chester.Openings
 
         private void BuildNode(PgnGame pgn)
         {
-            var edge = BuildTree(_root, pgn.Moves.AsHalfMoves());
+            var edge = BuildTree(_root, pgn.Moves.AsPlies());
             edge.SetPgn(pgn);
         }
 
-        private Node BuildTree(Node current, IEnumerable<PgnHalfMove> moves)
+        private Node BuildTree(Node current, IEnumerable<PgnPly> moves)
         {
             if (!moves.Any()) return current;
 
@@ -177,7 +177,7 @@ namespace Chester.Openings
             return BuildTree(subtree, moves.Skip(1));
         }
 
-        private Node BuildBranch(IEnumerable<PgnHalfMove> moves)
+        private Node BuildBranch(IEnumerable<PgnPly> moves)
         {
             if (moves.Count() == 1)
                 return new Node(moves.First());

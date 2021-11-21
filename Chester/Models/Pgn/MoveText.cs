@@ -29,9 +29,9 @@ namespace Chester.Models.Pgn
         IEnumerator IEnumerable.GetEnumerator() => _moves.GetEnumerator();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerable<PgnHalfMove> AsHalfMoves()
+        public IEnumerable<PgnPly> AsPlies()
         {
-            List<PgnHalfMove> result = new(_moves.Count * 2);
+            List<PgnPly> result = new(_moves.Count * 2);
             foreach (var move in _moves)
             {
                 result.Add(move.White);

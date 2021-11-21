@@ -55,7 +55,7 @@ namespace Chester.Services
                 _game = new Game(_reporter);
             }
 
-            foreach (var move in message.Moves.AsHalfMoves())
+            foreach (var move in message.Moves.AsPlies())
             {
                 var from = move.From.ToModel();
                 var to = move.To.ToModel();

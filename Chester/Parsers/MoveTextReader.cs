@@ -92,9 +92,9 @@ namespace Chester.Parsers
 
             Sequence();
             Comment(out string comment);
-            if (!HalfMove(Color.White, out PgnHalfMove white)) return false;
+            if (!HalfMove(Color.White, out PgnPly white)) return false;
             Sequence();
-            HalfMove(Color.Black, out PgnHalfMove black);
+            HalfMove(Color.Black, out PgnPly black);
 
             move = new PgnMove(sequence, white, black, comment);
 
@@ -132,12 +132,12 @@ namespace Chester.Parsers
         /// <param name="color"></param>
         /// <param name="halfMove"></param>
         /// <returns></returns>
-        private bool HalfMove(Color color, out PgnHalfMove halfMove)
+        private bool HalfMove(Color color, out PgnPly halfMove)
         {
             halfMove = null;
             WhiteSpace();
 
-            if (Castling(color, out PgnHalfMove castling))
+            if (Castling(color, out PgnPly castling))
             {
                 Check(out PgnMoveType check1);
                 Comment(out var comment);
@@ -160,11 +160,11 @@ namespace Chester.Parsers
             var from = second.InValid ? null : first;
             var to = second.InValid ? first : second;
 
-            halfMove = new PgnHalfMove(color, piece, from, to, take | promotion | check, comment1);
+            halfMove = new PgnPly(color, piece, from, to, take | promotion | check, comment1);
             return true;
         }
 
-        private bool Castling(Color color, out PgnHalfMove castling)
+        private bool Castling(Color color, out PgnPly castling)
         {
             castling = null;
             var span = _current.Span;
@@ -178,7 +178,7 @@ namespace Chester.Parsers
             var fromFile = 4;
             var toFile = queenSide ? 2 : 6;
 
-            castling = new PgnHalfMove(
+            castling = new PgnPly(
                 color,
                 PgnPiece.King,
                 new PgnPosition(fromFile, rank),

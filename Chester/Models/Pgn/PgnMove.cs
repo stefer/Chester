@@ -33,9 +33,9 @@ namespace Chester.Models.Pgn
 
     }
 
-    public record PgnHalfMove(Color Color, PgnPiece Piece, PgnPosition From, PgnPosition To = null, PgnMoveType Type = PgnMoveType.Normal, string Comment = null)
+    public record PgnPly(Color Color, PgnPiece Piece, PgnPosition From, PgnPosition To = null, PgnMoveType Type = PgnMoveType.Normal, string Comment = null)
     {
-        public static PgnHalfMove None = new((Color)(-1), (PgnPiece)(-1), null);
+        public static PgnPly None = new((Color)(-1), (PgnPiece)(-1), null);
 
         private static readonly Dictionary<PgnPiece, string> PgnPieces = new()
         {
@@ -81,7 +81,7 @@ namespace Chester.Models.Pgn
             return sb.ToString();
         }
 
-        public virtual bool Equals(PgnHalfMove other)
+        public virtual bool Equals(PgnPly other)
         {
             if (other == null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -95,7 +95,7 @@ namespace Chester.Models.Pgn
         }
     }
 
-    public record PgnMove(int Seq, PgnHalfMove White, PgnHalfMove Black, string Comment = null)
+    public record PgnMove(int Seq, PgnPly White, PgnPly Black, string Comment = null)
     {
         public override string ToString()
         {
@@ -106,7 +106,7 @@ namespace Chester.Models.Pgn
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerable<PgnHalfMove> HalfMoves()
+        public IEnumerable<PgnPly> Plies()
         {
             yield return White;
             if (Black != null) yield return Black;

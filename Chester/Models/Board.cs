@@ -201,7 +201,7 @@ namespace Chester.Models
 
         public void MakeMoves(MoveText moveText)
         {
-            foreach (var move in moveText.AsHalfMoves())
+            foreach (var move in moveText.AsPlies())
             {
                 var from = move.From.ToModel();
                 var to = move.To.ToModel();
