@@ -9,7 +9,6 @@ namespace Chester.Models
 {
     public class Board
     {
-        private const SquareState X = SquareState.Invalid;
         private const SquareState K = SquareState.White | SquareState.King;
         private const SquareState Q = SquareState.White | SquareState.Queen;
         private const SquareState T = SquareState.White | SquareState.Rook;
@@ -51,6 +50,8 @@ namespace Chester.Models
             t, n, b, q, k, b, n, t,
         };
 
+        private Stack<Move> _line = new Stack<Move>();
+
         public Board() { }
 
         public Board(SquareState[] squares)
@@ -58,7 +59,10 @@ namespace Chester.Models
             _squares = (SquareState[])squares.Clone();
         }
 
-        public Board(Board board) : this(board._squares) { }
+        public Board(Board board) : this(board._squares) 
+        { 
+            _line = new Stack<Move>(board._line);
+        }
 
         public static Position Pos(int idx)
         {
@@ -219,6 +223,7 @@ namespace Chester.Models
             _squares[Index(m.To)] = fromSquare | SquareState.Moved;
             _squares[Index(m.From)] = SquareState.Free;
 
+            _line.Push(m);
             return sm;
         }
 
@@ -226,7 +231,10 @@ namespace Chester.Models
         {
             _squares[Index(sm.Move.To)] = sm.ToSquare;
             _squares[Index(sm.Move.From)] = sm.Move.FromSquare;
+            _line.Pop();
         }
+
+        public IEnumerable<Move> Line => _line.Reverse().ToList();
 
         public IEnumerable<Piece> Pieces => Search(s => s.IsOccupied());
 

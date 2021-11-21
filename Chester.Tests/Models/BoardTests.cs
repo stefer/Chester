@@ -37,9 +37,38 @@ namespace Chester.Tests.Models
         }
 
         [Test]
+        public void Move_SavesLine()
+        {
+            Board board = new();
+
+            board.MakeMove(new Move(board.At("e2"), "e2", "e4"));
+            var moves = board.Line;
+            Assert.That(moves.Select(x => x.ToStringLong()), Is.EqualTo(new string[] { "e2e4" }));
+
+            var move = board.MakeMove(new Move(board.At("c7"), "c7", "c6"));
+            moves = board.Line;
+            Assert.That(moves.Select(x => x.ToStringLong()), Is.EqualTo(new string[] {"e2e4", "c7c6"}));
+        }
+
+        [Test]
+        public void TakeBack_SavesLine()
+        {
+            Board board = new();
+
+            board.MakeMove(new Move(board.At("e2"), "e2", "e4"));
+            Assert.That(board.Line.Select(x => x.ToStringLong()), Is.EqualTo(new string[] { "e2e4" }));
+
+            var move = board.MakeMove(new Move(board.At("c7"), "c7", "c6"));
+            Assert.That(board.Line.Select(x => x.ToStringLong()), Is.EqualTo(new string[] { "e2e4", "c7c6" }));
+
+            board.TakeBack(move);
+            Assert.That(board.Line.Select(x => x.ToStringLong()), Is.EqualTo(new string[] { "e2e4" }));
+        }
+
+        [Test]
         public void InvalidMove()
         {
-            Board board = new Board();
+            Board board = new();
 
             Play(board, "e2e4 c7c6 Qd1d3");
 
