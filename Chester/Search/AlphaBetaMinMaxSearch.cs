@@ -1,18 +1,20 @@
 ﻿using Chester.Evaluations;
 using Chester.Models;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Chester.Search
 {
     public class AlphaBetaMinMaxSearch : ISearch
     {
         protected SearchOptions Options { get; }
+        protected ISearchReporter Reporter { get; }
+
         private IEvaluator Evaluator { get; }
 
-        public AlphaBetaMinMaxSearch(SearchOptions options, IEvaluator evaluator)
+        public AlphaBetaMinMaxSearch(SearchOptions options, IEvaluator evaluator, ISearchReporter reporter)
         {
             Options = options;
+            Reporter = reporter;
             Evaluator = evaluator;
         }
 
@@ -52,7 +54,7 @@ namespace Chester.Search
 
         protected int AlphaBetaMax(Board board, int alpha, int beta, int depthLeft, Color nextToMove)
         {
-            if (depthLeft == 0) return Evaluate(board, nextToMove);
+            if (depthLeft == 0) return Evaluate(board);
 
             var moves = board.MovesFor(nextToMove);
             var sortedMoves = moves.Select(m => Evaluate(board, m)).OrderByDescending(x => x.score);
@@ -63,7 +65,10 @@ namespace Chester.Search
                 var score = AlphaBetaMin(board, alpha, beta, depthLeft - 1, nextToMove.Other());
                 board.TakeBack(save);
                 if (score >= beta) return beta; // fail hard beta-cutoff
-                if (score > alpha) alpha = score;    // alpha acts like max in MiniMax
+                if (score > alpha)
+                {
+                    alpha = score;    // alpha acts like max in MiniMax
+                }
             }
 
             return alpha;
@@ -71,7 +76,7 @@ namespace Chester.Search
 
         protected int AlphaBetaMin(Board board, int alpha, int beta, int depthLeft, Color nextToMove)
         {
-            if (depthLeft == 0) return Evaluate(board, nextToMove);
+            if (depthLeft == 0) return Evaluate(board);
 
             var moves = board.MovesFor(nextToMove).ToList();
             var sortedMoves = moves.Select(m => Evaluate(board, m)).OrderBy(x => x.score);
@@ -83,14 +88,18 @@ namespace Chester.Search
                 board.TakeBack(save);
 
                 if (score <= alpha) return alpha; // fail hard alpha-cutoff
-                if (score < beta) beta = score;        // beta acts like min in MiniMax
+                if (score < beta)
+                {
+                    beta = score;        // beta acts like min in MiniMax
+                }
             }
 
             return beta;
         }
 
-        protected int Evaluate(Board position, Color turnToMove)
+        protected int Evaluate(Board position)
         {
+            Reporter.NodeVisited();
             return Evaluator.Evaluate(position);
         }
 

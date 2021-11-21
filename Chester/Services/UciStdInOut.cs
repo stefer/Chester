@@ -53,15 +53,29 @@ namespace Chester.Services
             await channel.Writer.WriteAsync($"bestmove {message.Move.ToStringLong()}");
         }
 
-        public async Task HandleAsync(Info message)
+        public async Task HandleAsync(Info m)
         {
-            StringBuilder sb = new();
+            StringBuilder sb = new("info ");
 
-            if (message.CurrentMove != null) sb.Append("currentmove ").Append(message.CurrentMove.ToStringLong());
-            if (message.CurrentMoveNumber.HasValue) sb.Append(" currentmovenumber ").Append(message.CurrentMoveNumber.Value);
-            if (message.Score.HasValue) sb.Append(" score cp ").Append(message.Score.Value);
+            if (m.CurrentMove != null) sb.Append(" currentmove ").Append(m.CurrentMove.ToStringLong());
+            Append(m.CurrentMoveNumber, "currentmovenumber", sb);
+            Append(m.Depth, "depth", sb);
+            Append(m.Score, "score cp", sb);
+            Append(m.TimeMs, "time", sb);
+            Append(m.Nodes, "nodes", sb);
+            Append(m.NodesPerSec, "nps", sb);
+            if (m.Pv != null)
+            {
+                sb.Append(" pv ");
+                foreach(var node in m.Pv) sb.Append(' ').Append(node.ToStringLong());
+            }
 
             await channel.Writer.WriteAsync(sb.ToString());
+        }
+
+        public static void Append<T>(T? value, string key, StringBuilder sb) where T : struct
+        {
+            if (value.HasValue) sb.Append(' ').Append(key).Append(' ').Append(value.Value);
         }
 
         public async Task Start()

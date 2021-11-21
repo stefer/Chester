@@ -37,7 +37,19 @@ namespace Chester.Benchmark
 
     public class NullReporter : ISearchReporter
     {
+        public void BestLine(int depth, int score, IEnumerable<Move> bestLine)
+        {
+        }
+
         public void CurrentMove(Move move, long moveNumber, int score)
+        {
+        }
+
+        public void NodeVisited()
+        {
+        }
+
+        public void Reset()
         {
         }
     }

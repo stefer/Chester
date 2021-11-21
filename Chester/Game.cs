@@ -13,7 +13,7 @@ namespace Chester
 
         public Game(ISearchReporter reporter) 
         {
-            _search = new ParallellAlphaBetaMinMaxSearch(new SearchOptions(4), new Evaluator(), reporter);
+            _search = new ParallellAlphaBetaMinMaxSearch(new SearchOptions(6), new Evaluator(), reporter);
         }
 
         public Game(Board board, Color nextToMove, ISearchReporter reporter): this(reporter)

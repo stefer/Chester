@@ -4,6 +4,7 @@ using Chester.Search;
 using Chester.Evaluations;
 using FakeItEasy;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Chester.Tests.Search
 {
@@ -21,7 +22,7 @@ namespace Chester.Tests.Search
         {
             var evaluator = A.Fake<IEvaluator>();
             A.CallTo(() => evaluator.Evaluate(A<Board>._)).Returns(score);
-            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(depth), evaluator);
+            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(depth), evaluator, new NullReporter());
 
             var board = new Board();
             var eval = sut.Search(board, toMove);
@@ -36,7 +37,7 @@ namespace Chester.Tests.Search
             A.CallTo(() => evaluator.Evaluate(A<Board>._)).Returns(0);
             A.CallTo(() => evaluator.Evaluate(A<Board>.That.Matches(b => b.At("e4").IsWhite()))).Returns(10);
             A.CallTo(() => evaluator.Evaluate(A<Board>.That.Matches(b => b.At("d4").IsWhite()))).Returns(9);
-            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(0), evaluator);
+            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(0), evaluator, new NullReporter());
 
             var board = new Board();
             var eval = sut.Search(board, Color.White);
@@ -54,7 +55,7 @@ namespace Chester.Tests.Search
             A.CallTo(() => evaluator.Evaluate(A<Board>.That.Matches(b => b.At("d4").IsWhite()))).Returns(9);
             A.CallTo(() => evaluator.Evaluate(A<Board>.That.Matches(b => b.At("e5").IsBlack()))).Returns(-11);
             A.CallTo(() => evaluator.Evaluate(A<Board>.That.Matches(b => b.At("d6").IsBlack()))).Returns(-9);
-            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(0), evaluator);
+            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(0), evaluator, new NullReporter());
 
             var board = new Board();
             board.MakeMove(new Move(board.At("e2"), "e2", "e4")); ;
@@ -73,7 +74,7 @@ namespace Chester.Tests.Search
             A.CallTo(() => evaluator.Evaluate(A<Board>.That.Matches(b => b.At("e4").IsWhite()))).Returns(10);
             A.CallTo(() => evaluator.Evaluate(A<Board>.That.Matches(b => b.At("e4").IsWhite() && b.At("d5").IsBlack()))).Returns(-10);
             A.CallTo(() => evaluator.Evaluate(A<Board>.That.Matches(b => b.At("d4").IsWhite()))).Returns(8);
-            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(1), evaluator);
+            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(1), evaluator, new NullReporter());
 
             var board = new Board();
             var eval = sut.Search(board, Color.White);
@@ -86,7 +87,7 @@ namespace Chester.Tests.Search
         public void DepthThree_ReturnsHighestScore()
         {
             var evaluator = new Evaluator();
-            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(3), evaluator);
+            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(3), evaluator, new NullReporter());
 
             var board = new Board();
             var eval = sut.Search(board, Color.White);
@@ -99,7 +100,7 @@ namespace Chester.Tests.Search
         public void DepthOne_ReturnsHighestScore_ForBlackQueenTake()
         {
             var evaluator = new Evaluator();
-            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(1), evaluator);
+            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(1), evaluator, new NullReporter());
 
             var board = new Board();
             Play(board, "e2e4 g8h6 d1g4");
@@ -113,7 +114,7 @@ namespace Chester.Tests.Search
         public void InvalidOperation_MovedBlack()
         {
             var evaluator = new Evaluator();
-            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(1), evaluator);
+            var sut = new AlphaBetaMinMaxSearch(new SearchOptions(1), evaluator, new NullReporter());
 
             var board = new Board();
             Play(board, "e2e4 b8c6 g1f3 g8f6 b1c3 a8b8 f1b5 f6g4 e1g1 a7a6 b5a4 b7b5 a4b3 c6a5 b3d5 b5b4 c3e2 c7c6 d5b3 a5b3 a2b3 c8b7 h2h3 g4f6 d2d4 f6e4 d1d3 e4d6 c2c3 b4c3 b2c3 b8c8 f3e5 c8c7 c3c4 f7f6 e5g4 f6f5 g4e5 c6c5 d4d5 d6e4 c1b2 h8g8 b2a3 d7d6 e5f3 g7g6 b3b4 c5b4 a3b4 c7d7 b4a5 d8c8 f1b1");
@@ -127,4 +128,24 @@ namespace Chester.Tests.Search
             board.MakeMoves(moves);
         }
     }
+    public class NullReporter : ISearchReporter
+    {
+        public void BestLine(int depth, int score, IEnumerable<Move> bestLine)
+        {
+        }
+
+        public void CurrentMove(Move move, long moveNumber, int score)
+        {
+        }
+
+        public void NodeVisited()
+        {
+        }
+
+        public void Reset()
+        {
+        }
+
+    }
+
 }
