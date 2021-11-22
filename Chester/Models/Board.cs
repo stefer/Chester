@@ -109,9 +109,10 @@ namespace Chester.Models
             {
                 var oneUp = from.Move(0, direction);
                 var twoUp = from.Move(0, direction * 2);
-                var hasMoved = from.Rank != 2 && from.Rank != 7;
-                if (At(oneUp).IsFree()) yield return new Move(square, from, oneUp);
-                if (hasMoved && At(twoUp).IsFree()) yield return new Move(square, from, twoUp);
+                var isStartPos = from.Rank == (square.IsWhite() ? 2 : 7);
+                var isOneUpFree = At(oneUp).IsFree();
+                if (isOneUpFree) yield return new Move(square, from, oneUp);
+                if (isStartPos && isOneUpFree && At(twoUp).IsFree()) yield return new Move(square, from, twoUp);
 
                 var leftUp = from.Move(1, direction);
                 var rightUp = from.Move(-1, direction);
