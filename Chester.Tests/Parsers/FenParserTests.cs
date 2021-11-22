@@ -35,9 +35,9 @@ namespace Chester.Tests.Parsers
                 Assert.That(fen.Board.At("a1"), Is.EqualTo(SquareState.Rook | SquareState.White));
                 Assert.That(fen.Board.At("b2"), Is.EqualTo(SquareState.Pawn | SquareState.White));
                 Assert.That(fen.Board.At("h1"), Is.EqualTo(SquareState.Rook | SquareState.White));
-                Assert.That(fen.Board.At("a8"), Is.EqualTo(SquareState.Rook));
-                Assert.That(fen.Board.At("b7"), Is.EqualTo(SquareState.Pawn));
-                Assert.That(fen.Board.At("h8"), Is.EqualTo(SquareState.Rook));
+                Assert.That(fen.Board.At("a8"), Is.EqualTo(SquareState.Rook | SquareState.Black));
+                Assert.That(fen.Board.At("b7"), Is.EqualTo(SquareState.Pawn | SquareState.Black));
+                Assert.That(fen.Board.At("h8"), Is.EqualTo(SquareState.Rook | SquareState.Black));
             }
 
             [Test]
@@ -124,7 +124,7 @@ namespace Chester.Tests.Parsers
             Assert.That(fen.Board.At("e2"), Is.EqualTo(SquareState.Free));
             Assert.That(fen.Board.At("e4"), Is.EqualTo(SquareState.Pawn | SquareState.White));
             Assert.That(fen.Board.At("c7"), Is.EqualTo(SquareState.Free));
-            Assert.That(fen.Board.At("c5"), Is.EqualTo(SquareState.Pawn));
+            Assert.That(fen.Board.At("c5"), Is.EqualTo(SquareState.Pawn | SquareState.Black));
             Assert.That(fen.Board.At("g1"), Is.EqualTo(SquareState.Free));
             Assert.That(fen.Board.At("f3"), Is.EqualTo(SquareState.Knight | SquareState.White));
         }

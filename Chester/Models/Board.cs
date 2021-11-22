@@ -15,12 +15,12 @@ namespace Chester.Models
         private const SquareState B = SquareState.White | SquareState.Bishop;
         private const SquareState N = SquareState.White | SquareState.Knight;
         private const SquareState P = SquareState.White | SquareState.Pawn;
-        private const SquareState k = SquareState.King;
-        private const SquareState q = SquareState.Queen;
-        private const SquareState t = SquareState.Rook;
-        private const SquareState b = SquareState.Bishop;
-        private const SquareState n = SquareState.Knight;
-        private const SquareState p = SquareState.Pawn;
+        private const SquareState k = SquareState.Black | SquareState.King;
+        private const SquareState q = SquareState.Black | SquareState.Queen;
+        private const SquareState t = SquareState.Black | SquareState.Rook;
+        private const SquareState b = SquareState.Black | SquareState.Bishop;
+        private const SquareState n = SquareState.Black | SquareState.Knight;
+        private const SquareState p = SquareState.Black | SquareState.Pawn;
         private const int Ranks = 8;
         private const int Files = 8;
 
@@ -90,11 +90,11 @@ namespace Chester.Models
             Func<SquareState, bool> byColor = c == Color.White ? PieceExtensions.IsWhite : PieceExtensions.IsBlack;
             var pieces = _squares
                 .Select((square, from) => (from, square))
-                .Where(x => byColor(x.square));
+                .Where(x => byColor(x.square)).ToList();
 
             foreach (var (from, square) in pieces)
             {
-                var moves = ValidMoves(Pos(from), square);
+                var moves = ValidMoves(Pos(from), square).ToList();
                 foreach (var move in moves)
                 {
                     yield return move;
@@ -109,8 +109,9 @@ namespace Chester.Models
             {
                 var oneUp = from.Move(0, direction);
                 var twoUp = from.Move(0, direction * 2);
+                var hasMoved = from.Rank != 2 && from.Rank != 7;
                 if (At(oneUp).IsFree()) yield return new Move(square, from, oneUp);
-                if (!square.HasMoved() && At(twoUp).IsFree()) yield return new Move(square, from, twoUp);
+                if (hasMoved && At(twoUp).IsFree()) yield return new Move(square, from, twoUp);
 
                 var leftUp = from.Move(1, direction);
                 var rightUp = from.Move(-1, direction);
@@ -220,7 +221,7 @@ namespace Chester.Models
 
             SavedMove sm = new(m, _squares[Index(m.To)]);
 
-            _squares[Index(m.To)] = fromSquare | SquareState.Moved;
+            _squares[Index(m.To)] = fromSquare;
             _squares[Index(m.From)] = SquareState.Free;
 
             _line.Push(m);
