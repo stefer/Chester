@@ -1,9 +1,9 @@
 ﻿using Chester.Parsers;
 using NUnit.Framework;
+using Chester.Models;
 
 namespace Chester.Tests.Parsers;
 
-using Chester.Models;
 using Chester.Tests.Extensions;
 
 public class FenParserTests
