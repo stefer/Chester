@@ -15,8 +15,8 @@ namespace Chester.Benchmark;
 [ThreadingDiagnoser]
 public class EvaluatorBench
 {
-    private Evaluator? evaluator;
-    private Board? board;
+    private Evaluator? _evaluator;
+    private Board? _board;
 
     [Params(1000)]
     public int N;
@@ -24,10 +24,10 @@ public class EvaluatorBench
     [GlobalSetup]
     public void Setup()
     {
-        evaluator = new Evaluator();
-        board = new Board();
+        _evaluator = new Evaluator();
+        _board = new Board();
     }
 
     [Benchmark]
-    public int? Evaluate() => evaluator?.Evaluate(board);
+    public int? Evaluate() => _evaluator?.Evaluate(_board);
 }

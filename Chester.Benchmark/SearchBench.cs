@@ -14,10 +14,9 @@ namespace Chester.Benchmark;
 //[ConcurrencyVisualizerProfiler]
 //[NativeMemoryProfiler]
 [ThreadingDiagnoser]
-public class SearchBench
+public class SearchLinear
 {
     private Evaluator? _evaluator;
-    private Board? _board;
     private ISearch? _search;
 
     [Params(1, 2, 3, 4)]
@@ -27,13 +26,40 @@ public class SearchBench
     public void Setup()
     {
         _evaluator = new Evaluator();
-        _board = new Board();
+        _search = new AlphaBetaMinMaxSearch(new SearchOptions(N), _evaluator, new NullReporter());
+    }
+
+    [Benchmark]
+    public Evaluation? Search() => _search?.Search(new Board(), Color.White);
+}
+
+[SimpleJob(RuntimeMoniker.Net60)]
+[MemoryDiagnoser]
+//[InliningDiagnoser]
+//[TailCallDiagnoser]
+//[EtwProfiler]
+//[ConcurrencyVisualizerProfiler]
+//[NativeMemoryProfiler]
+[ThreadingDiagnoser]
+public class SearchParallell
+{
+    private Evaluator? _evaluator;
+    private ISearch? _search;
+
+    [Params(1, 2, 3, 4)]
+    public int N;
+
+    [GlobalSetup]
+    public void Setup()
+    {
+        _evaluator = new Evaluator();
         _search = new ParallellAlphaBetaMinMaxSearch(new SearchOptions(N), _evaluator, new NullReporter());
     }
 
     [Benchmark]
-    public Evaluation? Search() => _search?.Search(_board, Color.White);
+    public Evaluation? Search() => _search?.Search(new Board(), Color.White);
 }
+
 
 public class NullReporter : ISearchReporter
 {
