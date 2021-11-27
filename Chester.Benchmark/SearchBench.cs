@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Diagnostics.Windows.Configs;
 using BenchmarkDotNet.Jobs;
 using Chester.Evaluations;
 using Chester.Models;
@@ -8,7 +9,7 @@ namespace Chester.Benchmark;
 
 [SimpleJob(RuntimeMoniker.Net60)]
 [MemoryDiagnoser]
-//[InliningDiagnoser]
+//[InliningDiagnoser(true, true)]
 //[TailCallDiagnoser]
 //[EtwProfiler]
 //[ConcurrencyVisualizerProfiler]
@@ -35,7 +36,7 @@ public class SearchLinear
 
 [SimpleJob(RuntimeMoniker.Net60)]
 [MemoryDiagnoser]
-//[InliningDiagnoser]
+//[InliningDiagnoser(true, true)]
 //[TailCallDiagnoser]
 //[EtwProfiler]
 //[ConcurrencyVisualizerProfiler]

@@ -7,12 +7,10 @@ namespace Chester.Benchmark;
 
 [SimpleJob(RuntimeMoniker.Net60)]
 [MemoryDiagnoser]
-//[InliningDiagnoser]
-//[TailCallDiagnoser]
+//[InliningDiagnoser(false, false)]
+//[TailCallDiagnoser(logFailuresOnly: false, filterByNamespace: false)]
 //[EtwProfiler]
-//[ConcurrencyVisualizerProfiler]
 //[NativeMemoryProfiler]
-[ThreadingDiagnoser]
 public class EvaluatorBench
 {
     private Evaluator? _evaluator;
