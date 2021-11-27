@@ -22,17 +22,17 @@ namespace Chester.Services
         ICommandHandler<BestMoveEvaluated>,
         ICommandHandler<Info>
     {
-        private readonly IUciInterpretator interpretator;
-        private readonly Channel<string> channel;
-        private CancellationTokenSource tokenSource;
+        private readonly IUciInterpretator _interpretator;
+        private readonly Channel<string> _channel;
+        private CancellationTokenSource _tokenSource;
 
         public UciStdInOut(IUciInterpretator interpretator)
         {
-            this.interpretator = interpretator;
-            channel = Channel.CreateUnbounded<string>();
+            _interpretator = interpretator;
+            _channel = Channel.CreateUnbounded<string>();
         }
 
-        public async Task HandleAsync(SendUciMessage message) => await channel.Writer.WriteAsync(message.Status);
+        public async Task HandleAsync(SendUciMessage message) => await _channel.Writer.WriteAsync(message.Status);
 
         public async Task HandleAsync(StartUci message) => await Start();
 
@@ -42,7 +42,7 @@ namespace Chester.Services
             return Task.CompletedTask;
         }
 
-        public async Task HandleAsync(BestMoveEvaluated message) => await channel.Writer.WriteAsync($"bestmove {message.Move.ToStringLong()}");
+        public async Task HandleAsync(BestMoveEvaluated message) => await _channel.Writer.WriteAsync($"bestmove {message.Move.ToStringLong()}");
 
         public async Task HandleAsync(Info m)
         {
@@ -61,7 +61,7 @@ namespace Chester.Services
                 foreach (var node in m.Pv) sb.Append(' ').Append(node.ToStringLong());
             }
 
-            await channel.Writer.WriteAsync(sb.ToString());
+            await _channel.Writer.WriteAsync(sb.ToString());
         }
 
         public static void Append<T>(T? value, string key, StringBuilder sb) where T : struct
@@ -71,19 +71,19 @@ namespace Chester.Services
 
         public async Task Start()
         {
-            tokenSource = new CancellationTokenSource();
-            var ct = tokenSource.Token;
+            _tokenSource = new CancellationTokenSource();
+            var ct = _tokenSource.Token;
 
-            var writeTask = Task.Factory.StartNew(async () => await Write(channel.Reader, ct), ct);
+            var writeTask = Task.Factory.StartNew(async () => await Write(_channel.Reader, ct), ct);
 
             await Read(ct);
         }
 
         public void Stop()
         {
-            if (tokenSource != null)
-                tokenSource.Cancel();
-            tokenSource = null;
+            if (_tokenSource != null)
+                _tokenSource.Cancel();
+            _tokenSource = null;
         }
 
         private async Task Read(CancellationToken ct)
@@ -95,7 +95,7 @@ namespace Chester.Services
             {
                 ct.ThrowIfCancellationRequested();
                 var cmdLine = await reader.ReadLineAsync();
-                await interpretator.ExecuteAsync(cmdLine);
+                await _interpretator.ExecuteAsync(cmdLine);
             }
         }
 

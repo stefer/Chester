@@ -7,8 +7,8 @@ namespace Chester.Models
 {
     public record Position
     {
-        private static readonly int[] ranks = { 1, 2, 3, 4, 5, 6, 7, 8 };
-        private static readonly char[] files = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
+        private static readonly int[] _ranks = { 1, 2, 3, 4, 5, 6, 7, 8 };
+        private static readonly char[] _files = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
 
         public static readonly Position Invalid = new(-1, -1);
 
@@ -42,9 +42,9 @@ namespace Chester.Models
         {
             if (string.IsNullOrEmpty(position)) throw new ArgumentNullException(nameof(position));
             if (position.Length != 2) throw new ArgumentException("Must have length 2", nameof(position));
-            if (!files.Contains(position[0])) throw new ArgumentException("File must be a-h", nameof(position));
-            if (!ranks.Contains(position[1] - '0')) throw new ArgumentException("Rank must be 1-8", nameof(position));
-            return Create(Array.IndexOf(files, position[0]), Array.IndexOf(ranks, position[1] - '0'));
+            if (!_files.Contains(position[0])) throw new ArgumentException("File must be a-h", nameof(position));
+            if (!_ranks.Contains(position[1] - '0')) throw new ArgumentException("Rank must be 1-8", nameof(position));
+            return Create(Array.IndexOf(_files, position[0]), Array.IndexOf(_ranks, position[1] - '0'));
         }
 
         public void Deconstruct(out int file, out int rank) => (file, rank) = (File, Rank);
@@ -55,8 +55,8 @@ namespace Chester.Models
 
         public static implicit operator Position(string pos) => FromString(pos);
 
-        public override string ToString() => Valid ? $"{files[File]}{ranks[Rank]}" : "--";
-        public string FileString => $"{files[File]}";
+        public override string ToString() => Valid ? $"{_files[File]}{_ranks[Rank]}" : "--";
+        public string FileString => $"{_files[File]}";
 
     }
 }

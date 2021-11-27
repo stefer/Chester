@@ -7,7 +7,7 @@ namespace Chester.Models
 {
     public static class PieceExtensions
     {
-        private static readonly Dictionary<SquareState, char> pcs = new()
+        private static readonly Dictionary<SquareState, char> _pcs = new()
         {
             [SquareState.Black | SquareState.King] = 'k',
             [SquareState.Black | SquareState.Queen] = 'q',
@@ -70,10 +70,10 @@ namespace Chester.Models
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Direction(this SquareState self) => self.IsWhite() ? 1 : self.IsBlack() ? -1 : throw new InvalidOperationException("Square is neither black nor White");
 
-        public static string AsString(this SquareState self) => pcs.TryGetValue(self, out var rep) ? rep.ToString() : "-";
+        public static string AsString(this SquareState self) => _pcs.TryGetValue(self, out var rep) ? rep.ToString() : "-";
         public static SquareState AsPiece(this char self)
         {
-            var tuple = pcs.SingleOrDefault(t => t.Value == self, new KeyValuePair<SquareState, char>(SquareState.Invalid, char.MinValue));
+            var tuple = _pcs.SingleOrDefault(t => t.Value == self, new KeyValuePair<SquareState, char>(SquareState.Invalid, char.MinValue));
             return tuple.Key;
         }
     }

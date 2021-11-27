@@ -11,13 +11,13 @@ namespace Chester.Services
 {
     internal class UciInterpreter : IUciInterpretator
     {
-        private readonly IMessageBus messageBus;
+        private readonly IMessageBus _messageBus;
 
         private readonly Dictionary<string, Func<IEnumerable<string>, Task>> _handlers;
 
         public UciInterpreter(IMessageBus messageBus)
         {
-            this.messageBus = messageBus;
+            _messageBus = messageBus;
 
             _handlers = new()
             {
@@ -30,9 +30,9 @@ namespace Chester.Services
         }
 
 
-        public async Task CmdUci(IEnumerable<string> args) => await messageBus.SendAsync(new UciCommStarted());
-        public async Task CmdIsReady(IEnumerable<string> args) => await messageBus.SendAsync(new UciReadyRequested());
-        public async Task CmdNewGame(IEnumerable<string> args) => await messageBus.SendAsync(new StartNewGame());
+        public async Task CmdUci(IEnumerable<string> args) => await _messageBus.SendAsync(new UciCommStarted());
+        public async Task CmdIsReady(IEnumerable<string> args) => await _messageBus.SendAsync(new UciReadyRequested());
+        public async Task CmdNewGame(IEnumerable<string> args) => await _messageBus.SendAsync(new StartNewGame());
 
         private async Task CmdPosition(IEnumerable<string> args)
         {
@@ -66,10 +66,10 @@ namespace Chester.Services
                 setPositionCmd.Moves = reader.ReadAll();
             }
 
-            await messageBus.SendAsync(setPositionCmd);
+            await _messageBus.SendAsync(setPositionCmd);
         }
 
-        private async Task CmdGo(IEnumerable<string> arg) => await messageBus.SendAsync(new Go());
+        private async Task CmdGo(IEnumerable<string> arg) => await _messageBus.SendAsync(new Go());
 
         public async Task ExecuteAsync(string commandLine)
         {

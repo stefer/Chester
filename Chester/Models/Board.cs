@@ -7,6 +7,7 @@ using System.Text;
 
 namespace Chester.Models
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "I want some with small caps")]
     public class Board
     {
         private const SquareState K = SquareState.White | SquareState.King;

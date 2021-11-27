@@ -36,7 +36,7 @@ namespace Chester.Models.Pgn
     {
         public static readonly PgnPly None = new((Color)(-1), (PgnPiece)(-1), null);
 
-        private static readonly Dictionary<PgnPiece, string> PgnPieces = new()
+        private static readonly Dictionary<PgnPiece, string> _pgnPieces = new()
         {
             [PgnPiece.King] = "K",
             [PgnPiece.Queen] = "Q",
@@ -46,7 +46,7 @@ namespace Chester.Models.Pgn
             [PgnPiece.Pawn] = ""
         };
 
-        private static readonly Dictionary<PgnMoveType, char> Promotions = new()
+        private static readonly Dictionary<PgnMoveType, char> _promotions = new()
         {
             [PgnMoveType.PromotionQueen] = 'Q',
             [PgnMoveType.PromotionRook] = 'R',
@@ -65,12 +65,12 @@ namespace Chester.Models.Pgn
                 sb.Append("O-O-O");
             else
             {
-                sb.Append(PgnPieces[Piece]);
+                sb.Append(_pgnPieces[Piece]);
                 sb.Append(From);
                 if (Type.HasFlag(PgnMoveType.Take)) sb.Append('x');
                 if (To != null && !To.InValid) sb.Append(To);
                 var promotion = Type & PgnMoveType.PromotionMask;
-                if (promotion != PgnMoveType.Normal) sb.Append('=').Append(Promotions[promotion]);
+                if (promotion != PgnMoveType.Normal) sb.Append('=').Append(_promotions[promotion]);
             }
 
             if (Type.HasFlag(PgnMoveType.CheckMate)) sb.Append('#');
