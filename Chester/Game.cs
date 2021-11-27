@@ -1,7 +1,6 @@
 ﻿using Chester.Evaluations;
 using Chester.Models;
 using Chester.Search;
-using Chester.Services;
 
 namespace Chester
 {
@@ -11,12 +10,12 @@ namespace Chester
         public Color NextToMove { get; private set; } = Color.White;
         private readonly ISearch _search;
 
-        public Game(ISearchReporter reporter) 
+        public Game(ISearchReporter reporter)
         {
             _search = new ParallellAlphaBetaMinMaxSearch(new SearchOptions(6), new Evaluator(), reporter);
         }
 
-        public Game(Board board, Color nextToMove, ISearchReporter reporter): this(reporter)
+        public Game(Board board, Color nextToMove, ISearchReporter reporter) : this(reporter)
         {
             Board = board;
             NextToMove = nextToMove;
@@ -30,14 +29,8 @@ namespace Chester
             NextToMove = NextToMove.Other();
         }
 
-        public Evaluation Search()
-        {
-            return _search.Search(Board, NextToMove);
-        }
+        public Evaluation Search() => _search.Search(Board, NextToMove);
 
-        public override string ToString()
-        {
-            return Board.ToString();
-        }
+        public override string ToString() => Board.ToString();
     }
 }

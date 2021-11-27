@@ -11,7 +11,7 @@
 
         public static PgnPart FromString(string part)
         {
-            if (int.TryParse(part, out int value)) return new PgnPart(value);
+            if (int.TryParse(part, out var value)) return new PgnPart(value);
             return Unknown;
         }
     }

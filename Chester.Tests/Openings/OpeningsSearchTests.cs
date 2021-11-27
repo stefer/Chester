@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using Chester.Models;
 using Chester.Models.Pgn;
 using Chester.Openings;
 using Chester.Parsers;
-using Chester.Models;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Chester.Tests.Openings
 {

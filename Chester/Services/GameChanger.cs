@@ -1,9 +1,9 @@
-﻿using Chester.Models;
-using Chester.Messages;
+﻿using Chester.Messages;
 using Chester.Messages.Commands;
 using Chester.Messages.Events;
-using System.Threading.Tasks;
+using Chester.Models;
 using Chester.Search;
+using System.Threading.Tasks;
 
 namespace Chester.Services
 {
@@ -16,7 +16,7 @@ namespace Chester.Services
     {
         private readonly IMessageBus _messageBus;
         private Game _game;
-        ISearchReporter _reporter;
+        private readonly ISearchReporter _reporter;
 
         public GameChanger(IMessageBus messageBus, ISearchReporter reporter)
         {
@@ -32,10 +32,7 @@ namespace Chester.Services
             await _messageBus.SendAsync(new SendUciMessage("uciok"));
         }
 
-        public async Task HandleAsync(UciReadyRequested _)
-        {
-            await _messageBus.SendAsync(new SendUciMessage("readyok"));
-        }
+        public async Task HandleAsync(UciReadyRequested _) => await _messageBus.SendAsync(new SendUciMessage("readyok"));
 
         public Task HandleAsync(StartNewGame _)
         {

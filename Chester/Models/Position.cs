@@ -7,20 +7,20 @@ namespace Chester.Models
 {
     public record Position
     {
-        static readonly int[] ranks = { 1, 2, 3, 4, 5, 6, 7, 8 };
-        static readonly char[] files = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
+        private static readonly int[] ranks = { 1, 2, 3, 4, 5, 6, 7, 8 };
+        private static readonly char[] files = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
 
         public static readonly Position Invalid = new(-1, -1);
 
         public int Rank { get; init; }
         public int File { get; init; }
 
-        public static Dictionary<int, Position> Positions = new Dictionary<int, Position>(64);
+        public static readonly Dictionary<int, Position> Positions = new(64);
 
         static Position()
         {
-            for (int f = 0; f < 8; f++)
-                for (int r = 0; r < 8; r++)
+            for (var f = 0; f < 8; f++)
+                for (var r = 0; r < 8; r++)
                     Positions[f * 64 + r] = new Position(f, r);
 
         }
@@ -28,7 +28,7 @@ namespace Chester.Models
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Position Create(int file, int rank)
         {
-            if (Positions.TryGetValue(file * 64 + rank, out Position value)) return value;
+            if (Positions.TryGetValue(file * 64 + rank, out var value)) return value;
             return Invalid;
         }
 

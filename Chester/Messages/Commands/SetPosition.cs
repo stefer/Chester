@@ -1,5 +1,4 @@
-﻿using Chester.Messages;
-using Chester.Models;
+﻿using Chester.Models;
 using Chester.Models.Pgn;
 
 namespace Chester.Messages.Commands

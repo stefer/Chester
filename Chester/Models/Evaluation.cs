@@ -4,7 +4,7 @@ namespace Chester.Models
 {
     public class Evaluation
     {
-        public static int CheckMate = 20000;
+        public const int CheckMate = 20000;
 
         public Evaluation(int value, Move move)
         {
@@ -17,6 +17,6 @@ namespace Chester.Models
 
         public bool IsCheckMate() => Math.Abs(Value) >= CheckMate;
 
-        override public string ToString() => $"{Move}:{Value}";
+        public override string ToString() => $"{Move}:{Value}";
     }
 }

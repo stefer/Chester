@@ -18,7 +18,7 @@ namespace Chester.Tests.Extensions
             if (typeof(TActual) != typeof(T))
                 return new ConstraintResult(this, actual, ConstraintStatus.Error);
 
-            T aEnum = (T)(object)actual;
+            var aEnum = (T)(object)actual;
 
             if (aEnum.HasFlag(_expected))
                 return new ConstraintResult(this, actual, ConstraintStatus.Success);

@@ -8,9 +8,9 @@ namespace Chester.Models.Pgn
 {
     public class MoveText : IEnumerable<PgnMove>, IReadOnlyList<PgnMove>
     {
-        private List<PgnMove> _moves;
+        private readonly List<PgnMove> _moves;
 
-        public static readonly MoveText Empty = new MoveText(Enumerable.Empty<PgnMove>(), "*");
+        public static readonly MoveText Empty = new(Enumerable.Empty<PgnMove>(), "*");
 
         public MoveText(IEnumerable<PgnMove> moves, string result)
         {
@@ -40,7 +40,7 @@ namespace Chester.Models.Pgn
             return result;
         }
 
-        override public string ToString()
+        public override string ToString()
         {
             const int LineLength = 80;
 
@@ -57,10 +57,10 @@ namespace Chester.Models.Pgn
                     lineLength = 0;
                 }
 
-                sb.Append(moveStr).Append(" ");
+                sb.Append(moveStr).Append(' ');
                 lineLength += moveStr.Length + 1;
             }
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append(Result);
 
             return sb.ToString();

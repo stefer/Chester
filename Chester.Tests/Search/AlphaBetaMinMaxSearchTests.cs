@@ -1,7 +1,7 @@
-﻿using Chester.Models;
+﻿using Chester.Evaluations;
+using Chester.Models;
 using Chester.Parsers;
 using Chester.Search;
-using Chester.Evaluations;
 using FakeItEasy;
 using NUnit.Framework;
 using System.Collections.Generic;

@@ -1,5 +1,4 @@
-﻿using Chester.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -35,7 +34,7 @@ namespace Chester.Models.Pgn
 
     public record PgnPly(Color Color, PgnPiece Piece, PgnPosition From, PgnPosition To = null, PgnMoveType Type = PgnMoveType.Normal, string Comment = null)
     {
-        public static PgnPly None = new((Color)(-1), (PgnPiece)(-1), null);
+        public static readonly PgnPly None = new((Color)(-1), (PgnPiece)(-1), null);
 
         private static readonly Dictionary<PgnPiece, string> PgnPieces = new()
         {
@@ -76,7 +75,7 @@ namespace Chester.Models.Pgn
 
             if (Type.HasFlag(PgnMoveType.CheckMate)) sb.Append('#');
             if (Type.HasFlag(PgnMoveType.Check)) sb.Append('+');
-            if (Comment != null) sb.Append(" ").Append('{').Append(Comment).Append('}');
+            if (Comment != null) sb.Append(' ').Append('{').Append(Comment).Append('}');
 
             return sb.ToString();
         }
@@ -89,10 +88,7 @@ namespace Chester.Models.Pgn
             return (Color, Piece, From, To, To).Equals((other.Color, other.Piece, other.From, other.To, other.To));
         }
 
-        public override int GetHashCode()
-        {
-            return (Color, Piece, From, To, To).GetHashCode();
-        }
+        public override int GetHashCode() => (Color, Piece, From, To, To).GetHashCode();
     }
 
     public record PgnMove(int Seq, PgnPly White, PgnPly Black, string Comment = null)
@@ -120,9 +116,6 @@ namespace Chester.Models.Pgn
             return (Seq, White, Black).Equals((other.Seq, other.White, other.Black));
         }
 
-        public override int GetHashCode()
-        {
-            return (Seq, White, Black).GetHashCode();
-        }
+        public override int GetHashCode() => HashCode.Combine(Seq, White, Black);
     }
 }

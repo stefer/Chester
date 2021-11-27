@@ -2,9 +2,9 @@
 
 namespace Chester.Tests.Parsers
 {
-    using Chester.Parsers;
     using Chester.Models;
     using Chester.Models.Pgn;
+    using Chester.Parsers;
     using Chester.Tests.Extensions;
 
     public class MoveTextReaderTests
@@ -37,7 +37,7 @@ namespace Chester.Tests.Parsers
         public class Specific
         {
             [Test]
-            public void bxc3()
+            public void ReadAll_bxc3()
             {
                 var moveText = @"6.bxc3 dxc5";
                 var sut = new MoveTextReader(moveText);

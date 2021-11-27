@@ -19,17 +19,13 @@ namespace Chester.Services
         }
 
 
-        public void AddHandler<TCommand>(ICommandHandler<TCommand> handler) where TCommand : Message
-        {
-            _handlers.AddOrUpdate(
+        public void AddHandler<TCommand>(ICommandHandler<TCommand> handler) where TCommand : Message => _handlers.AddOrUpdate(
                 typeof(TCommand),
                 new List<ICommandHandler<Message>>() { (ICommandHandler<Message>)handler },
-                (type, list) =>
-                {
+                (type, list) => {
                     list.Add((ICommandHandler<Message>)handler);
                     return list;
                 });
-        }
 
         public Task SendAsync<TCommand>(TCommand command) where TCommand : Message
         {

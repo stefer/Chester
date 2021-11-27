@@ -19,8 +19,8 @@ namespace Chester.Evaluations
             [SquareState.Pawn] = 0
         };
 
-        public static int MiddleGameThreshold = 32 - 1; // One major piece taken
-        public static int EndGameThreshold = 10;        // Queen and one major piece
+        public const int MiddleGameThreshold = 32 - 1; // One major piece taken
+        public const int EndGameThreshold = 10;        // Queen and one major piece
 
         public static EvaluationTables FromBoard(Board b)
         {

@@ -35,8 +35,8 @@ namespace Chester.Models.Pgn
 
         public override string ToString()
         {
-            string file = ValidFile ? files[File].ToString() : string.Empty;
-            string rank = ValidRank ? ranks[Rank].ToString() : string.Empty;
+            var file = ValidFile ? files[File].ToString() : string.Empty;
+            var rank = ValidRank ? ranks[Rank].ToString() : string.Empty;
 
             return $"{file}{rank}";
         }

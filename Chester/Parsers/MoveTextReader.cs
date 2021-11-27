@@ -31,12 +31,12 @@ namespace Chester.Parsers
         public MoveText ReadAll()
         {
             List<PgnMove> moves = new();
-            int sequence = 1;
+            var sequence = 1;
 
-            while (Move(sequence++, out PgnMove move)) moves.Add(move);
+            while (Move(sequence++, out var move)) moves.Add(move);
 
             WhiteSpace();
-            Result(out string result);
+            Result(out var result);
 
             return new MoveText(moves, result);
         }
@@ -53,7 +53,7 @@ namespace Chester.Parsers
 
             var span = _current.Span;
 
-            int move = 0;
+            var move = 0;
             while (move < span.Length && !char.IsWhiteSpace(span[move])) move++;
 
             result = span[0..move].ToString();
@@ -91,10 +91,10 @@ namespace Chester.Parsers
             if (IsResult()) return false;
 
             Sequence();
-            Comment(out string comment);
-            if (!HalfMove(Color.White, out PgnPly white)) return false;
+            Comment(out var comment);
+            if (!HalfMove(Color.White, out var white)) return false;
             Sequence();
-            HalfMove(Color.Black, out PgnPly black);
+            HalfMove(Color.Black, out var black);
 
             move = new PgnMove(sequence, white, black, comment);
 
@@ -137,20 +137,20 @@ namespace Chester.Parsers
             halfMove = null;
             WhiteSpace();
 
-            if (Castling(color, out PgnPly castling))
+            if (Castling(color, out var castling))
             {
-                Check(out PgnMoveType check1);
+                Check(out var check1);
                 Comment(out var comment);
                 halfMove = castling with { Type = castling.Type | check1, Comment = comment };
                 return true;
             }
 
-            Piece(out PgnPiece piece);
-            Position(out PgnPosition first);
-            Take(out PgnMoveType take);
-            Position(out PgnPosition second);
-            Promotion(out PgnMoveType promotion);
-            Check(out PgnMoveType check);
+            Piece(out var piece);
+            Position(out var first);
+            Take(out var take);
+            Position(out var second);
+            Promotion(out var promotion);
+            Check(out var check);
             Comment(out var comment1);
 
 
@@ -234,7 +234,7 @@ namespace Chester.Parsers
 
             if (_current.IsEmpty) return;
 
-            if (PgnPieces.TryGetValue(_current.Span[0], out PgnPiece piece2))
+            if (PgnPieces.TryGetValue(_current.Span[0], out var piece2))
             {
                 piece = piece2;
                 _current = _current[1..];
@@ -257,7 +257,7 @@ namespace Chester.Parsers
             var span = _current.Span;
             if (!_current.IsEmpty && span[0] == '=')
             {
-                if (span.Length < 2 || !Promotions.TryGetValue(char.ToUpper(span[1]), out PgnMoveType value))
+                if (span.Length < 2 || !Promotions.TryGetValue(char.ToUpper(span[1]), out var value))
                     throw new PgnParseError($"Expected promotion to known piece at {span.ToString()}");
                 promotion = value;
                 _current = _current[2..];
@@ -297,7 +297,7 @@ namespace Chester.Parsers
         private void WhiteSpace()
         {
             var span = _current.Span;
-            int i = 0;
+            var i = 0;
             while (i < span.Length && char.IsWhiteSpace(span[i])) i++;
 
             _current = _current[i..];
@@ -309,7 +309,7 @@ namespace Chester.Parsers
             Number();
             WhiteSpace();
             var span = _current.Span;
-            int i = 0;
+            var i = 0;
             while (i < span.Length && span[i] == '.') i++;
 
             _current = _current[i..];
@@ -318,7 +318,7 @@ namespace Chester.Parsers
         private void Number()
         {
             var span = _current.Span;
-            int i = 0;
+            var i = 0;
             while (i < span.Length && char.IsNumber(span[i])) i++;
 
             _current = _current[i..];

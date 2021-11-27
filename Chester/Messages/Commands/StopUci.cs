@@ -1,6 +1,4 @@
-﻿using Chester.Messages;
-
-namespace Chester.Messages.Commands
+﻿namespace Chester.Messages.Commands
 {
     internal class StopUci : Command { }
 }

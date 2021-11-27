@@ -1,10 +1,8 @@
 ﻿using Chester.Models.Pgn;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace Chester.Openings
 {
@@ -26,15 +24,9 @@ namespace Chester.Openings
         public PgnGame Pgn { get; private set; }
         public OpeningResults Results { get; private set; }
 
-        internal void SetPgn(PgnGame pgn)
-        {
-            Pgn = pgn;
-        }
+        internal void SetPgn(PgnGame pgn) => Pgn = pgn;
 
-        internal void SetResult(OpeningResults result)
-        {
-            Results = result;
-        }
+        internal void SetResult(OpeningResults result) => Results = result;
     }
 
     public class OpeningSearch
@@ -49,16 +41,13 @@ namespace Chester.Openings
                 return (x.From, x.To, x.Piece).Equals((y.From, y.To, y.Piece));
             }
 
-            public int GetHashCode([DisallowNull] PgnPly obj)
-            {
-                return (obj.From, obj.To, obj.Piece).GetHashCode();
-            }
+            public int GetHashCode([DisallowNull] PgnPly obj) => (obj.From, obj.To, obj.Piece).GetHashCode();
         }
 
         [DebuggerDisplay("Node {Value} ({_alternatives.Count})")]
         private class Node
         {
-            private Dictionary<PgnPly, Node> _alternatives = new(new HalfMoveComparer());
+            private readonly Dictionary<PgnPly, Node> _alternatives = new(new HalfMoveComparer());
 
             public Node()
             {
@@ -81,7 +70,7 @@ namespace Chester.Openings
 
             public void Add(Node subtree)
             {
-                if (TryGet(subtree.Value.Move, out Node existing))
+                if (TryGet(subtree.Value.Move, out var existing))
                     existing.Add(subtree);
                 else
                     _alternatives.Add(subtree.Value.Move, subtree);
@@ -90,10 +79,7 @@ namespace Chester.Openings
 
             public bool TryGet(PgnPly halfMove, out Node node) => _alternatives.TryGetValue(halfMove, out node);
 
-            public void SetPgn(PgnGame pgn)
-            {
-                Value.SetPgn(pgn);
-            }
+            public void SetPgn(PgnGame pgn) => Value.SetPgn(pgn);
         }
 
         private Node _root;
@@ -119,7 +105,7 @@ namespace Chester.Openings
             node?.Value.SetResult(result);
         }
 
-        private OpeningResults GetResult(PgnResult result)
+        private static OpeningResults GetResult(PgnResult result)
         {
             if (result == PgnResult.WhiteWin) return new OpeningResults(1, 0, 0);
             if (result == PgnResult.BlackWin) return new OpeningResults(0, 1, 0);
@@ -152,7 +138,7 @@ namespace Chester.Openings
         {
             _root = new Node();
 
-            foreach (PgnGame pgn in pgns)
+            foreach (var pgn in pgns)
             {
                 BuildNode(pgn);
             }

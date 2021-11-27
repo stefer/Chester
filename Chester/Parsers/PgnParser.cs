@@ -11,7 +11,7 @@ namespace Chester.Parsers
     {
         public static IEnumerable<PgnGame> Parse(string input)
         {
-            int position = 0;
+            var position = 0;
             do
             {
                 MoveToAttributes(input, ref position);

@@ -11,18 +11,12 @@ namespace Chester
 
         public bool IsEnabled(LogLevel logLevel) => true;
 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-        {
-            Console.Error.WriteLine($"[{eventId.Id,2}: {logLevel,-12}] {formatter(state, exception)}");
-        }
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter) => Console.Error.WriteLine($"[{eventId.Id,2}: {logLevel,-12}] {formatter(state, exception)}");
     }
 
     public sealed class StdErrConsoleLoggerProvider : ILoggerProvider
     {
-        public ILogger CreateLogger(string categoryName)
-        {
-            return new StdErrConsoleLogger();
-        }
+        public ILogger CreateLogger(string categoryName) => new StdErrConsoleLogger();
 
         public void Dispose()
         {

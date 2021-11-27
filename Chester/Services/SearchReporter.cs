@@ -12,7 +12,7 @@ namespace Chester.Services
     {
         private const long MinWaitTimeMs = 500;
         private readonly IMessageBus _bus;
-        private readonly Stopwatch _watch = new Stopwatch();
+        private readonly Stopwatch _watch = new();
         private long _countNodes = 0;
         private long _lastLineUpdateTime = 0;
         private long _lastNodesUpdateTime = 0;
@@ -24,11 +24,9 @@ namespace Chester.Services
             _watch.Start();
         }
 
-        public void CurrentMove(Move move, long moveNumber, int score)
-        {
+        public void CurrentMove(Move move, long moveNumber, int score) =>
             // Do not wait
             _bus.SendAsync(new Info { CurrentMove = move, CurrentMoveNumber = moveNumber, Score = score });
-        }
 
         public void BestLine(int depth, int score, IEnumerable<Move> bestLine)
         {
@@ -39,7 +37,7 @@ namespace Chester.Services
             var nodes = _countNodes;
             var nps = 1000 * nodes / ms;
             // Do not wait
-            _bus.SendAsync(new Info { Depth = depth, Score = score, Pv = bestLine, Nodes = nodes, TimeMs = ms, NodesPerSec = nps});
+            _bus.SendAsync(new Info { Depth = depth, Score = score, Pv = bestLine, Nodes = nodes, TimeMs = ms, NodesPerSec = nps });
         }
 
         public void Reset()

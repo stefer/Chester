@@ -24,7 +24,7 @@ namespace Chester.Models
         private const int Ranks = 8;
         private const int Files = 8;
 
-        private static SquareState[] Emptysquares = new SquareState[Ranks * Files]
+        private static readonly SquareState[] Emptysquares = new SquareState[Ranks * Files]
         {
             0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0,
@@ -38,7 +38,7 @@ namespace Chester.Models
 
         public static Board Empty() => new(Emptysquares);
 
-        private SquareState[] _squares = new SquareState[Ranks * Files]
+        private readonly SquareState[] _squares = new SquareState[Ranks * Files]
         {
             T, N, B, Q, K, B, N, T,
             P, P, P, P, P, P, P, P,
@@ -50,7 +50,7 @@ namespace Chester.Models
             t, n, b, q, k, b, n, t,
         };
 
-        private Stack<Move> _line = new Stack<Move>();
+        private readonly Stack<Move> _line = new();
 
         public Board() { }
 
@@ -59,15 +59,12 @@ namespace Chester.Models
             _squares = (SquareState[])squares.Clone();
         }
 
-        public Board(Board board) : this(board._squares) 
-        { 
+        public Board(Board board) : this(board._squares)
+        {
             _line = new Stack<Move>(board._line);
         }
 
-        public static Position Pos(int idx)
-        {
-            return Position.Create(idx % Files, idx / Files);
-        }
+        public static Position Pos(int idx) => Position.Create(idx % Files, idx / Files);
 
         public static int Index(Position p)
         {
@@ -75,15 +72,9 @@ namespace Chester.Models
             return p.Rank * Files + p.File;
         }
 
-        public SquareState At(Position p)
-        {
-            return p.Valid ? _squares[Index(p)] : SquareState.Invalid;
-        }
+        public SquareState At(Position p) => p.Valid ? _squares[Index(p)] : SquareState.Invalid;
 
-        public void Set(Position p, SquareState state)
-        {
-            _squares[Index(p)] = state;
-        }
+        public void Set(Position p, SquareState state) => _squares[Index(p)] = state;
 
         public IEnumerable<Move> MovesFor(Color c)
         {
@@ -120,6 +111,7 @@ namespace Chester.Models
                 if (square.IsAttack(At(rightUp))) yield return new Move(square, from, rightUp, true);
 
                 // TODO: En Passant
+                // TODO: Promote
             }
             else if (square.IsKnight())
             {
@@ -240,27 +232,21 @@ namespace Chester.Models
 
         public IEnumerable<Piece> Pieces => Search(s => s.IsOccupied());
 
-        public IEnumerable<Piece> Search(Func<SquareState, bool> predicate)
-        {
-            return _squares
+        public IEnumerable<Piece> Search(Func<SquareState, bool> predicate) => _squares
                 .Select((square, from) => new Piece(Pos(from), square))
                 .Where(p => predicate(p.SquareState));
-        }
 
-        public Board Clone()
-        {
-            return new Board(this);
-        }
+        public Board Clone() => new(this);
 
         public override string ToString()
         {
             var sb = new StringBuilder();
 
             sb.AppendLine("  abcdefgh");
-            for (int r = 7; r >= 0; r--)
+            for (var r = 7; r >= 0; r--)
             {
                 sb.Append($"{r + 1}|");
-                for (int f = 0; f < 8; f++)
+                for (var f = 0; f < 8; f++)
                 {
                     sb.Append(_squares[r * Files + f].AsString());
                 }

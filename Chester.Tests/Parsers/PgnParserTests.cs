@@ -12,7 +12,7 @@ namespace Chester.Tests.Parsers
         public class SingleEntry
         {
 
-            private static string Single = @"
+            private static readonly string Single = @"
 [Event ""F/S Return Match""]
 [Site ""Belgrade, Serbia JUG""]
 [Date ""1992.11.04""]
@@ -75,7 +75,7 @@ Nf2 42. g4 Bd3 43. Re6 1/2-1/2
 
         public class MultipleEntries
         {
-            private static string Multiple = @"
+            private static readonly string Multiple = @"
 [Event ""Match 1""]
 [Site ""Belgrade, Serbia JUG""]
 [Date ""1992.11.04""]

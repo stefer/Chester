@@ -1,7 +1,7 @@
-﻿using Chester.Messages.Commands;
+﻿using Chester.Messages;
+using Chester.Messages.Commands;
 using Chester.Messages.Events;
 using Chester.Parsers;
-using Chester.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,10 +69,7 @@ namespace Chester.Services
             await messageBus.SendAsync(setPositionCmd);
         }
 
-        private async Task CmdGo(IEnumerable<string> arg)
-        {
-            await messageBus.SendAsync(new Go());
-        }
+        private async Task CmdGo(IEnumerable<string> arg) => await messageBus.SendAsync(new Go());
 
         public async Task ExecuteAsync(string commandLine)
         {
@@ -80,7 +77,7 @@ namespace Chester.Services
             var cmd = split[0].Trim().ToLower();
             var args = split.Skip(1);
 
-            if (_handlers.TryGetValue(cmd, out Func<IEnumerable<string>, Task> handler))
+            if (_handlers.TryGetValue(cmd, out var handler))
                 await handler(args);
         }
     }
