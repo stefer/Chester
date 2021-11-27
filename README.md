@@ -19,7 +19,7 @@ Play.
 
 ## TODOS
 
- - [ ] Dotnet 6 / Csharp 10
+ - [X] Dotnet 6 / Csharp 10
  - [ ] Iterative deepening of search depth
  - [ ] En Passant
  - [ ] Promoting
