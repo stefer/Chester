@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Chester.Tests.Extensions
+namespace Chester.Tests.Extensions;
+
+public class Has : NUnit.Framework.Has
 {
-    public class Has : NUnit.Framework.Has
-    {
-        public static EnumHasFlagConstraint<T> Flag<T>(T expected) where T : Enum => new(expected);
-    }
+    public static EnumHasFlagConstraint<T> Flag<T>(T expected) where T : Enum => new(expected);
 }

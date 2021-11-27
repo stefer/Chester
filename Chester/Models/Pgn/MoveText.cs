@@ -4,66 +4,65 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace Chester.Models.Pgn
+namespace Chester.Models.Pgn;
+
+public class MoveText : IEnumerable<PgnMove>, IReadOnlyList<PgnMove>
 {
-    public class MoveText : IEnumerable<PgnMove>, IReadOnlyList<PgnMove>
+    private readonly List<PgnMove> _moves;
+
+    public static readonly MoveText Empty = new(Enumerable.Empty<PgnMove>(), "*");
+
+    public MoveText(IEnumerable<PgnMove> moves, string result)
     {
-        private readonly List<PgnMove> _moves;
+        _moves = moves.ToList();
+        Result = result;
+    }
 
-        public static readonly MoveText Empty = new(Enumerable.Empty<PgnMove>(), "*");
+    public string Result { get; }
 
-        public MoveText(IEnumerable<PgnMove> moves, string result)
+    public PgnMove this[int index] => _moves[index];
+
+    public int Count => _moves.Count;
+
+    public IEnumerator<PgnMove> GetEnumerator() => _moves.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => _moves.GetEnumerator();
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public IEnumerable<PgnPly> AsPlies()
+    {
+        List<PgnPly> result = new(_moves.Count * 2);
+        foreach (var move in _moves)
         {
-            _moves = moves.ToList();
-            Result = result;
+            result.Add(move.White);
+            if (move.Black is not null) result.Add(move.Black);
         }
+        return result;
+    }
 
-        public string Result { get; }
+    public override string ToString()
+    {
+        const int LineLength = 80;
 
-        public PgnMove this[int index] => _moves[index];
+        var sb = new StringBuilder();
+        var lineLength = 0;
 
-        public int Count => _moves.Count;
-
-        public IEnumerator<PgnMove> GetEnumerator() => _moves.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => _moves.GetEnumerator();
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerable<PgnPly> AsPlies()
+        foreach (var move in this)
         {
-            List<PgnPly> result = new(_moves.Count * 2);
-            foreach (var move in _moves)
+            var moveStr = move.ToString();
+
+            if (lineLength + moveStr.Length + 1 > LineLength)
             {
-                result.Add(move.White);
-                if (move.Black is not null) result.Add(move.Black);
+                sb.AppendLine();
+                lineLength = 0;
             }
-            return result;
+
+            sb.Append(moveStr).Append(' ');
+            lineLength += moveStr.Length + 1;
         }
+        sb.Append(' ');
+        sb.Append(Result);
 
-        public override string ToString()
-        {
-            const int LineLength = 80;
-
-            var sb = new StringBuilder();
-            var lineLength = 0;
-
-            foreach (var move in this)
-            {
-                var moveStr = move.ToString();
-
-                if (lineLength + moveStr.Length + 1 > LineLength)
-                {
-                    sb.AppendLine();
-                    lineLength = 0;
-                }
-
-                sb.Append(moveStr).Append(' ');
-                lineLength += moveStr.Length + 1;
-            }
-            sb.Append(' ');
-            sb.Append(Result);
-
-            return sb.ToString();
-        }
+        return sb.ToString();
     }
 }

@@ -1,4 +1,3 @@
-﻿namespace Chester.Messages.Commands
-{
-    internal class StopUci : Command { }
-}
+﻿namespace Chester.Messages.Commands;
+
+internal class StopUci : Command { }

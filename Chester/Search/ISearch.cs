@@ -1,9 +1,8 @@
 ﻿using Chester.Models;
 
-namespace Chester.Search
+namespace Chester.Search;
+
+public interface ISearch
 {
-    public interface ISearch
-    {
-        Evaluation Search(Board board, Color nextToMove);
-    }
+    Evaluation Search(Board board, Color nextToMove);
 }

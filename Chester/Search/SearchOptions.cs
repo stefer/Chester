@@ -1,4 +1,3 @@
-﻿namespace Chester.Search
-{
-    public record SearchOptions(int MaxDepth) { }
-}
+﻿namespace Chester.Search;
+
+public record SearchOptions(int MaxDepth) { }

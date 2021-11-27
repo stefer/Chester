@@ -1,4 +1,3 @@
-﻿namespace Chester.Messages
-{
-    public interface Message { }
-}
+﻿namespace Chester.Messages;
+
+public interface Message { }

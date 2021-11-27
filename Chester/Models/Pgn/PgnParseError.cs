@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Chester.Models.Pgn
+namespace Chester.Models.Pgn;
+
+public class PgnParseError : Exception
 {
-    public class PgnParseError : Exception
-    {
-        public PgnParseError(string message) : base(message) { }
-    }
+    public PgnParseError(string message) : base(message) { }
 }

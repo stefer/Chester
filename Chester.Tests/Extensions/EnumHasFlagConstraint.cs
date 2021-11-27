@@ -1,29 +1,28 @@
 ﻿using NUnit.Framework.Constraints;
 using System;
 
-namespace Chester.Tests.Extensions
+namespace Chester.Tests.Extensions;
+
+public class EnumHasFlagConstraint<T> : Constraint where T : Enum
 {
-    public class EnumHasFlagConstraint<T> : Constraint where T : Enum
+    readonly T _expected;
+
+    public EnumHasFlagConstraint(T expected)
     {
-        readonly T _expected;
+        _expected = expected;
+        Description = $"EnumHasFlag {expected}";
+    }
 
-        public EnumHasFlagConstraint(T expected)
-        {
-            _expected = expected;
-            Description = $"EnumHasFlag {expected}";
-        }
+    public override ConstraintResult ApplyTo<TActual>(TActual actual)
+    {
+        if (typeof(TActual) != typeof(T))
+            return new ConstraintResult(this, actual, ConstraintStatus.Error);
 
-        public override ConstraintResult ApplyTo<TActual>(TActual actual)
-        {
-            if (typeof(TActual) != typeof(T))
-                return new ConstraintResult(this, actual, ConstraintStatus.Error);
+        var aEnum = (T)(object)actual;
 
-            var aEnum = (T)(object)actual;
-
-            if (aEnum.HasFlag(_expected))
-                return new ConstraintResult(this, actual, ConstraintStatus.Success);
-            else
-                return new ConstraintResult(this, actual, ConstraintStatus.Failure);
-        }
+        if (aEnum.HasFlag(_expected))
+            return new ConstraintResult(this, actual, ConstraintStatus.Success);
+        else
+            return new ConstraintResult(this, actual, ConstraintStatus.Failure);
     }
 }

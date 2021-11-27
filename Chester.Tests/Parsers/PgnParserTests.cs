@@ -3,16 +3,15 @@ using Chester.Parsers;
 using NUnit.Framework;
 using System.Linq;
 
-namespace Chester.Tests.Parsers
+namespace Chester.Tests.Parsers;
+
+public class PgnParserTests
 {
 
-    public class PgnParserTests
+    public class SingleEntry
     {
 
-        public class SingleEntry
-        {
-
-            private static readonly string Single = @"
+        private static readonly string Single = @"
 [Event ""F/S Return Match""]
 [Site ""Belgrade, Serbia JUG""]
 [Date ""1992.11.04""]
@@ -32,50 +31,50 @@ hxg5 29. b3 Ke6 30. a3 Kd6 31. axb4 cxb4 32. Ra5 Nd5 33. f3 Bc8 34. Kf2 Bf5
 Nf2 42. g4 Bd3 43. Re6 1/2-1/2
 ";
 
-            [Test]
-            public void AttributesAreRead()
-            {
-                var sut = PgnParser.Parse(Single).Single();
+        [Test]
+        public void AttributesAreRead()
+        {
+            var sut = PgnParser.Parse(Single).Single();
 
-                Assert.That(sut.Attributes["Event"], Is.EqualTo("F/S Return Match"));
-                Assert.That(sut.Attributes["Site"], Is.EqualTo("Belgrade, Serbia JUG"));
-                Assert.That(sut.Attributes["Date"], Is.EqualTo("1992.11.04"));
-                Assert.That(sut.Attributes["Round"], Is.EqualTo("29"));
-                Assert.That(sut.Attributes["White"], Is.EqualTo("Fischer, Robert J."));
-                Assert.That(sut.Attributes["Black"], Is.EqualTo("Spassky, Boris V."));
-                Assert.That(sut.Attributes["Result"], Is.EqualTo("1/2-1/2"));
-                Assert.That(sut.Attributes["Undef"], Is.EqualTo("Kalle på spången!"));
-            }
-
-            [Test]
-            public void AttributesAreReadAndDefaultPropertiesSet()
-            {
-                var sut = PgnParser.Parse(Single).Single();
-
-                Assert.That(sut.Event, Is.EqualTo("F/S Return Match"));
-                Assert.That(sut.Site, Is.EqualTo("Belgrade, Serbia JUG"));
-                Assert.That(sut.Date, Is.EqualTo(new PgnDate(1992, 11, 04)));
-                Assert.That(sut.Round, Is.EqualTo(29));
-                Assert.That(sut.White, Is.EqualTo("Fischer, Robert J."));
-                Assert.That(sut.Black, Is.EqualTo("Spassky, Boris V."));
-                Assert.That(sut.Result, Is.EqualTo(PgnResult.Draw));
-            }
-
-            [Test]
-            public void MoveTextIsRead()
-            {
-                var sut = PgnParser.Parse(Single).Single();
-
-                Assert.That(sut.Moves, Is.Not.Empty);
-                Assert.That(sut.Moves[0].ToString(), Is.EqualTo("1. e4 e5"));
-                Assert.That(sut.Moves[42].ToString(), Is.EqualTo("43. Re6"));
-                Assert.That(sut.Result, Is.EqualTo(PgnResult.Draw));
-            }
+            Assert.That(sut.Attributes["Event"], Is.EqualTo("F/S Return Match"));
+            Assert.That(sut.Attributes["Site"], Is.EqualTo("Belgrade, Serbia JUG"));
+            Assert.That(sut.Attributes["Date"], Is.EqualTo("1992.11.04"));
+            Assert.That(sut.Attributes["Round"], Is.EqualTo("29"));
+            Assert.That(sut.Attributes["White"], Is.EqualTo("Fischer, Robert J."));
+            Assert.That(sut.Attributes["Black"], Is.EqualTo("Spassky, Boris V."));
+            Assert.That(sut.Attributes["Result"], Is.EqualTo("1/2-1/2"));
+            Assert.That(sut.Attributes["Undef"], Is.EqualTo("Kalle på spången!"));
         }
 
-        public class MultipleEntries
+        [Test]
+        public void AttributesAreReadAndDefaultPropertiesSet()
         {
-            private static readonly string Multiple = @"
+            var sut = PgnParser.Parse(Single).Single();
+
+            Assert.That(sut.Event, Is.EqualTo("F/S Return Match"));
+            Assert.That(sut.Site, Is.EqualTo("Belgrade, Serbia JUG"));
+            Assert.That(sut.Date, Is.EqualTo(new PgnDate(1992, 11, 04)));
+            Assert.That(sut.Round, Is.EqualTo(29));
+            Assert.That(sut.White, Is.EqualTo("Fischer, Robert J."));
+            Assert.That(sut.Black, Is.EqualTo("Spassky, Boris V."));
+            Assert.That(sut.Result, Is.EqualTo(PgnResult.Draw));
+        }
+
+        [Test]
+        public void MoveTextIsRead()
+        {
+            var sut = PgnParser.Parse(Single).Single();
+
+            Assert.That(sut.Moves, Is.Not.Empty);
+            Assert.That(sut.Moves[0].ToString(), Is.EqualTo("1. e4 e5"));
+            Assert.That(sut.Moves[42].ToString(), Is.EqualTo("43. Re6"));
+            Assert.That(sut.Result, Is.EqualTo(PgnResult.Draw));
+        }
+    }
+
+    public class MultipleEntries
+    {
+        private static readonly string Multiple = @"
 [Event ""Match 1""]
 [Site ""Belgrade, Serbia JUG""]
 [Date ""1992.11.04""]
@@ -98,23 +97,22 @@ Nf2 42. g4 Bd3 43. Re6 1/2-1/2
 
 ";
 
-            [Test]
-            public void Parse()
-            {
-                var pgns = PgnParser.Parse(Multiple).ToList();
+        [Test]
+        public void Parse()
+        {
+            var pgns = PgnParser.Parse(Multiple).ToList();
 
-                Assert.That(pgns, Has.Count.EqualTo(2));
+            Assert.That(pgns, Has.Count.EqualTo(2));
 
-                Assert.That(pgns[0].Event, Is.EqualTo("Match 1"));
-                Assert.That(pgns[0].Round, Is.EqualTo(1));
-                Assert.That(pgns[0].White, Is.EqualTo("Fischer, Robert J."));
-                Assert.That(pgns[0].Moves[0].ToString(), Is.EqualTo("1. e4 e5"));
+            Assert.That(pgns[0].Event, Is.EqualTo("Match 1"));
+            Assert.That(pgns[0].Round, Is.EqualTo(1));
+            Assert.That(pgns[0].White, Is.EqualTo("Fischer, Robert J."));
+            Assert.That(pgns[0].Moves[0].ToString(), Is.EqualTo("1. e4 e5"));
 
-                Assert.That(pgns[1].Event, Is.EqualTo("Match 2"));
-                Assert.That(pgns[1].Round, Is.EqualTo(2));
-                Assert.That(pgns[1].White, Is.EqualTo("Spassky, Boris V."));
-                Assert.That(pgns[1].Moves[0].ToString(), Is.EqualTo("1. e5 e4"));
-            }
+            Assert.That(pgns[1].Event, Is.EqualTo("Match 2"));
+            Assert.That(pgns[1].Round, Is.EqualTo(2));
+            Assert.That(pgns[1].White, Is.EqualTo("Spassky, Boris V."));
+            Assert.That(pgns[1].Moves[0].ToString(), Is.EqualTo("1. e5 e4"));
         }
     }
 }

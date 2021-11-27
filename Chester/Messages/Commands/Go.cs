@@ -1,5 +1,3 @@
-﻿namespace Chester.Messages.Commands
-{
+﻿namespace Chester.Messages.Commands;
 
-    internal class Go : Command { }
-}
+internal class Go : Command { }

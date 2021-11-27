@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace Chester.Messages
+namespace Chester.Messages;
+
+public interface IMessageBus
 {
-    public interface IMessageBus
-    {
-        Task SendAsync<TCommand>(TCommand command) where TCommand : Message;
-    }
+    Task SendAsync<TCommand>(TCommand command) where TCommand : Message;
 }

@@ -1,4 +1,3 @@
-﻿namespace Chester.Messages.Events
-{
-    internal class UciReadyRequested : Event { }
-}
+﻿namespace Chester.Messages.Events;
+
+internal class UciReadyRequested : Event { }

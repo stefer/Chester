@@ -1,22 +1,21 @@
 ﻿using Chester.Models;
 using System.Linq;
 
-namespace Chester.Evaluations
-{
-    public interface IEvaluator
-    {
-        public int Evaluate(Board b);
-    }
+namespace Chester.Evaluations;
 
-    public class Evaluator : IEvaluator
+public interface IEvaluator
+{
+    public int Evaluate(Board b);
+}
+
+public class Evaluator : IEvaluator
+{
+    public int Evaluate(Board b)
     {
-        public int Evaluate(Board b)
-        {
-            var eval = EvaluationTables.FromBoard(b);
-            var pieces = b.Pieces.ToList();
-            var byValue = pieces.Select(p => eval.PieceValue(p)).Sum();
-            var byPosition = pieces.Select(p => eval.Positional(p)).Sum();
-            return byValue + byPosition;
-        }
+        var eval = EvaluationTables.FromBoard(b);
+        var pieces = b.Pieces.ToList();
+        var byValue = pieces.Select(p => eval.PieceValue(p)).Sum();
+        var byPosition = pieces.Select(p => eval.Positional(p)).Sum();
+        return byValue + byPosition;
     }
 }

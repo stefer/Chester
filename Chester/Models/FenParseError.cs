@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Chester.Models
+namespace Chester.Models;
+
+public class FenParseError : Exception
 {
-    public class FenParseError : Exception
-    {
-        public FenParseError(string message) : base(message) { }
-    }
+    public FenParseError(string message) : base(message) { }
 }

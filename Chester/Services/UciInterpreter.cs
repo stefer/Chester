@@ -7,78 +7,77 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Chester.Services
+namespace Chester.Services;
+
+internal class UciInterpreter : IUciInterpretator
 {
-    internal class UciInterpreter : IUciInterpretator
+    private readonly IMessageBus _messageBus;
+
+    private readonly Dictionary<string, Func<IEnumerable<string>, Task>> _handlers;
+
+    public UciInterpreter(IMessageBus messageBus)
     {
-        private readonly IMessageBus _messageBus;
+        _messageBus = messageBus;
 
-        private readonly Dictionary<string, Func<IEnumerable<string>, Task>> _handlers;
-
-        public UciInterpreter(IMessageBus messageBus)
+        _handlers = new()
         {
-            _messageBus = messageBus;
+            ["uci"] = CmdUci,
+            ["isready"] = CmdIsReady,
+            ["ucinewgame"] = CmdNewGame,
+            ["position"] = CmdPosition,
+            ["go"] = CmdGo
+        };
+    }
 
-            _handlers = new()
-            {
-                ["uci"] = CmdUci,
-                ["isready"] = CmdIsReady,
-                ["ucinewgame"] = CmdNewGame,
-                ["position"] = CmdPosition,
-                ["go"] = CmdGo
-            };
+
+    public async Task CmdUci(IEnumerable<string> args) => await _messageBus.SendAsync(new UciCommStarted());
+    public async Task CmdIsReady(IEnumerable<string> args) => await _messageBus.SendAsync(new UciReadyRequested());
+    public async Task CmdNewGame(IEnumerable<string> args) => await _messageBus.SendAsync(new StartNewGame());
+
+    private async Task CmdPosition(IEnumerable<string> args)
+    {
+        // position [fen <fenstring> | startpos ]  moves <move1> .... <movei>
+        var typeString = args.First().Trim().ToLower();
+        var restArgs = args.Skip(1);
+        var setPositionCmd = new SetPosition();
+
+        switch (typeString)
+        {
+            case "fen":
+                var fenParser = new FenParser(restArgs.First());
+                setPositionCmd.Fen = fenParser.Parse();
+                restArgs = args.Skip(1);
+                break;
+
+            case "startpos":
+                setPositionCmd.StartPosition = true;
+                break;
+
+            case "moves":
+                break;
+
+            default:
+                throw new ArgumentException($"Unknown UCI position type {typeString} in {string.Join(", ", args)}");
         }
 
-
-        public async Task CmdUci(IEnumerable<string> args) => await _messageBus.SendAsync(new UciCommStarted());
-        public async Task CmdIsReady(IEnumerable<string> args) => await _messageBus.SendAsync(new UciReadyRequested());
-        public async Task CmdNewGame(IEnumerable<string> args) => await _messageBus.SendAsync(new StartNewGame());
-
-        private async Task CmdPosition(IEnumerable<string> args)
+        if (restArgs.Any() && restArgs.First() == "moves")
         {
-            // position [fen <fenstring> | startpos ]  moves <move1> .... <movei>
-            var typeString = args.First().Trim().ToLower();
-            var restArgs = args.Skip(1);
-            var setPositionCmd = new SetPosition();
-
-            switch (typeString)
-            {
-                case "fen":
-                    var fenParser = new FenParser(restArgs.First());
-                    setPositionCmd.Fen = fenParser.Parse();
-                    restArgs = args.Skip(1);
-                    break;
-
-                case "startpos":
-                    setPositionCmd.StartPosition = true;
-                    break;
-
-                case "moves":
-                    break;
-
-                default:
-                    throw new ArgumentException($"Unknown UCI position type {typeString} in {string.Join(", ", args)}");
-            }
-
-            if (restArgs.Any() && restArgs.First() == "moves")
-            {
-                var reader = new MoveTextReader(string.Join(" ", restArgs.Skip(1)));
-                setPositionCmd.Moves = reader.ReadAll();
-            }
-
-            await _messageBus.SendAsync(setPositionCmd);
+            var reader = new MoveTextReader(string.Join(" ", restArgs.Skip(1)));
+            setPositionCmd.Moves = reader.ReadAll();
         }
 
-        private async Task CmdGo(IEnumerable<string> arg) => await _messageBus.SendAsync(new Go());
+        await _messageBus.SendAsync(setPositionCmd);
+    }
 
-        public async Task ExecuteAsync(string commandLine)
-        {
-            var split = commandLine.Split(' ');
-            var cmd = split[0].Trim().ToLower();
-            var args = split.Skip(1);
+    private async Task CmdGo(IEnumerable<string> arg) => await _messageBus.SendAsync(new Go());
 
-            if (_handlers.TryGetValue(cmd, out var handler))
-                await handler(args);
-        }
+    public async Task ExecuteAsync(string commandLine)
+    {
+        var split = commandLine.Split(' ');
+        var cmd = split[0].Trim().ToLower();
+        var args = split.Skip(1);
+
+        if (_handlers.TryGetValue(cmd, out var handler))
+            await handler(args);
     }
 }

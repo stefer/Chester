@@ -1,4 +1,3 @@
-﻿namespace Chester.Messages
-{
-    public class Event : Message { }
-}
+﻿namespace Chester.Messages;
+
+public class Event : Message { }
