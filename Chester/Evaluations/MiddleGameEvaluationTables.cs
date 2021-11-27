@@ -10,12 +10,12 @@ public class MiddleGameEvaluationTables : EvaluationTables
     public override int Positional(Piece s)
     {
         var rank = s.SquareState.IsWhite() ? s.Position.Rank : 7 - s.Position.Rank;
-        return s.SquareState.Direction() * PositionalValues[s.SquareState.Piece()][rank][s.Position.File];
+        return s.SquareState.Direction() * _positionalValues[s.SquareState.Piece()][rank][s.Position.File];
     }
 
-    public override int PieceValue(Piece s) => s.SquareState.Direction() * PieceValues[s.SquareState.Piece()];
+    public override int PieceValue(Piece s) => s.SquareState.Direction() * _pieceValues[s.SquareState.Piece()];
 
-    private readonly Dictionary<SquareState, int> PieceValues = new()
+    private readonly Dictionary<SquareState, int> _pieceValues = new()
     {
         [SquareState.King] = Evaluation.CheckMate,
         [SquareState.Queen] = 900,
@@ -28,7 +28,7 @@ public class MiddleGameEvaluationTables : EvaluationTables
     /// <summary>
     /// https://www.chessprogramming.org/Simplified_Evaluation_Function
     /// </summary>
-    private readonly Dictionary<SquareState, int[][]> PositionalValues = new()
+    private readonly Dictionary<SquareState, int[][]> _positionalValues = new()
     {
         [SquareState.Pawn] = new int[][]
         {

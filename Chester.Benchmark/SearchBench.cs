@@ -16,9 +16,9 @@ namespace Chester.Benchmark;
 [ThreadingDiagnoser]
 public class SearchBench
 {
-    private Evaluator? evaluator;
-    private Board? board;
-    private ISearch? search;
+    private Evaluator? _evaluator;
+    private Board? _board;
+    private ISearch? _search;
 
     [Params(1, 2, 3, 4)]
     public int N;
@@ -26,13 +26,13 @@ public class SearchBench
     [GlobalSetup]
     public void Setup()
     {
-        evaluator = new Evaluator();
-        board = new Board();
-        search = new ParallellAlphaBetaMinMaxSearch(new SearchOptions(N), evaluator, new NullReporter());
+        _evaluator = new Evaluator();
+        _board = new Board();
+        _search = new ParallellAlphaBetaMinMaxSearch(new SearchOptions(N), _evaluator, new NullReporter());
     }
 
     [Benchmark]
-    public Evaluation? Search() => search?.Search(board, Color.White);
+    public Evaluation? Search() => _search?.Search(_board, Color.White);
 }
 
 public class NullReporter : ISearchReporter

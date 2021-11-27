@@ -10,43 +10,43 @@ public class FenParserTests
 {
     public class ParseStandard
     {
-        private Fen fen;
+        private Fen _fen;
 
         [OneTimeSetUp]
         public void SetUp()
         {
             var parser = new FenParser("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
-            fen = parser.Parse();
+            _fen = parser.Parse();
         }
 
         [Test]
-        public void Sets_Board() => Assert.That(fen.NextToMove, Is.EqualTo(Color.White));
+        public void Sets_Board() => Assert.That(_fen.NextToMove, Is.EqualTo(Color.White));
 
         [Test]
-        public void Sets_NoEnpassant() => Assert.That(fen.EnPassantTarget.Valid, Is.False);
+        public void Sets_NoEnpassant() => Assert.That(_fen.EnPassantTarget.Valid, Is.False);
 
         [Test]
-        public void Sets_HalfMOveClock() => Assert.That(fen.HalfMoveClock, Is.EqualTo(0));
+        public void Sets_HalfMOveClock() => Assert.That(_fen.HalfMoveClock, Is.EqualTo(0));
 
         [Test]
         public void Initializes_Board()
         {
-            Assert.That(fen.Board.At("a1"), Is.EqualTo(SquareState.Rook | SquareState.White));
-            Assert.That(fen.Board.At("b2"), Is.EqualTo(SquareState.Pawn | SquareState.White));
-            Assert.That(fen.Board.At("h1"), Is.EqualTo(SquareState.Rook | SquareState.White));
-            Assert.That(fen.Board.At("a8"), Is.EqualTo(SquareState.Rook | SquareState.Black));
-            Assert.That(fen.Board.At("b7"), Is.EqualTo(SquareState.Pawn | SquareState.Black));
-            Assert.That(fen.Board.At("h8"), Is.EqualTo(SquareState.Rook | SquareState.Black));
+            Assert.That(_fen.Board.At("a1"), Is.EqualTo(SquareState.Rook | SquareState.White));
+            Assert.That(_fen.Board.At("b2"), Is.EqualTo(SquareState.Pawn | SquareState.White));
+            Assert.That(_fen.Board.At("h1"), Is.EqualTo(SquareState.Rook | SquareState.White));
+            Assert.That(_fen.Board.At("a8"), Is.EqualTo(SquareState.Rook | SquareState.Black));
+            Assert.That(_fen.Board.At("b7"), Is.EqualTo(SquareState.Pawn | SquareState.Black));
+            Assert.That(_fen.Board.At("h8"), Is.EqualTo(SquareState.Rook | SquareState.Black));
         }
 
         [Test]
         public void Sets_Castling()
         {
-            Assert.That(fen.Castling, Has.Flag(Castling.WhiteKing));
-            Assert.That(fen.Castling, Has.Flag(Castling.WhiteQueen));
-            Assert.That(fen.Castling, Has.Flag(Castling.BlackKing));
-            Assert.That(fen.Castling, Has.Flag(Castling.BlackQueen));
+            Assert.That(_fen.Castling, Has.Flag(Castling.WhiteKing));
+            Assert.That(_fen.Castling, Has.Flag(Castling.WhiteQueen));
+            Assert.That(_fen.Castling, Has.Flag(Castling.BlackKing));
+            Assert.That(_fen.Castling, Has.Flag(Castling.BlackQueen));
         }
     }
 
