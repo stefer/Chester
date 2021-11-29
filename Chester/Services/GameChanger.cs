@@ -57,7 +57,6 @@ internal class GameChanger :
             var from = move.From.ToModel();
             var to = move.To.ToModel();
             var fromState = _game.At(from);
-            var toState = _game.At(to);
 
             //if (fromState.Piece() != move.Piece.ToModel())
             //    throw new GameError($"SetPosition: move {move} piece does not match actual board piece {fromState}");
@@ -65,7 +64,7 @@ internal class GameChanger :
             //if (toState.SameColor(fromState))
             //    throw new GameError($"SetPosition: move {move} tries to move piece onto same color {fromState} -> {toState}");
 
-            var gameMove = new Move(fromState, from, to, fromState.IsAttack(toState));
+            var gameMove = new Move(fromState, from, to, move.Type.ToModel());
             _game.MakeMove(gameMove);
         }
 

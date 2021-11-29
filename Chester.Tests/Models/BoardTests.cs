@@ -5,6 +5,8 @@ using System.Linq;
 
 namespace Chester.Tests.Models;
 
+using Chester.Tests.Extensions;
+
 public class BoardTests
 {
     [Test]
@@ -55,6 +57,61 @@ public class BoardTests
 
         board.TakeBack(move);
         Assert.That(board.Line.Select(x => x.ToStringLong()), Is.EqualTo(new string[] { "e2e4" }));
+    }
+
+    [Test]
+    public void Moves_Include_Castling()
+    {
+        var line = "1. e4 e5 2. Bc4 d6 3. Nf3 Nf6";
+
+        Board board = new();
+        Play(board, line);
+
+        var moves = board.MovesFor(Color.White);
+        var castling = moves.Single(x => x.MoveType.HasFlag(MoveType.CastleKingSide));
+        Assert.That(castling.ToString(), Is.EqualTo("O-O"));
+        Assert.That(castling.ToStringLong(), Is.EqualTo("e1g1"));
+        Assert.That(castling.From.File, Is.EqualTo(4));
+        Assert.That(castling.To.File, Is.EqualTo(6));
+    }
+
+    [Test]
+    public void Move_Does_Castling()
+    {
+        var line = "1. e4 e5 2. Bc4 d6 3. Nf3 Nf6";
+
+        Board board = new();
+        Play(board, line);
+
+        Assert.That(board.At("e1"), Has.Flag(SquareState.King));
+        Assert.That(board.At("f1"), Is.EqualTo(SquareState.Free));
+        Assert.That(board.At("g1"), Is.EqualTo(SquareState.Free));
+        Assert.That(board.At("h1"), Has.Flag(SquareState.Rook));
+
+        board.MakeMove(new Move(board.At("e1"), "e1", "g1", MoveType.CastleKingSide));
+
+        Assert.That(board.At("e1"), Is.EqualTo(SquareState.Free));
+        Assert.That(board.At("f1"), Has.Flag(SquareState.Rook));
+        Assert.That(board.At("g1"), Has.Flag(SquareState.King));
+        Assert.That(board.At("h1"), Is.EqualTo(SquareState.Free));
+    }
+
+    [Test]
+    public void TakeBack_Castling_Resets()
+    {
+        var line = "1. e4 e5 2. Bc4 d6 3. Nf3 Nf6";
+
+        Board board = new();
+        Play(board, line);
+
+        var move = board.MakeMove(new Move(board.At("e1"), "e1", "g1", MoveType.CastleKingSide));
+
+        board.TakeBack(move);
+
+        Assert.That(board.At("e1"), Has.Flag(SquareState.King));
+        Assert.That(board.At("f1"), Is.EqualTo(SquareState.Free));
+        Assert.That(board.At("g1"), Is.EqualTo(SquareState.Free));
+        Assert.That(board.At("h1"), Has.Flag(SquareState.Rook));
     }
 
     [Test]

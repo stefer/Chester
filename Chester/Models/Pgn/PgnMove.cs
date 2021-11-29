@@ -29,7 +29,6 @@ public enum PgnMoveType : ushort
     CastleKingSide = 0b0010000000,
     Check = 0b0100000000,
     CheckMate = 0b1000000000,
-
 }
 
 public record PgnPly(Color Color, PgnPiece Piece, PgnPosition From, PgnPosition To = null, PgnMoveType Type = PgnMoveType.Normal, string Comment = null)

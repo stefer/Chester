@@ -15,20 +15,20 @@ public record Position
     public int Rank { get; init; }
     public int File { get; init; }
 
-    public static readonly Dictionary<int, Position> Positions = new(64);
+    public static readonly Dictionary<(int, int), Position> Positions = new(64);
 
     static Position()
     {
         for (var f = 0; f < 8; f++)
             for (var r = 0; r < 8; r++)
-                Positions[f * 64 + r] = new Position(f, r);
+                Positions[(f, r)] = new Position(f, r);
 
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Position Create(int file, int rank)
     {
-        if (Positions.TryGetValue(file * 64 + rank, out var value)) return value;
+        if (Positions.TryGetValue((file, rank), out var value)) return value;
         return Invalid;
     }
 
@@ -52,6 +52,7 @@ public record Position
     public bool Valid => Rank >= 0 && Rank < 8 && File >= 0 && File < 8;
 
     public Position Move(int df = 0, int dr = 0) => Create(File + df, Rank + dr);
+    public Position With(int? f = null, int? r = null) => Create(f ?? File, r ?? Rank);
 
     public static implicit operator Position(string pos) => FromString(pos);
 

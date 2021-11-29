@@ -101,15 +101,15 @@ public class Board
         {
             var oneUp = from.Move(0, direction);
             var twoUp = from.Move(0, direction * 2);
-            var isStartPos = from.Rank == (square.IsWhite() ? 2 : 7);
+            var isStartPos = from.Rank == (square.IsWhite() ? 1 : 6);
             var isOneUpFree = At(oneUp).IsFree();
             if (isOneUpFree) yield return new Move(square, from, oneUp);
             if (isStartPos && isOneUpFree && At(twoUp).IsFree()) yield return new Move(square, from, twoUp);
 
             var leftUp = from.Move(1, direction);
             var rightUp = from.Move(-1, direction);
-            if (square.IsAttack(At(leftUp))) yield return new Move(square, from, leftUp, true);
-            if (square.IsAttack(At(rightUp))) yield return new Move(square, from, rightUp, true);
+            if (square.IsAttack(At(leftUp))) yield return new Move(square, from, leftUp, MoveType.Capture);
+            if (square.IsAttack(At(rightUp))) yield return new Move(square, from, rightUp, MoveType.Capture);
 
             // TODO: En Passant
             // TODO: Promote
@@ -122,7 +122,7 @@ public class Board
                 var p = from.Move(f, r);
                 var to = At(p);
                 var isAttack = square.IsAttack(to);
-                if (to.IsFree() || isAttack) yield return new Move(square, from, p, isAttack);
+                if (to.IsFree() || isAttack) yield return new Move(square, from, p, MoveType.Capture);
             }
         }
         else if (square.IsBishop())
@@ -135,7 +135,7 @@ public class Board
                 {
                     var to = At(p);
                     var isAttack = square.IsAttack(to);
-                    if (to.IsFree() || isAttack) yield return new Move(square, from, p, isAttack);
+                    if (to.IsFree() || isAttack) yield return new Move(square, from, p, isAttack ? MoveType.Capture : MoveType.Normal);
                     if (isAttack || square.SameColor(to)) break;
                     p = p.Move(f, r);
                 }
@@ -151,7 +151,7 @@ public class Board
                 {
                     var to = At(p);
                     var isAttack = square.IsAttack(to);
-                    if (to.IsFree() || isAttack) yield return new Move(square, from, p, isAttack);
+                    if (to.IsFree() || isAttack) yield return new Move(square, from, p, isAttack ? MoveType.Capture : MoveType.Normal);
                     if (isAttack || square.SameColor(to)) break;
                     p = p.Move(f, r);
                 }
@@ -169,7 +169,7 @@ public class Board
                 {
                     var to = At(p);
                     var isAttack = square.IsAttack(to);
-                    if (to.IsFree() || isAttack) yield return new Move(square, from, p, isAttack);
+                    if (to.IsFree() || isAttack) yield return new Move(square, from, p, isAttack ? MoveType.Capture : MoveType.Normal);
                     if (isAttack || square.SameColor(to)) break;
                     p = p.Move(f, r);
                 }
@@ -183,10 +183,15 @@ public class Board
                 var p = from.Move(f, r);
                 var to = At(p);
                 var isAttack = square.IsAttack(to);
-                if (to.IsFree() || isAttack) yield return new Move(square, from, p, isAttack);
+                if (to.IsFree() || isAttack) yield return new Move(square, from, p, isAttack ? MoveType.Capture : MoveType.Normal);
             }
 
-            // TODO: Castle
+            var rookKingSide = from.With(f: 7);
+            var rookQueenSide = from.With(f: 0);
+            if (!HasMoved(square) && At(from.With(f: 5)).IsFree() && At(from.With(f: 6)).IsFree() && At(rookKingSide).IsRook())
+                yield return new Move(square, from, from.With(f: 6), MoveType.CastleKingSide);
+            if (!HasMoved(square) && At(from.With(f: 3)).IsFree() && At(from.With(f: 2)).IsFree() && At(from.With(f: 1)).IsFree() && At(rookQueenSide).IsRook())
+                yield return new Move(square, from, from.With(f: 3), MoveType.CastleQueenSide);
         }
         else
         {
@@ -194,16 +199,30 @@ public class Board
         }
     }
 
+    private bool HasMoved(SquareState square) => Line.Any(x => (x.FromSquare & (SquareState.Pieces | SquareState.Colors)) == (square & (SquareState.Pieces | SquareState.Colors)));
+
     public void MakeMoves(MoveText moveText)
     {
         foreach (var move in moveText.AsPlies())
         {
-            var from = move.From.ToModel();
+            var from = move.From?.ToModel();
             var to = move.To.ToModel();
-            var fromState = At(from);
-            var toState = At(to);
 
-            var gameMove = new Move(fromState, from, to, fromState.IsAttack(toState));
+            if (from == null)
+            {
+                // Movetext does not include from position if it obvious from game
+                // We need to calculate that in that case
+                var validMoves = MovesFor(move.Color);
+                var fromMove = validMoves.FirstOrDefault(x => x.To == to && x.FromSquare.Piece() == move.Piece.ToModel());
+                from = fromMove?.From;
+
+                if (from == null)
+                    throw new InvalidOperationException($"Cannot determine from position ply {move} in movetext {moveText}");
+            }
+
+            var fromState = At(from);
+
+            var gameMove = new Move(fromState, from, to, move.Type.ToModel());
             MakeMove(gameMove);
         }
     }
@@ -215,8 +234,25 @@ public class Board
 
         SavedMove sm = new(m, _squares[Index(m.To)]);
 
-        _squares[Index(m.To)] = fromSquare;
-        _squares[Index(m.From)] = SquareState.Free;
+        if (m.MoveType.HasFlag(MoveType.CastleKingSide))
+        {
+            _squares[Index(m.To)] = fromSquare;
+            _squares[Index(m.From)] = SquareState.Free;
+            _squares[Index(m.From.With(f: 5))] = At(m.From.With(f: 7));
+            _squares[Index(m.From.With(f: 7))] = SquareState.Free;
+        }
+        if (m.MoveType.HasFlag(MoveType.CastleQueenSide))
+        {
+            _squares[Index(m.To)] = fromSquare;
+            _squares[Index(m.From)] = SquareState.Free;
+            _squares[Index(m.From.With(f: 4))] = At(m.From.With(f: 0));
+            _squares[Index(m.From.With(f: 0))] = SquareState.Free;
+        }
+        else
+        {
+            _squares[Index(m.To)] = fromSquare;
+            _squares[Index(m.From)] = SquareState.Free;
+        }
 
         _line.Push(m);
         return sm;
@@ -224,8 +260,26 @@ public class Board
 
     public void TakeBack(SavedMove sm)
     {
-        _squares[Index(sm.Move.To)] = sm.ToSquare;
-        _squares[Index(sm.Move.From)] = sm.Move.FromSquare;
+        var m = sm.Move;
+        if (sm.Move.MoveType.HasFlag(MoveType.CastleKingSide))
+        {
+            _squares[Index(m.To)] = SquareState.Free;
+            _squares[Index(m.From)] = m.FromSquare;
+            _squares[Index(m.From.With(f: 7))] = At(m.From.With(f: 5));
+            _squares[Index(m.From.With(f: 5))] = SquareState.Free;
+        }
+        if (sm.Move.MoveType.HasFlag(MoveType.CastleQueenSide))
+        {
+            _squares[Index(m.To)] = SquareState.Free;
+            _squares[Index(m.From)] = m.FromSquare;
+            _squares[Index(m.From.With(f: 0))] = At(m.From.With(f: 4));
+            _squares[Index(m.From.With(f: 4))] = SquareState.Free;
+        }
+        else
+        {
+            _squares[Index(m.To)] = sm.ToSquare;
+            _squares[Index(m.From)] = m.FromSquare;
+        }
         _line.Pop();
     }
 
