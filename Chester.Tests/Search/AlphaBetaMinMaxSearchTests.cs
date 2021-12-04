@@ -65,7 +65,6 @@ internal class AlphaBetaMinMaxSearchTests
         Assert.That(eval.Move.ToStringLong(), Is.EqualTo("e7e5"));
     }
 
-
     [Test]
     public void DepthOne_ReturnsHighestScore()
     {

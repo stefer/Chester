@@ -164,16 +164,32 @@ public class MoveTextReader
         return true;
     }
 
+    private static readonly List<(Color color, string move, PgnMoveType type)> Castlings = new()
+    {
+        (Color.White, "e1g1",  PgnMoveType.CastleKingSide),
+        (Color.White, "O-O",   PgnMoveType.CastleKingSide),
+        (Color.White, "e1c1",  PgnMoveType.CastleQueenSide),
+        (Color.White, "O-O-O", PgnMoveType.CastleQueenSide),
+        (Color.Black, "e8g8",  PgnMoveType.CastleKingSide),
+        (Color.Black, "O-O",   PgnMoveType.CastleKingSide),
+        (Color.Black, "e8c8",  PgnMoveType.CastleQueenSide),
+        (Color.Black, "O-O-O", PgnMoveType.CastleQueenSide),
+    };
+
     private bool Castling(Color color, out PgnPly castling)
     {
         castling = null;
+
         var span = _current.Span;
-        var queenSide = span.StartsWith("O-O-O");
-        var kingSide = span.StartsWith("O-O");
+        var start = span.ToString();
 
-        if (!queenSide && !kingSide) return false;
+        var variant = Castlings.SingleOrDefault(x => x.color == color && start.StartsWith(x.move));
 
-        var castlingType = queenSide ? PgnMoveType.CastleQueenSide : PgnMoveType.CastleKingSide;
+        if (variant == default) return false;
+
+        var queenSide = variant.type == PgnMoveType.CastleQueenSide;
+        var kingSide = variant.type == PgnMoveType.CastleKingSide;
+
         var rank = color == Color.White ? 0 : 7;
         var fromFile = 4;
         var toFile = queenSide ? 2 : 6;
@@ -183,9 +199,9 @@ public class MoveTextReader
             PgnPiece.King,
             new PgnPosition(fromFile, rank),
             new PgnPosition(toFile, rank),
-            castlingType);
+            variant.type);
 
-        _current = _current[(queenSide ? 5 : 3)..];
+        _current = _current[variant.move.Length..];
 
         return true;
     }

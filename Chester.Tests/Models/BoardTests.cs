@@ -97,6 +97,21 @@ public class BoardTests
     }
 
     [Test]
+    public void Move_Does_Castling_FromLine()
+    {
+        var line = "1. e4 e5 2. Bc4 d6 3. Nf3 Nf6 4. O-O";
+
+        Board board = new();
+        Play(board, line);
+
+        Assert.That(board.At("e1"), Is.EqualTo(SquareState.Free));
+        Assert.That(board.At("f1"), Has.Flag(SquareState.Rook));
+        Assert.That(board.At("g1"), Has.Flag(SquareState.King));
+        Assert.That(board.At("h1"), Is.EqualTo(SquareState.Free));
+    }
+
+
+    [Test]
     public void TakeBack_Castling_Resets()
     {
         var line = "1. e4 e5 2. Bc4 d6 3. Nf3 Nf6";

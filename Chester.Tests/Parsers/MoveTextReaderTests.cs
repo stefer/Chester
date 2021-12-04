@@ -56,9 +56,29 @@ public class MoveTextReaderTests
         }
 
         [Test]
-        public void WhiteKingCastling()
+        public void WhiteKingCastling_LineAlgrebraic()
         {
-            var sut = new MoveTextReader("O-O");
+            var sut = new MoveTextReader("e2e4 b8c6 f1d3 g8f6 g1f3 d7d6 e1g1");
+
+            var result = sut.ReadAll();
+
+            Assert.That(result.Count, Is.EqualTo(4));
+            var move = result[3];
+
+            Assert.That(move.White.Type, Has.Flag(PgnMoveType.CastleKingSide));
+            Assert.That(move.White.Color, Is.EqualTo(Color.White));
+            Assert.That(move.White.Piece, Is.EqualTo(PgnPiece.King));
+            Assert.That(move.White.From.InValid, Is.False);
+            Assert.That(move.White.From.ToString(), Is.EqualTo("e1"));
+            Assert.That(move.White.To.ToString(), Is.EqualTo("g1"));
+            Assert.That(move.ToString(), Is.EqualTo("4. O-O"));
+        }
+
+        [TestCase("O-O")]
+        [TestCase("e1g1")]
+        public void WhiteKingCastling(string ply)
+        {
+            var sut = new MoveTextReader(ply);
 
             var result = sut.ReadAll();
 
@@ -74,17 +94,18 @@ public class MoveTextReaderTests
             Assert.That(move.ToString(), Is.EqualTo("1. O-O"));
         }
 
-        [Test]
-        public void BlackKingCastling()
+        [TestCase("O-O")]
+        [TestCase("e8g8")]
+        public void BlackKingCastling(string ply)
         {
-            var sut = new MoveTextReader("e4 O-O");
+            var sut = new MoveTextReader("e4 " + ply);
 
             var result = sut.ReadAll();
 
             Assert.That(result.Count, Is.EqualTo(1));
             var move = result[0];
 
-            Assert.That(move.Black.Type.HasFlag(PgnMoveType.CastleKingSide));
+            Assert.That(move.Black.Type, Has.Flag(PgnMoveType.CastleKingSide));
             Assert.That(move.Black.Color, Is.EqualTo(Color.Black));
             Assert.That(move.Black.Piece, Is.EqualTo(PgnPiece.King));
             Assert.That(move.Black.From.InValid, Is.False);
@@ -93,17 +114,18 @@ public class MoveTextReaderTests
             Assert.That(move.ToString(), Is.EqualTo("1. e4 O-O"));
         }
 
-        [Test]
-        public void WhiteQueenCastling()
+        [TestCase("O-O-O")]
+        [TestCase("e1c1")]
+        public void WhiteQueenCastling(string ply)
         {
-            var sut = new MoveTextReader("O-O-O");
+            var sut = new MoveTextReader(ply);
 
             var result = sut.ReadAll();
 
             Assert.That(result.Count, Is.EqualTo(1));
             var move = result[0];
 
-            Assert.That(move.White.Type.HasFlag(PgnMoveType.CastleQueenSide));
+            Assert.That(move.White.Type, Has.Flag(PgnMoveType.CastleQueenSide));
             Assert.That(move.White.Color, Is.EqualTo(Color.White));
             Assert.That(move.White.Piece, Is.EqualTo(PgnPiece.King));
             Assert.That(move.White.From.InValid, Is.False);
@@ -112,17 +134,18 @@ public class MoveTextReaderTests
             Assert.That(move.ToString(), Is.EqualTo("1. O-O-O"));
         }
 
-        [Test]
-        public void BlackQueenCastling()
+        [TestCase("O-O-O")]
+        [TestCase("e8c8")]
+        public void BlackQueenCastling(string ply)
         {
-            var sut = new MoveTextReader("e4 O-O-O");
+            var sut = new MoveTextReader("e4 " + ply);
 
             var result = sut.ReadAll();
 
             Assert.That(result.Count, Is.EqualTo(1));
             var move = result[0];
 
-            Assert.That(move.Black.Type.HasFlag(PgnMoveType.CastleQueenSide));
+            Assert.That(move.Black.Type, Has.Flag(PgnMoveType.CastleQueenSide));
             Assert.That(move.Black.Color, Is.EqualTo(Color.Black));
             Assert.That(move.Black.Piece, Is.EqualTo(PgnPiece.King));
             Assert.That(move.Black.From.InValid, Is.False);
