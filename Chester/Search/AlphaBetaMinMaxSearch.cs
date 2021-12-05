@@ -1,5 +1,8 @@
-﻿using Chester.Evaluations;
+﻿// #define TAKE_BACK_ASSERT
+
+using Chester.Evaluations;
 using Chester.Models;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Chester.Search;
@@ -112,9 +115,16 @@ public class AlphaBetaMinMaxSearch : ISearch
 
     protected (int score, Move move) Evaluate(Board board, Move m)
     {
+#if DEBUG && TAKE_BACK_ASSERT
+        var before = board.ToString();
+#endif
         var saved = board.MakeMove(m);
         var eval = Evaluator.Evaluate(board);
         board.TakeBack(saved);
+#if DEBUG && TAKE_BACK_ASSERT
+        var after = board.ToString();
+        Debug.Assert(before == after);
+#endif
         return (eval, m);
     }
 

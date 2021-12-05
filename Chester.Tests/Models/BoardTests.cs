@@ -77,7 +77,7 @@ public class BoardTests
         }
     }
 
-    public class Castling
+    public class CastlingWhiteKingSide
     {
         [Test]
         public void Moves_Include_Castling()
@@ -147,6 +147,81 @@ public class BoardTests
             Assert.That(board.At("f1"), Is.EqualTo(SquareState.Free));
             Assert.That(board.At("g1"), Is.EqualTo(SquareState.Free));
             Assert.That(board.At("h1"), Has.Flag(SquareState.Rook));
+        }
+    }
+
+    public class CastlingBlackQueenSide
+    {
+        [Test]
+        public void Moves_Include_Castling()
+        {
+            var line = "e2e4 b8c6 g1f3 g8f6 b1c3 d7d6 d2d4 c8g4 f1e2 c6b4 e1g1 g4f3 e2f3 b4c2 d1c2 d8d7 c1e3";
+
+            Board board = new();
+            Play(board, line);
+
+            var moves = board.MovesFor(Color.Black);
+            var castling = moves.Single(x => x.MoveType.HasFlag(MoveType.CastleQueenSide));
+            Assert.That(castling.ToString(), Is.EqualTo("O-O-O"));
+            Assert.That(castling.ToStringLong(), Is.EqualTo("e8c8"));
+            Assert.That(castling.From.File, Is.EqualTo(4));
+            Assert.That(castling.To.File, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void Move_Does_Castling()
+        {
+            var line = "e2e4 b8c6 g1f3 g8f6 b1c3 d7d6 d2d4 c8g4 f1e2 c6b4 e1g1 g4f3 e2f3 b4c2 d1c2 d8d7 c1e3";
+
+            Board board = new();
+            Play(board, line);
+
+            Assert.That(board.At("e8"), Has.Flag(SquareState.King));
+            Assert.That(board.At("b1"), Is.EqualTo(SquareState.Free));
+            Assert.That(board.At("c1"), Is.EqualTo(SquareState.Free));
+            Assert.That(board.At("a1"), Has.Flag(SquareState.Rook));
+
+            board.MakeMove(new Move(board.At("e8"), "e8", "c8", MoveType.CastleQueenSide));
+
+            Assert.That(board.At("e8"), Is.EqualTo(SquareState.Free));
+            Assert.That(board.At("d8"), Has.Flag(SquareState.Rook));
+            Assert.That(board.At("c8"), Has.Flag(SquareState.King));
+            Assert.That(board.At("b8"), Is.EqualTo(SquareState.Free));
+            Assert.That(board.At("a8"), Is.EqualTo(SquareState.Free));
+        }
+
+        [Test]
+        public void Move_Does_Castling_FromLine()
+        {
+            var line = "e2e4 b8c6 g1f3 g8f6 b1c3 d7d6 d2d4 c8g4 f1e2 c6b4 e1g1 g4f3 e2f3 b4c2 d1c2 d8d7 c1e3 O-O-O";
+
+            Board board = new();
+            Play(board, line);
+
+            Assert.That(board.At("e8"), Is.EqualTo(SquareState.Free));
+            Assert.That(board.At("d8"), Has.Flag(SquareState.Rook));
+            Assert.That(board.At("c8"), Has.Flag(SquareState.King));
+            Assert.That(board.At("b8"), Is.EqualTo(SquareState.Free));
+            Assert.That(board.At("a8"), Is.EqualTo(SquareState.Free));
+        }
+
+
+        [Test]
+        public void TakeBack_Castling_Resets()
+        {
+            var line = "e2e4 b8c6 g1f3 g8f6 b1c3 d7d6 d2d4 c8g4 f1e2 c6b4 e1g1 g4f3 e2f3 b4c2 d1c2 d8d7 c1e3";
+
+            Board board = new();
+            Play(board, line);
+
+            var move = board.MakeMove(new Move(board.At("e8"), "e8", "c8", MoveType.CastleQueenSide));
+
+            board.TakeBack(move);
+
+            Assert.That(board.At("e8"), Has.Flag(SquareState.King));
+            Assert.That(board.At("b1"), Is.EqualTo(SquareState.Free));
+            Assert.That(board.At("c1"), Is.EqualTo(SquareState.Free));
+            Assert.That(board.At("a1"), Has.Flag(SquareState.Rook));
         }
     }
 

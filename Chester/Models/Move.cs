@@ -41,7 +41,7 @@ public record Move
 
         if (type.HasFlag(MoveType.CastleKingSide) && !((to.Rank == 0 || to.Rank == 7) && to.File == 6))
             throw new ArgumentException("Invalid castling move", nameof(to));
-        if (type.HasFlag(MoveType.CastleQueenSide) && !((to.Rank == 0 || to.Rank == 7) && (to.File == 3)))
+        if (type.HasFlag(MoveType.CastleQueenSide) && !((to.Rank == 0 || to.Rank == 7) && (to.File == 2)))
             throw new ArgumentException("Invalid castling move", nameof(to));
 
         FromSquare = fromSquare;

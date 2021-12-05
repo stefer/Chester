@@ -120,6 +120,17 @@ internal class AlphaBetaMinMaxSearchTests
         Assert.That(() => sut.Search(board, Color.Black), Throws.Nothing);
     }
 
+    [Test]
+    public void InvalidOperation_MovedBlack_AfterCastlingImplemented()
+    {
+        var evaluator = new Evaluator();
+        var sut = new AlphaBetaMinMaxSearch(new SearchOptions(1), evaluator, new NullReporter());
+
+        var board = new Board();
+        Play(board, "e2e4 b8c6 g1f3 g8f6 b1c3 d7d6 d2d4 c8g4 f1e2 c6b4 e1g1 g4f3 e2f3 b4c2 d1c2 d8d7 c1e3");
+        Assert.That(() => sut.Search(board, Color.Black), Throws.Nothing);
+    }
+
     private static void Play(Board board, string moveText)
     {
         var reader = new MoveTextReader(moveText);

@@ -189,7 +189,7 @@ public class Board
             if (!HasMoved(square) && At(from.With(f: 5)).IsFree() && At(from.With(f: 6)).IsFree() && At(rookKingSide).IsRook())
                 yield return new Move(square, from, from.With(f: 6), MoveType.CastleKingSide);
             if (!HasMoved(square) && At(from.With(f: 3)).IsFree() && At(from.With(f: 2)).IsFree() && At(from.With(f: 1)).IsFree() && At(rookQueenSide).IsRook())
-                yield return new Move(square, from, from.With(f: 3), MoveType.CastleQueenSide);
+                yield return new Move(square, from, from.With(f: 2), MoveType.CastleQueenSide);
         }
         else
         {
@@ -243,7 +243,7 @@ public class Board
         {
             _squares[Index(m.To)] = fromSquare;
             _squares[Index(m.From)] = SquareState.Free;
-            _squares[Index(m.From.With(f: 4))] = At(m.From.With(f: 0));
+            _squares[Index(m.From.With(f: 3))] = At(m.From.With(f: 0));
             _squares[Index(m.From.With(f: 0))] = SquareState.Free;
         }
         else
@@ -270,8 +270,8 @@ public class Board
         {
             _squares[Index(m.To)] = SquareState.Free;
             _squares[Index(m.From)] = m.FromSquare;
-            _squares[Index(m.From.With(f: 0))] = At(m.From.With(f: 4));
-            _squares[Index(m.From.With(f: 4))] = SquareState.Free;
+            _squares[Index(m.From.With(f: 0))] = At(m.From.With(f: 3));
+            _squares[Index(m.From.With(f: 3))] = SquareState.Free;
         }
         else
         {
