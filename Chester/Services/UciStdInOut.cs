@@ -48,8 +48,8 @@ internal class UciStdInOut :
     {
         StringBuilder sb = new("info ");
 
-        if (m.CurrentMove != null) sb.Append(" currentmove ").Append(m.CurrentMove.ToStringLong());
-        Append(m.CurrentMoveNumber, "currentmovenumber", sb);
+        if (m.CurrentMove != null) sb.Append(" currmove ").Append(m.CurrentMove.ToStringLong());
+        Append(m.CurrentMoveNumber, "currmovenumber", sb);
         Append(m.Depth, "depth", sb);
         Append(m.Score, "score cp", sb);
         Append(m.TimeMs, "time", sb);
