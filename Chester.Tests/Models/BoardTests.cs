@@ -60,6 +60,31 @@ public class BoardTests
         Assert.That(board.Line.Select(x => x.ToStringLong()), Is.EqualTo(new string[] { "e2e4" }));
     }
 
+    [Test]
+    public void LineStringLong_Formatted()
+    {
+        var line = "e2e4 b8c6 g1f3 g8f6 b1c3 d7d6 d2d4 c8g4 f1e2 c6b4 e1g1 g4f3 e2f3 b4c2 d1c2 d8d7 c1e3";
+
+        Board board = new();
+        Play(board, line);
+
+        Assert.That(board.LineStringLong, Is.EqualTo(line));
+    }
+
+    [Test]
+    public void Cloned_LineStringLong_Formatted()
+    {
+        var line = "e2e4 b8c6 g1f3 g8f6 b1c3 d7d6 d2d4 c8g4 f1e2 c6b4 e1g1 g4f3 e2f3 b4c2 d1c2 d8d7 c1e3";
+
+        Board board = new();
+        Play(board, line);
+
+        var boardCloned = board.Clone();
+
+        Assert.That(boardCloned.LineStringLong, Is.EqualTo(line));
+    }
+
+
     public class Moves
     {
         [Test]

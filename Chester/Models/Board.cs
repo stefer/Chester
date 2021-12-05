@@ -62,7 +62,7 @@ public class Board
 
     public Board(Board board) : this(board._squares)
     {
-        _line = new Stack<Move>(board._line);
+        _line = new Stack<Move>(board.Line);
     }
 
     public static Position Pos(int idx) => Position.Create(idx % Files, idx / Files);
@@ -282,6 +282,8 @@ public class Board
     }
 
     public IEnumerable<Move> Line => _line.Reverse().ToList();
+
+    public string LineStringLong => string.Join(" ", Line.Select(x => x.ToStringLong()));
 
     public IEnumerable<Piece> Pieces => Search(s => s.IsOccupied());
 
