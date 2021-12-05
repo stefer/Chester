@@ -21,7 +21,7 @@ Play.
 
  - [X] Dotnet 6 / Csharp 10
  - [v] Castling
-   - [ ] Current implementation screws up the board somehow as can be seen when playing with Arena
+   - [x] Current implementation screws up the board somehow as can be seen when playing with Arena
    - [ ] Current implementation requires looking into played moves, 
      Maybe move to use same state as in Fen type?
  - [ ] Iterative deepening of search depth

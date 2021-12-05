@@ -18,6 +18,7 @@ public class ParallellAlphaBetaMinMaxSearch : AlphaBetaMinMaxSearch
         var bestScore = isMaximizing ? -Evaluation.CheckMate : Evaluation.CheckMate;
         Move bestMove = null;
         var l = new object();
+        var startLineCount = board.Line.Count();
 
         Reporter.Reset();
 
@@ -38,7 +39,7 @@ public class ParallellAlphaBetaMinMaxSearch : AlphaBetaMinMaxSearch
                     {
                         bestScore = score;
                         bestMove = x.move;
-                        Reporter.BestLine(Options.MaxDepth, score, x.position.Line);
+                        Reporter.BestLine(Options.MaxDepth, score, x.position.Line.Skip(startLineCount));
                     }
                 }
             else if (!isMaximizing && score < bestScore)
@@ -48,7 +49,7 @@ public class ParallellAlphaBetaMinMaxSearch : AlphaBetaMinMaxSearch
                     {
                         bestScore = score;
                         bestMove = x.move;
-                        Reporter.BestLine(Options.MaxDepth, score, x.position.Line);
+                        Reporter.BestLine(Options.MaxDepth, score, x.position.Line.Skip(startLineCount));
                     }
                 }
         });
