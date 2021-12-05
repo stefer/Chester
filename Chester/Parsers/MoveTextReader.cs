@@ -60,14 +60,14 @@ public class MoveTextReader
         _current = _current[move..];
     }
 
-    private static readonly string[] Results = new string[] { "*", "1/2-1/2", "1-0", "0-1" };
+    private static readonly string[] _results = new string[] { "*", "1/2-1/2", "1-0", "0-1" };
 
     private bool IsResult()
     {
         var span = _current.Span;
         while (char.IsWhiteSpace(span[0])) span = span[1..];
 
-        foreach (var result in Results)
+        foreach (var result in _results)
         {
             if (span.StartsWith(result)) return true;
         }
@@ -164,16 +164,19 @@ public class MoveTextReader
         return true;
     }
 
-    private static readonly List<(Color color, string move, PgnMoveType type)> Castlings = new()
+    /// <summary>
+    /// Important that O-O-O is before O-O, since we look for StartsWith
+    /// </summary>
+    private static readonly List<(Color color, string move, PgnMoveType type)> _castlings = new()
     {
+        (Color.White, "e1c1", PgnMoveType.CastleQueenSide),
+        (Color.White, "O-O-O", PgnMoveType.CastleQueenSide),
         (Color.White, "e1g1",  PgnMoveType.CastleKingSide),
         (Color.White, "O-O",   PgnMoveType.CastleKingSide),
-        (Color.White, "e1c1",  PgnMoveType.CastleQueenSide),
-        (Color.White, "O-O-O", PgnMoveType.CastleQueenSide),
+        (Color.Black, "e8c8", PgnMoveType.CastleQueenSide),
+        (Color.Black, "O-O-O", PgnMoveType.CastleQueenSide),
         (Color.Black, "e8g8",  PgnMoveType.CastleKingSide),
         (Color.Black, "O-O",   PgnMoveType.CastleKingSide),
-        (Color.Black, "e8c8",  PgnMoveType.CastleQueenSide),
-        (Color.Black, "O-O-O", PgnMoveType.CastleQueenSide),
     };
 
     private bool Castling(Color color, out PgnPly castling)
@@ -183,7 +186,7 @@ public class MoveTextReader
         var span = _current.Span;
         var start = span.ToString();
 
-        var variant = Castlings.SingleOrDefault(x => x.color == color && start.StartsWith(x.move));
+        var variant = _castlings.FirstOrDefault(x => x.color == color && start.StartsWith(x.move));
 
         if (variant == default) return false;
 
@@ -206,8 +209,8 @@ public class MoveTextReader
         return true;
     }
 
-    static readonly char[] ranks = { '1', '2', '3', '4', '5', '6', '7', '8' };
-    static readonly char[] files = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
+    private static readonly char[] _ranks = { '1', '2', '3', '4', '5', '6', '7', '8' };
+    private static readonly char[] _files = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
 
     private bool Position(out PgnPosition position)
     {
@@ -216,13 +219,13 @@ public class MoveTextReader
         var rank = -1;
         var moved = 0;
 
-        if (!span.IsEmpty && files.Contains(span[moved]))
+        if (!span.IsEmpty && _files.Contains(span[moved]))
         {
             file = _current.Span[moved] - 'a';
             moved++;
         }
 
-        if (!span.IsEmpty && ranks.Contains(_current.Span[moved]))
+        if (!span.IsEmpty && _ranks.Contains(_current.Span[moved]))
         {
             rank = _current.Span[moved] - '1';
             moved++;
@@ -234,7 +237,7 @@ public class MoveTextReader
         return moved > 0;
     }
 
-    private static readonly Dictionary<char, PgnPiece> PgnPieces = new()
+    private static readonly Dictionary<char, PgnPiece> _pgnPieces = new()
     {
         ['K'] = PgnPiece.King,
         ['Q'] = PgnPiece.Queen,
@@ -250,7 +253,7 @@ public class MoveTextReader
 
         if (_current.IsEmpty) return;
 
-        if (PgnPieces.TryGetValue(_current.Span[0], out var piece2))
+        if (_pgnPieces.TryGetValue(_current.Span[0], out var piece2))
         {
             piece = piece2;
             _current = _current[1..];
@@ -259,7 +262,7 @@ public class MoveTextReader
         return;
     }
 
-    private readonly Dictionary<char, PgnMoveType> Promotions = new()
+    private readonly Dictionary<char, PgnMoveType> _promotions = new()
     {
         ['Q'] = PgnMoveType.PromotionQueen,
         ['R'] = PgnMoveType.PromotionRook,
@@ -273,7 +276,7 @@ public class MoveTextReader
         var span = _current.Span;
         if (!_current.IsEmpty && span[0] == '=')
         {
-            if (span.Length < 2 || !Promotions.TryGetValue(char.ToUpper(span[1]), out var value))
+            if (span.Length < 2 || !_promotions.TryGetValue(char.ToUpper(span[1]), out var value))
                 throw new PgnParseError($"Expected promotion to known piece at {span.ToString()}");
             promotion = value;
             _current = _current[2..];

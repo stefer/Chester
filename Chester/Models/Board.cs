@@ -122,7 +122,7 @@ public class Board
                 var p = from.Move(f, r);
                 var to = At(p);
                 var isAttack = square.IsAttack(to);
-                if (to.IsFree() || isAttack) yield return new Move(square, from, p, MoveType.Capture);
+                if (to.IsFree() || isAttack) yield return new Move(square, from, p, isAttack ? MoveType.Capture : MoveType.Normal);
             }
         }
         else if (square.IsBishop())
@@ -156,8 +156,6 @@ public class Board
                     p = p.Move(f, r);
                 }
             }
-
-            // TODO: Castle
         }
         else if (square.IsQueen())
         {

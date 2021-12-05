@@ -11,7 +11,7 @@ public class PgnParserTests
     public class SingleEntry
     {
 
-        private static readonly string Single = @"
+        private static readonly string _single = @"
 [Event ""F/S Return Match""]
 [Site ""Belgrade, Serbia JUG""]
 [Date ""1992.11.04""]
@@ -34,7 +34,7 @@ Nf2 42. g4 Bd3 43. Re6 1/2-1/2
         [Test]
         public void AttributesAreRead()
         {
-            var sut = PgnParser.Parse(Single).Single();
+            var sut = PgnParser.Parse(_single).Single();
 
             Assert.That(sut.Attributes["Event"], Is.EqualTo("F/S Return Match"));
             Assert.That(sut.Attributes["Site"], Is.EqualTo("Belgrade, Serbia JUG"));
@@ -49,7 +49,7 @@ Nf2 42. g4 Bd3 43. Re6 1/2-1/2
         [Test]
         public void AttributesAreReadAndDefaultPropertiesSet()
         {
-            var sut = PgnParser.Parse(Single).Single();
+            var sut = PgnParser.Parse(_single).Single();
 
             Assert.That(sut.Event, Is.EqualTo("F/S Return Match"));
             Assert.That(sut.Site, Is.EqualTo("Belgrade, Serbia JUG"));
@@ -63,7 +63,7 @@ Nf2 42. g4 Bd3 43. Re6 1/2-1/2
         [Test]
         public void MoveTextIsRead()
         {
-            var sut = PgnParser.Parse(Single).Single();
+            var sut = PgnParser.Parse(_single).Single();
 
             Assert.That(sut.Moves, Is.Not.Empty);
             Assert.That(sut.Moves[0].ToString(), Is.EqualTo("1. e4 e5"));
@@ -74,7 +74,7 @@ Nf2 42. g4 Bd3 43. Re6 1/2-1/2
 
     public class MultipleEntries
     {
-        private static readonly string Multiple = @"
+        private static readonly string _multiple = @"
 [Event ""Match 1""]
 [Site ""Belgrade, Serbia JUG""]
 [Date ""1992.11.04""]
@@ -100,7 +100,7 @@ Nf2 42. g4 Bd3 43. Re6 1/2-1/2
         [Test]
         public void Parse()
         {
-            var pgns = PgnParser.Parse(Multiple).ToList();
+            var pgns = PgnParser.Parse(_multiple).ToList();
 
             Assert.That(pgns, Has.Count.EqualTo(2));
 
