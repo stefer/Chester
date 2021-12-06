@@ -14,9 +14,7 @@ internal class SearchReporter : ISearchReporter
     private readonly IMessageBus _bus;
     private readonly Stopwatch _watch = new();
     private long _countNodes = 0;
-    private long _lastLineUpdateTime = 0;
     private long _lastNodesUpdateTime = 0;
-    private long _currMoveUpdateTime = 0;
 
 
     public SearchReporter(IMessageBus bus)
@@ -27,10 +25,6 @@ internal class SearchReporter : ISearchReporter
 
     public void CurrentMove(Move move, long moveNumber, int score)
     {
-        var ms = _watch.ElapsedMilliseconds;
-        if (ms - _currMoveUpdateTime < 2000) return;
-
-        _currMoveUpdateTime = ms;
         // Do not wait
         _bus.SendAsync(new Info { CurrentMove = move, CurrentMoveNumber = moveNumber, Score = score });
     }
@@ -38,9 +32,6 @@ internal class SearchReporter : ISearchReporter
     public void BestLine(int depth, int score, IEnumerable<Move> bestLine)
     {
         var ms = _watch.ElapsedMilliseconds;
-        if (ms - _lastLineUpdateTime < 500) return;
-
-        _lastLineUpdateTime = ms;
         var nodes = _countNodes;
         var nps = 1000 * nodes / ms;
         // Do not wait
@@ -52,7 +43,6 @@ internal class SearchReporter : ISearchReporter
         _watch.Stop();
         _watch.Reset();
         _countNodes = 0;
-        _lastLineUpdateTime = 0;
         _lastNodesUpdateTime = 0;
         _watch.Start();
     }
